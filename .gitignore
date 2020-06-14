@@ -1,5 +1,6 @@
 /build
 /dest
+/dist
 node_modules
 web_modules
 /.idea
