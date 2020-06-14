@@ -1,0 +1,83 @@
+{
+  "name": "graph-visualizer",
+  "version": "1.0.0",
+  "description": "discover nodes and edges in a flexible way",
+  "main": "index.js",
+  "scripts": {
+    "start": "snowpack dev",
+    "build": "snowpack build",
+    "test": "tsa ci",
+    "prepublishOnly": "tsa clean && npm -s run dist",
+    "assist": "tsa assist",
+    "release": "tsa release",
+    "fix": "tsa fix",
+    "clean": "tsa clean",
+    "dist": "tsc -p ./src/tsconfig.json",
+    "ci": "tsa ci",
+    "coverage-show": "open-cli build/coverage/index.html"
+  },
+  "keywords": [
+    "graph",
+    "visualize"
+  ],
+  "author": "",
+  "license": "MIT",
+  "dependencies": {
+    "typescript-assistant": "^0.40.21"
+  },
+  "nyc": {
+    "include": [
+      "src/**/*.ts"
+    ],
+    "extension": [
+      ".ts"
+    ],
+    "reporter": [
+      "lcov",
+      "html",
+      "text-summary"
+    ],
+    "cache": true,
+    "temp-directory": "./build/nyc/cache",
+    "all": false,
+    "check-coverage": true,
+    "report-dir": "./build/coverage",
+    "es-module": false,
+    "lines": 100,
+    "statements": 100,
+    "functions": 100,
+    "branches": 100,
+    "watermarks": {
+      "lines": [
+        75,
+        100
+      ],
+      "functions": [
+        75,
+        100
+      ],
+      "branches": [
+        75,
+        100
+      ],
+      "statements": [
+        75,
+        100
+      ]
+    }
+  },
+  "devDependencies": {
+    "koa": "^2.12.0",
+    "koa-static": "^5.0.0",
+    "maquette": "^3.3.7",
+    "snowpack": "^2.3.1"
+  },
+  "husky": {
+    "hooks": {
+      "post-checkout": "tsa post-checkout || exit 0",
+      "post-merge": "tsa post-merge || exit 0",
+      "pre-commit": "tsa pre-commit",
+      "pre-push": "npm run dist && tsa pre-push"
+    }
+  }
+}
