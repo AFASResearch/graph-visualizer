@@ -4,8 +4,9 @@
   "description": "discover nodes and edges in a flexible way",
   "main": "index.js",
   "scripts": {
-    "start": "snowpack dev",
-    "build": "snowpack build",
+    "start": "webpack-dev-server --open",
+    "watch": "webpack --watch",
+    "build": "webpack",
     "test": "tsa ci",
     "prepublishOnly": "tsa clean && npm -s run dist",
     "assist": "tsa assist",
@@ -67,10 +68,17 @@
     }
   },
   "devDependencies": {
+    "css-loader": "3.6.0",
+    "html-webpack-plugin": "4.3.0",
     "koa": "^2.12.0",
     "koa-static": "^5.0.0",
     "maquette": "^3.3.7",
-    "snowpack": "^2.3.1"
+    "snowpack": "^2.3.1",
+    "style-loader": "1.2.1",
+    "ts-loader": "7.0.5",
+    "webpack": "4.43.0",
+    "webpack-cli": "3.3.12",
+    "webpack-dev-server": "3.11.0"
   },
   "husky": {
     "hooks": {

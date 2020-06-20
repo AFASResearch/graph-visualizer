@@ -14,6 +14,8 @@ export let createDefaultNodeLayout = (model: NodeModel): NodeLayout => {
 
   return {
     model,
+    x: model.x,
+    y: model.y,
     left: model.x - (width / 2),
     right: model.x + (width / 2),
     bottom: model.y + (height / 2),
@@ -41,17 +43,17 @@ export let createDefaultNodeLayout = (model: NodeModel): NodeLayout => {
             height: height.toString(),
             filter: 'none',
             rx: '6'
-          }, undefined),
+          }),
           h('path', {
             d: 'M 0 20 ' + width + ' 20',
             stroke,
             'stroke-width': '1'
-          }, undefined),
+          }),
           h('path', {
             d: 'M0,6 Q0,0 6,0 l' + (width - 12) + ',0 q6,0 6,6 l0,14 L0,20 0,6z',
             fill,
             stroke
-          }, undefined),
+          }),
           h(
             'text',
             {
@@ -86,6 +88,7 @@ export let createDefaultNodeLayout = (model: NodeModel): NodeLayout => {
   };
 
   function mouseDownEventHandler() {
+    // wip
   }
 
   function makeSafeTitle(tl: string): string {

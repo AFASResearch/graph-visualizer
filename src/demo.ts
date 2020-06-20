@@ -2,6 +2,9 @@ import { createProjector } from 'maquette';
 import { createVisualizer, VisualizerAPI } from './visualizer';
 import { VisualizationEntry } from './api';
 
+// tslint:disable-next-line:no-var-requires
+require('./demo.css');
+
 // Bootstrap demo data and show the graph-visualizer widget fullscreen
 
 let domNode = document.body;
