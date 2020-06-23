@@ -1,16 +1,19 @@
-import { MaquetteComponent, h } from 'maquette';
+import { MaquetteComponent, h, ProjectorService } from 'maquette';
 import { VisualizerAPI } from './visualizer';
 import { EdgeData, NodeData, VisualizationEntry } from './api';
 import { EdgeLayout, NodeLayout, NodeModel, XY } from './interfaces';
-import { toSVGCoordinates } from './utils';
+import { snapToGrid, toSVGCoordinates } from './utils';
 import { createDefaultNodeLayout } from './node-layout/default-node-layout';
 import { edgeLayoutFactory } from './edge-layout/edge-layout-factory';
+import { createDragHandler } from './drag-handler';
 
-export let createGraph = (api: VisualizerAPI): MaquetteComponent => {
+export let createGraph = (api: VisualizerAPI, projector: ProjectorService): MaquetteComponent => {
   let svgElement: SVGSVGElement;
 
   let state: {
-    activeNode?: NodeData;
+    activeNodeKey?: string;
+    dragStartPosition?: XY;
+    dragPosition?: XY;
     zoomFactor: number;
     visualizationTransform: XY;
   } = {
@@ -21,20 +24,24 @@ export let createGraph = (api: VisualizerAPI): MaquetteComponent => {
     }
   };
 
-  let registerSVG = function(elem: SVGSVGElement) {
-    if (!svgElement) {
-      svgElement = elem;
-    }
-  };
+  let dragHandler = createDragHandler(afterDragging, onDragging);
 
   return {
     render: () => {
       let nodeDatas = api.getNodes();
+      let activeNode: NodeLayout | undefined;
       let nodeLayouts = new Map<string, NodeLayout>();
       api.getVisualizationEntries().forEach(visualizationEntry => processVisualizationEntry(visualizationEntry, nodeDatas, nodeLayouts));
       // edges
       let relationLines = api.getEdges().map(e => processEdge(e, nodeLayouts));
+      if (state.activeNodeKey) {
+        activeNode = nodeLayouts.get(state.activeNodeKey);
+        if (!activeNode) {
+          state.activeNodeKey = undefined;
+        }
+      }
       return h('div.gravi-graph', [
+        state.dragStartPosition ? dragHandler.render() : undefined,
         h('svg',
           {
             preserveAspectRatio: 'xMidYMid slice',
@@ -93,141 +100,91 @@ export let createGraph = (api: VisualizerAPI): MaquetteComponent => {
                                 key: 'relationlines decorations'
                               },
                               [
-                                relationLines.map(function(edge) {
+                                relationLines.map((edge) => {
                                   return edge?.renderDecorations();
                                 })
-                              ])
-                            // (activeItem) ? [
-                            //   h('rect', {
-                            //     'stroke-width': '2',
-                            //     'stroke-dasharray': '2 0 2',
-                            //     stroke: '#2896DD',
-                            //     fill: 'none',
-                            //     'pointer-events': 'none',
-                            //     display: model.dragging.isDragging ? '' : 'none',
-                            //     rx: '6',
-                            //     transform: 'translate(' + activeItem.getPosition().x + ',' + activeItem.getPosition().y + ')',
-                            //     x: (-activeItem.getWidth() / 2).toString(),
-                            //     y: (-activeItem.getHeight() / 2).toString(),
-                            //     width: activeItem.getWidth().toString(),
-                            //     height: activeItem.getHeight().toString(),
-                            //   }),
-                            //   h(
-                            //     'g',
-                            //     {
-                            //       key: 'focus',
-                            //       fill: 'none',
-                            //       'stroke-width': '2',
-                            //       'stroke': '#2896DD',
-                            //       transform: 'translate(' + activeItem.getLayout().x + ',' + activeItem.getLayout().y + ')',
-                            //       display: model.dragging.isDragging ? 'none' : ''
-                            //     },
-                            //     [
-                            //       h('rect',
-                            //         {
-                            //           rx: '6',
-                            //           x: (-activeItem.getWidth() / 2).toString(),
-                            //           y: (-activeItem.getHeight() / 2).toString(),
-                            //           width: activeItem.getWidth().toString(),
-                            //           height: activeItem.getHeight().toString(),
-                            //           'pointer-events': 'none'
-                            //         }),
-                            //       [
-                            //         h(
-                            //           'g',
-                            //           {
-                            //             transform: 'translate(' +
-                            //               ((activeItem.getWidth() / 2) - 10).toString() + ', '
-                            //               + ((-activeItem.getHeight() / 2) - 14).toString() + ')',
-                            //             onmousedown: graph.removeActiveItem,
-                            //             cursor: 'pointer'
-                            //           },
-                            //           [
-                            //             h('circle', {
-                            //               'cx': '0',
-                            //               'cy': '0',
-                            //               'r': '10',
-                            //               'fill': 'rgba(255,255,255,0.5)'
-                            //             }),
-                            //             h('path', {
-                            //               'stroke-width': '2',
-                            //               'd': 'M-6,-6 l12,12 M-6,6 l 12, -12'
-                            //             })
-                            //           ]
-                            //         ),
-                            //         h('g',
-                            //           {
-                            //             'transform': 'translate(' + ((activeItem.getWidth() / 2) - 35).toString() +
-                            //               ', ' + ((-activeItem.getHeight() / 2) - 14).toString() + ')',
-                            //             onmousedown: showRelatedNodes,
-                            //             onclick: showDropDown,
-                            //             'cursor': 'pointer'
-                            //           },
-                            //           [
-                            //             h('circle', {
-                            //               'cx': '0',
-                            //               'cy': '0',
-                            //               'r': '10',
-                            //               'fill': 'rgba(255,255,255,0.5)'
-                            //             }),
-                            //             h('polygon', {
-                            //               'points': '-2,6 1,4 1,0 5,-5 -5,-5 -2,0 '
-                            //             })
-                            //           ]),
-                            //         activeItem.getData().childrenVertical.length > 0 ? [
-                            //           h('g',
-                            //             {
-                            //               transform: 'translate(' + ((-activeItem.getWidth() / 2) + 11).toString()
-                            //                 + ', ' + ((activeItem.getHeight() / 2) - 12).toString() + ')',
-                            //               onmousedown: toggleVerticalNodes,
-                            //               cursor: 'pointer',
-                            //               key: 'expand-vertical-collapse',
-                            //               'stroke': 'black'
-                            //             },
-                            //             [
-                            //               h('circle', {
-                            //                 cx: '0',
-                            //                 cy: '0',
-                            //                 r: '8',
-                            //                 'stroke-width': '1',
-                            //                 fill: 'rgba(255,255,255,0.5)'
-                            //               }),
-                            //               h('path', {
-                            //                 'stroke-width': '1',
-                            //                 d: checkAllInTheGraph(activeItem.getData().childrenVertical) ? 'M-4,0 l8,0' : 'M-4,0 l8,0 l-4,0 l0,-4 l0,8'
-                            //               })
-                            //             ]
-                            //           )
-                            //         ] : [],
-                            //         activeItem.getData().childrenHorizontal.length > 0 ? [
-                            //           h(
-                            //             'g',
-                            //             {
-                            //               transform: 'translate(' + ((activeItem.getWidth() / 2) - 15).toString()
-                            //                 + ', ' + ((activeItem.getHeight() / 2 - 37)).toString() + ')',
-                            //               onmousedown: toggleHorizontalNodes,
-                            //               cursor: 'pointer',
-                            //               key: 'expand-horizontal',
-                            //               'stroke': 'black'
-                            //             },
-                            //             [
-                            //               h('circle', {
-                            //                 cx: '0',
-                            //                 cy: '0',
-                            //                 r: '8',
-                            //                 'stroke-width': '1',
-                            //                 fill: 'rgba(255,255,255,0.5)'
-                            //               }),
-                            //               h('path', {
-                            //                 'stroke-width': '1',
-                            //                 d: checkAllInTheGraph(activeItem.getData().childrenHorizontal) ? 'M-4,0 l8,0' : 'M-4,0 l8,0 l-4,0 l0,-4 l0,8'
-                            //               })
-                            //             ]
-                            //           )
-                            //         ] : []
-                            //       ]
-                            //     ])
-                            // ] : [/*no active item*/]
+                              ]),
+                            (activeNode) ? [
+                              h('rect', {
+                                'stroke-width': '2',
+                                'stroke-dasharray': '2 0 2',
+                                stroke: '#2896DD',
+                                fill: 'none',
+                                'pointer-events': 'none',
+                                display: state.dragStartPosition ? '' : 'none',
+                                rx: '6',
+                                transform: 'translate(' + activeNode.x + ',' + activeNode.y + ')',
+                                x: (-activeNode.width / 2).toString(),
+                                y: (-activeNode.height / 2).toString(),
+                                width: activeNode.width.toString(),
+                                height: activeNode.height.toString()
+                              }),
+                              h(
+                                'g',
+                                {
+                                  key: 'focus',
+                                  fill: 'none',
+                                  'stroke-width': '2',
+                                  stroke: '#2896DD',
+                                  transform: 'translate(' + activeNode.x + ',' + activeNode.y + ')',
+                                  display: state.dragStartPosition ? 'none' : ''
+                                },
+                                [
+                                  h('rect',
+                                    {
+                                      rx: '6',
+                                      x: (-activeNode.width / 2).toString(),
+                                      y: (-activeNode.height / 2).toString(),
+                                      width: activeNode.width.toString(),
+                                      height: activeNode.height.toString(),
+                                      'pointer-events': 'none'
+                                    }),
+                                  [
+                                    h(
+                                      'g',
+                                      {
+                                        transform: 'translate(' +
+                                          ((activeNode.width / 2) - 10).toString() + ', '
+                                          + ((-activeNode.height / 2) - 14).toString() + ')',
+                                        onmousedown: unselectNode,
+                                        cursor: 'pointer'
+                                      },
+                                      [
+                                        h('circle', {
+                                          cx: '0',
+                                          cy: '0',
+                                          r: '10',
+                                          fill: 'rgba(255,255,255,0.5)'
+                                        }),
+                                        h('path', {
+                                          'stroke-width': '2',
+                                          d: 'M-6,-6 l12,12 M-6,6 l 12, -12'
+                                        })
+                                      ]
+                                    ),
+                                    h('g',
+                                      {
+                                        transform: 'translate(' + ((activeNode.width / 2) - 35).toString() +
+                                          ', ' + ((-activeNode.height / 2) - 14).toString() + ')',
+                                        onmousedown: showRelatedNodes,
+                                        onclick: showDropDown,
+                                        cursor: 'pointer'
+                                      },
+                                      [
+                                        h('circle', {
+                                          cx: '0',
+                                          cy: '0',
+                                          r: '10',
+                                          fill: 'rgba(255,255,255,0.5)'
+                                        }),
+                                        h('polygon', {
+                                          points: '-2,6 1,4 1,0 5,-5 -5,-5 -2,0 '
+                                        })
+                                      ]
+                                    )
+                                  ]
+                                ])
+                            ] : [/*no active item*/]
                           ])
                       ])
                   ])
@@ -242,15 +199,15 @@ export let createGraph = (api: VisualizerAPI): MaquetteComponent => {
   }
 
   function processVisualizationEntry(visualizationEntry: VisualizationEntry, nodeDatas: NodeData[], nodeModels: Map<string, NodeLayout>) {
-    if (visualizationEntry.key === '_zoom') {
-      state.zoomFactor = visualizationEntry.x || 1;
-    } else if (visualizationEntry.key === '_offset') {
-      state.visualizationTransform = { x: visualizationEntry.x ?? 0, y: visualizationEntry.y ?? 0 };
-    } else {
-      let nodeData = nodeDatas.find(nd => nd.key === visualizationEntry.key);
-      if (nodeData) {
-        nodeModels.set(visualizationEntry.key, createDefaultNodeLayout(createNodeModel(visualizationEntry, nodeData)));
-      }
+    let nodeData = nodeDatas.find(nd => nd.key === visualizationEntry.key);
+    if (nodeData) {
+      nodeModels.set(
+        visualizationEntry.key,
+        createDefaultNodeLayout(createNodeModel(visualizationEntry, nodeData), (evt) => {
+          evt.preventDefault();
+          selectNode(visualizationEntry.key);
+        })
+      );
     }
   }
 
@@ -267,33 +224,122 @@ export let createGraph = (api: VisualizerAPI): MaquetteComponent => {
   }
 
   function createNodeModel(visualizationEntry: VisualizationEntry, nodeData: NodeData): NodeModel {
+    let x = visualizationEntry.x ?? 0;
+    let y = visualizationEntry.y ?? 0;
+    if (state.activeNodeKey === nodeData.key && state.dragPosition) {
+      x += state.dragPosition.x - state.dragStartPosition!.x;
+      y += state.dragPosition.y - state.dragStartPosition!.y;
+    }
     return {
       data: nodeData,
-      x: visualizationEntry.x ?? 0,
-      y: visualizationEntry.y ?? 0
+      x,
+      y
     };
   }
 
   function mouseWheelEventHandler(evt: WheelEvent) {
+    evt.preventDefault();
+    // setting new zoom
+    let oldZoomFactor = state.zoomFactor;
+    let zoom = (evt.deltaY / 120) > 0 ? 0.8 : 1.25;
+    state.zoomFactor = state.zoomFactor * zoom;
+
+    // calculation transform by mouse position
+    function calculateNewMousePosition(mousePosition: XY) {
+      let calculate = (pos: number): number => {
+        return (pos / state.zoomFactor) * oldZoomFactor;
+      };
+      return {
+        x: calculate(mousePosition.x),
+        y: calculate(mousePosition.y)
+      };
+    } // current mouseposition on the SVG
+
+    let currentMousePosition = toSVGCoordinates(
+      svgElement,
+      evt.pageX,
+      evt.pageY,
+      state.visualizationTransform.x,
+      state.visualizationTransform.y,
+      state.zoomFactor);
+
+    // calculate the new mouse position after zooming
+    let newMousePosition = calculateNewMousePosition(currentMousePosition);
+
+    let mouseDelta = {
+      x: (newMousePosition.x - currentMousePosition.x) * state.zoomFactor,
+      y: (newMousePosition.y - currentMousePosition.y) * state.zoomFactor
+    };
+    state.visualizationTransform = {
+      x: state.visualizationTransform.x + (mouseDelta.x / oldZoomFactor) * state.zoomFactor,
+      y: state.visualizationTransform.y + (mouseDelta.y / oldZoomFactor) * state.zoomFactor
+    };
   }
 
   function fixOnWheel(elem: HTMLElement) {
     // Fix for IE who has not a onwheel attribute
-    elem.addEventListener('wheel', function(evt) {
+    elem.addEventListener('wheel', (evt) => {
       mouseWheelEventHandler(evt);
-      // projector.scheduleRender();
+      projector.scheduleRender();
     }
     );
   }
 
   function mouseDownEventHandler(evt: MouseEvent) {
-    // dragHandler.activate();
-    // projector.scheduleRender();
+    state.dragStartPosition = transformXYCoordinates(evt.x, evt.y);
+    state.dragPosition = state.dragStartPosition;
     if (!evt.defaultPrevented) {
-      // model.dragging.x = evt.pageX;
-      // model.dragging.y = evt.pageY;
-      // model.dragging.isDragging = true;
-      // activeItem = null;
+      state.activeNodeKey = undefined;
+      evt.preventDefault();
+    }
+  }
+
+  function registerSVG(elem: SVGSVGElement) {
+    svgElement = elem;
+  }
+
+  function unselectNode() {
+    state.activeNodeKey = undefined;
+  }
+
+  function selectNode(key: string) {
+    state.activeNodeKey = key;
+  }
+
+  function showRelatedNodes() {
+    // wip
+  }
+
+  function showDropDown() {
+    // wip
+  }
+
+  function afterDragging() {
+    if (state.activeNodeKey) {
+      let entry = api.getVisualizationEntries().find(e => e.key === state.activeNodeKey);
+      if (entry) {
+        let x = snapToGrid((entry.x ?? 0) + state.dragPosition!.x - state.dragStartPosition!.x);
+        let y = snapToGrid((entry.y ?? 0) + state.dragPosition!.y - state.dragStartPosition!.y);
+        api.updateVisualizationEntry({ key: state.activeNodeKey, x, y });
+      }
+    }
+    state.dragStartPosition = undefined;
+    state.dragPosition = undefined;
+  }
+
+  function onDragging(mousePosition: XY) {
+    if (state.dragStartPosition) {
+      let position = transformXYCoordinates(mousePosition.x, mousePosition.y);
+      state.dragPosition = position;
+      let { x, y } = position;
+      if (state.activeNodeKey) {
+        // store offset in state
+      } else {
+        state.visualizationTransform = {
+          x: state.visualizationTransform.x - state.dragStartPosition.x - x,
+          y: state.visualizationTransform.y - state.dragStartPosition.y - y
+        };
+      }
     }
   }
 };

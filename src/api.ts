@@ -14,10 +14,9 @@ export interface EdgeData {
 
 export interface VisualizationEntry {
   /**
-   * May be the key of a Node, but also _scale, _offset
+   * Key of a node
    */
   key: string;
-  x?: number;
-  y?: number;
-  data?: string;
+  x: number;
+  y: number;
 }

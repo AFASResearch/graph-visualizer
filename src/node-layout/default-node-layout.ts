@@ -7,7 +7,7 @@ const DEFAULT_FONT_SIZE = 18;
 /**
  * Instances only live shortly during the render cycle, so edges can position themselves accordingly
  */
-export let createDefaultNodeLayout = (model: NodeModel): NodeLayout => {
+export let createDefaultNodeLayout = (model: NodeModel, mouseDownEventHandler: (evt: MouseEvent) => void): NodeLayout => {
   let width: number = DEFAULT_WIDTH;
   let height = 75;
   let fontSize = DEFAULT_FONT_SIZE;
@@ -86,10 +86,6 @@ export let createDefaultNodeLayout = (model: NodeModel): NodeLayout => {
         ]);
     }
   };
-
-  function mouseDownEventHandler() {
-    // wip
-  }
 
   function makeSafeTitle(tl: string): string {
     return truncateWithEllipses(tl.replace('<', '').replace('>', ''), 24);

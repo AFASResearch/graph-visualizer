@@ -10,12 +10,14 @@ require('./demo.css');
 let domNode = document.body;
 let projector = createProjector();
 
+let currentEntries: VisualizationEntry[] = [
+  { key: 'A', x: 0, y: 0 },
+  { key: 'B', x: 100, y: 100 }
+];
+
 let api: VisualizerAPI = {
   getVisualizationEntries(): VisualizationEntry[] {
-    return [
-      { key: 'A', x: 0, y: 0 },
-      { key: 'B', x: 100, y: 100 }
-    ];
+    return currentEntries;
   },
   getNodes: () => [
     { key: 'A', displayName: 'Node A', style: 'plain' },
@@ -24,10 +26,13 @@ let api: VisualizerAPI = {
   getEdges: () => [
     { key: 'ab', displayName: 'a to b', fromNode: 'A', toNode: 'B', style: 'arrow' }
   ],
-  updateVisualizationEntry: () => undefined,
+  updateVisualizationEntry: (newEntry) => {
+    currentEntries = currentEntries.filter(e => e.key !== newEntry.key);
+    currentEntries.push(newEntry);
+  },
   removeVisualizationEntry: () => undefined
 };
 
-let visualizer = createVisualizer(api);
+let visualizer = createVisualizer(api, projector);
 
 projector.append(domNode, visualizer.render);

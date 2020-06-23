@@ -3,8 +3,8 @@ import { VNode, VNodeChild } from 'maquette';
 import { EdgeData, NodeData } from './api';
 
 export interface XY {
-  x: number;
-  y: number;
+  readonly x: number;
+  readonly y: number;
 }
 
 export interface NodeModel extends XY {

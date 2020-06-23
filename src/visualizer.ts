@@ -1,4 +1,4 @@
-import { h } from 'maquette';
+import { h, Projector, ProjectorService } from 'maquette';
 import { EdgeData, NodeData, VisualizationEntry } from './api';
 import { createGraph } from './graph';
 
@@ -10,8 +10,8 @@ export interface VisualizerAPI {
   removeVisualizationEntry(entryKey: string): void;
 }
 
-export let createVisualizer = (api: VisualizerAPI) => {
-  let graph = createGraph(api);
+export let createVisualizer = (api: VisualizerAPI, projector: ProjectorService) => {
+  let graph = createGraph(api, projector);
   return {
     render() {
       return h('div.gravi', [
