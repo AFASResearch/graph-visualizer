@@ -3,6 +3,22 @@ import { EdgeLayout, NodeLayout } from '../interfaces';
 import { h } from 'maquette';
 import { intersectionWithEntity } from './edge-utils';
 
+export function createArrow(data: EdgeData, from: NodeLayout, to: NodeLayout): EdgeLayout {
+  return {
+    renderLine: () => {
+      let startPosition = intersectionWithEntity(to, from);
+      let endPosition = intersectionWithEntity(from, to);
+      return h('path', {
+        key: data,
+        'stroke-width': '1',
+        stroke: 'black',
+        d: renderPathWithArrow(startPosition.x, startPosition.y, endPosition.x, endPosition.y)
+      }, []);
+    },
+    renderDecorations: () => undefined
+  };
+}
+
 function renderPathWithArrow(fromX: number, fromY: number, toX: number, toY: number) {
   let dx = toX - fromX;
   let dy = toY - fromY;
@@ -19,20 +35,4 @@ function renderPathWithArrow(fromX: number, fromY: number, toX: number, toY: num
     + ' l' + (-8 * ndx + 3 * ndy) + ',' + (-8 * ndy - 3 * ndx)
     + ' m' + (8 * ndx - 3 * ndy) + ',' + (8 * ndy + 3 * ndx)
     + ' l' + -dx + ',' + -dy;
-}
-
-export function createArrow(data: EdgeData, from: NodeLayout, to: NodeLayout): EdgeLayout {
-  return {
-    renderLine: () => {
-      let startPosition = intersectionWithEntity(to, from);
-      let endPosition = intersectionWithEntity(from, to);
-      return h('path', {
-        key: data,
-        'stroke-width': '1',
-        stroke: 'black',
-        d: renderPathWithArrow(startPosition.x, startPosition.y, endPosition.x, endPosition.y)
-      }, []);
-    },
-    renderDecorations: () => undefined
-  };
 }

@@ -12,4 +12,18 @@ Algorithm: pure function executed on every render:
   - NodeLayouts
   - EdgeLayouts decoration
 
+- 'Session' state:
+  - zoom, transform
+  - selected node
 
+## TODO
+
+- labels on both ends
+- Add/remove nodes (list, search, etc)
+- Navigate away
+
+## Future plans
+- Lock, unlock?
+- Multiple node-layouts
+- Investigate caching
+- Consistent architecture with regard to state and caching
