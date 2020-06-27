@@ -10,6 +10,8 @@ export interface EdgeData {
   fromNode: string;
   toNode: string;
   style: string;
+  fromLabel?: string;
+  toLabel?: string;
 }
 
 export interface VisualizationEntry {

@@ -1,6 +1,6 @@
 import { XY } from './interfaces';
 
-export let snapToGrid = (nr: number) => 10 * Math.round(nr / 10);
+export let snapToGrid = (nr: number) => 20 * Math.round(nr / 20);
 
 export let toSVGCoordinates = (svgElement: SVGSVGElement, x: number, y: number, transformX: number, transformY: number, scale: number): XY => {
   let point = svgElement.createSVGPoint();

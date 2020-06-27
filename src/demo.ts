@@ -24,7 +24,7 @@ let api: VisualizerAPI = {
     { key: 'B', displayName: 'Node B', style: 'plain' }
   ],
   getEdges: () => [
-    { key: 'ab', displayName: 'a to b', fromNode: 'A', toNode: 'B', style: 'umbrella' }
+    { key: 'ab', displayName: 'a to b', fromNode: 'A', toNode: 'B', style: 'arrow', fromLabel: '0..1', toLabel: '*' }
   ],
   updateVisualizationEntry: (newEntry) => {
     currentEntries = currentEntries.filter(e => e.key !== newEntry.key);

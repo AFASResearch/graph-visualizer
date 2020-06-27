@@ -7,6 +7,18 @@ export interface XY {
   readonly y: number;
 }
 
+export type HorizontalAlign = 'left' | 'right';
+export type VerticalAlign = 'top' | 'bottom';
+
+export interface Align {
+  horizontal: HorizontalAlign;
+  vertical: VerticalAlign;
+}
+
+export interface DockPosition extends XY {
+  labelAlign: Align;
+}
+
 export interface NodeModel extends XY {
   data: NodeData;
 }

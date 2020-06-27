@@ -54,18 +54,15 @@ export let createDefaultNodeLayout = (model: NodeModel, mouseDownEventHandler: (
             fill,
             stroke
           }),
-          h(
-            'text',
-            {
-              'font-size': '14',
-              x: '5',
-              y: '13',
-              'stroke-width': '0',
-              'font-family': 'Arial',
-              fill: headerColor,
-              'font-weight': '400'
-            },
-            [model.data.displayName] // type?
+          h('text', {
+            'font-size': '14',
+            x: '5',
+            y: '13',
+            'stroke-width': '0',
+            'font-family': 'Arial',
+            fill: headerColor,
+            'font-weight': '400'
+          }, [model.data.displayName] // type?
           ),
           h(
             'text',

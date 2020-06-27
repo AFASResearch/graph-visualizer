@@ -7,10 +7,10 @@ import { h } from 'maquette';
  * Only works well at the bottom.
  */
 export function createAngularWithDiamond(data: EdgeData, from: NodeLayout, to: NodeLayout): EdgeLayout {
+  let startPosition = intersectionWithEntity(to, from);
+  let endPosition = intersectionWithEntity(from, to);
   return {
     renderLine: () => {
-      let startPosition = intersectionWithEntity(to, from);
-      let endPosition = intersectionWithEntity(from, to);
       return h('path', {
         key: data,
         'stroke-width': '1',

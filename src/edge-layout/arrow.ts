@@ -1,13 +1,13 @@
 import { EdgeData } from '../api';
 import { EdgeLayout, NodeLayout } from '../interfaces';
 import { h } from 'maquette';
-import { intersectionWithEntity } from './edge-utils';
+import { intersectionWithEntity, renderLabel } from './edge-utils';
 
 export function createArrow(data: EdgeData, from: NodeLayout, to: NodeLayout): EdgeLayout {
+  let startPosition = intersectionWithEntity(to, from);
+  let endPosition = intersectionWithEntity(from, to);
   return {
     renderLine: () => {
-      let startPosition = intersectionWithEntity(to, from);
-      let endPosition = intersectionWithEntity(from, to);
       return h('path', {
         key: data,
         'stroke-width': '1',
@@ -15,7 +15,12 @@ export function createArrow(data: EdgeData, from: NodeLayout, to: NodeLayout): E
         d: renderPathWithArrow(startPosition.x, startPosition.y, endPosition.x, endPosition.y)
       }, []);
     },
-    renderDecorations: () => undefined
+    renderDecorations: () => {
+      return [
+        renderLabel(data.fromLabel, startPosition, from),
+        renderLabel(data.toLabel, endPosition, to)
+      ];
+    }
   };
 }
 
