@@ -1,5 +1,5 @@
 import { createProjector } from 'maquette';
-import { createVisualizer, VisualizerAPI } from './visualizer';
+import { createVisualizerState, renderVisualizer, VisualizerAPI } from './visualizer';
 import { VisualizationEntry } from './api';
 
 // tslint:disable-next-line:no-var-requires
@@ -33,6 +33,6 @@ let api: VisualizerAPI = {
   removeVisualizationEntry: () => undefined
 };
 
-let visualizer = createVisualizer(api, projector);
+let visualizerState = createVisualizerState();
 
-projector.append(domNode, visualizer.render);
+projector.append(domNode, () => renderVisualizer(visualizerState, api, projector));

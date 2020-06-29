@@ -16,9 +16,15 @@ Algorithm: pure function executed on every render:
   - zoom, transform
   - selected node
 
+## interaction
+
+- + button opens sidebar global list
+- + button on node opens filtered list
+- list can be closed using an 'x' button
+- click on item copies item to canvas, (just center left of popup) list remains open
+
 ## TODO
 
-- labels on both ends
 - Add/remove nodes (list, search, etc)
 - Navigate away
 

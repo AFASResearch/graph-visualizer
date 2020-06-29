@@ -1,207 +1,204 @@
-import { MaquetteComponent, h, ProjectorService } from 'maquette';
+import { h, ProjectorService } from 'maquette';
 import { VisualizerAPI } from './visualizer';
 import { EdgeData, NodeData, VisualizationEntry } from './api';
 import { EdgeLayout, NodeLayout, NodeModel, XY } from './interfaces';
 import { snapToGrid, toSVGCoordinates } from './utils';
 import { createDefaultNodeLayout } from './node-layout/default-node-layout';
 import { edgeLayoutFactory } from './edge-layout/edge-layout-factory';
-import { createDragHandler } from './drag-handler';
+import { renderDragHandler } from './drag-handler';
 
-export let createGraph = (api: VisualizerAPI, projector: ProjectorService): MaquetteComponent => {
-  let svgElement: SVGSVGElement;
+export interface GraphState {
+  svgElement?: SVGSVGElement;
+  activeNodeKey?: string;
+  dragStartPosition?: XY;
+  dragPosition?: XY;
+  zoomFactor: number;
+  visualizationTransform: XY;
+}
 
-  let state: {
-    activeNodeKey?: string;
-    dragStartPosition?: XY;
-    dragPosition?: XY;
-    zoomFactor: number;
-    visualizationTransform: XY;
-  } = {
+export function createGraphState(): GraphState {
+  return {
     zoomFactor: 0.65,
     visualizationTransform: {
       x: 0,
       y: 0
     }
   };
+}
 
-  let dragHandler = createDragHandler(afterDragging, onDragging);
-
-  return {
-    render: () => {
-      let nodeDatas = api.getNodes();
-      let activeNode: NodeLayout | undefined;
-      let nodeLayouts = new Map<string, NodeLayout>();
-      api.getVisualizationEntries().forEach(visualizationEntry => processVisualizationEntry(visualizationEntry, nodeDatas, nodeLayouts));
-      // edges
-      let relationLines = api.getEdges().map(e => processEdge(e, nodeLayouts));
-      if (state.activeNodeKey) {
-        activeNode = nodeLayouts.get(state.activeNodeKey);
-        if (!activeNode) {
-          state.activeNodeKey = undefined;
-        }
-      }
-      return h('div.gravi-graph', [
-        state.dragStartPosition ? dragHandler.render() : undefined,
-        h('svg',
+export function renderGraph(state: GraphState, api: VisualizerAPI, projector: ProjectorService) {
+  let nodeDatas = api.getNodes();
+  let activeNode: NodeLayout | undefined;
+  let nodeLayouts = new Map<string, NodeLayout>();
+  api.getVisualizationEntries().forEach(visualizationEntry => processVisualizationEntry(visualizationEntry));
+  // edges
+  let relationLines = api.getEdges().map(e => processEdge(e, nodeLayouts));
+  if (state.activeNodeKey) {
+    activeNode = nodeLayouts.get(state.activeNodeKey);
+    if (!activeNode) {
+      state.activeNodeKey = undefined;
+    }
+  }
+  return h('div.gravi-graph', [
+    state.dragStartPosition ? renderDragHandler(afterDragging, onDragging) : undefined,
+    h('svg',
+      {
+        preserveAspectRatio: 'xMidYMid slice',
+        viewBox: '-600 -600 1200 1200',
+        'pointer-events': 'all',
+        afterCreate: registerSVG,
+        'shape-rendering': 'optimizeQuality'
+      },
+      [
+        h('g',
           {
-            preserveAspectRatio: 'xMidYMid slice',
-            viewBox: '-600 -600 1200 1200',
-            'pointer-events': 'all',
-            afterCreate: registerSVG,
-            'shape-rendering': 'optimizeQuality'
+            onmousedown: mouseDownEventHandler,
+            afterCreate: fixOnWheel
           },
           [
+            h('rect', {
+              x: '-600',
+              y: '-600',
+              width: '1200',
+              height: '1200',
+              fill: 'transparent'
+            }),
             h('g',
               {
-                onmousedown: mouseDownEventHandler,
-                afterCreate: fixOnWheel
+                transform: 'translate(' + state.visualizationTransform.x + ',' + state.visualizationTransform.y + ')',
+                'data-transform': { x: state.visualizationTransform.x, y: state.visualizationTransform.y }
               },
               [
-                h('rect', {
-                  x: '-600',
-                  y: '-600',
-                  width: '1200',
-                  height: '1200',
-                  fill: 'transparent'
-                }),
                 h('g',
                   {
-                    transform: 'translate(' + state.visualizationTransform.x + ',' + state.visualizationTransform.y + ')',
-                    'data-transform': { x: state.visualizationTransform.x, y: state.visualizationTransform.y }
+                    transform: 'scale(' + state.zoomFactor + ')'
                   },
                   [
+                    // graph relationlines
                     h('g',
                       {
-                        transform: 'scale(' + state.zoomFactor + ')'
+                        key: 'relationlines layer',
+                        fill: 'none'
                       },
                       [
-                        // graph relationlines
+                        relationLines.map((edge) => {
+                          return edge?.renderLine();
+                        })
+                      ]
+                    ),
+                    // graph entities
+                    h('g',
+                      {
+                        key: 'entities layer'
+                      },
+                      [
+                        [...nodeLayouts.values()].map(node => node.render()),
+                        // graph relationlines decorations
                         h('g',
                           {
-                            key: 'relationlines layer',
-                            fill: 'none'
+                            key: 'relationlines decorations'
                           },
                           [
                             relationLines.map((edge) => {
-                              return edge?.renderLine();
+                              return edge?.renderDecorations();
                             })
-                          ]
-                        ),
-                        // graph entities
-                        h('g',
-                          {
-                            key: 'entities layer'
-                          },
-                          [
-                            [...nodeLayouts.values()].map(node => node.render()),
-                            // graph relationlines decorations
-                            h('g',
-                              {
-                                key: 'relationlines decorations'
-                              },
-                              [
-                                relationLines.map((edge) => {
-                                  return edge?.renderDecorations();
-                                })
-                              ]),
-                            (activeNode) ? [
-                              h('rect', {
-                                'stroke-width': '2',
-                                'stroke-dasharray': '2 0 2',
-                                stroke: '#2896DD',
-                                fill: 'none',
-                                'pointer-events': 'none',
-                                display: state.dragStartPosition ? '' : 'none',
-                                rx: '6',
-                                transform: 'translate(' + activeNode.x + ',' + activeNode.y + ')',
-                                x: (-activeNode.width / 2).toString(),
-                                y: (-activeNode.height / 2).toString(),
-                                width: activeNode.width.toString(),
-                                height: activeNode.height.toString()
-                              }),
-                              h(
-                                'g',
+                          ]),
+                        (activeNode) ? [
+                          h('rect', {
+                            'stroke-width': '2',
+                            'stroke-dasharray': '2 0 2',
+                            stroke: '#2896DD',
+                            fill: 'none',
+                            'pointer-events': 'none',
+                            display: state.dragStartPosition ? '' : 'none',
+                            rx: '6',
+                            transform: 'translate(' + activeNode.x + ',' + activeNode.y + ')',
+                            x: (-activeNode.width / 2).toString(),
+                            y: (-activeNode.height / 2).toString(),
+                            width: activeNode.width.toString(),
+                            height: activeNode.height.toString()
+                          }),
+                          h(
+                            'g',
+                            {
+                              key: 'focus',
+                              fill: 'none',
+                              'stroke-width': '2',
+                              stroke: '#2896DD',
+                              transform: 'translate(' + activeNode.x + ',' + activeNode.y + ')',
+                              display: state.dragStartPosition ? 'none' : ''
+                            },
+                            [
+                              h('rect',
                                 {
-                                  key: 'focus',
-                                  fill: 'none',
-                                  'stroke-width': '2',
-                                  stroke: '#2896DD',
-                                  transform: 'translate(' + activeNode.x + ',' + activeNode.y + ')',
-                                  display: state.dragStartPosition ? 'none' : ''
-                                },
-                                [
-                                  h('rect',
-                                    {
-                                      rx: '6',
-                                      x: (-activeNode.width / 2).toString(),
-                                      y: (-activeNode.height / 2).toString(),
-                                      width: activeNode.width.toString(),
-                                      height: activeNode.height.toString(),
-                                      'pointer-events': 'none'
-                                    }),
+                                  rx: '6',
+                                  x: (-activeNode.width / 2).toString(),
+                                  y: (-activeNode.height / 2).toString(),
+                                  width: activeNode.width.toString(),
+                                  height: activeNode.height.toString(),
+                                  'pointer-events': 'none'
+                                }),
+                              [
+                                h(
+                                  'g',
+                                  {
+                                    transform: 'translate(' +
+                                      ((activeNode.width / 2) - 10).toString() + ', '
+                                      + ((-activeNode.height / 2) - 14).toString() + ')',
+                                    onmousedown: unselectNode,
+                                    cursor: 'pointer'
+                                  },
                                   [
-                                    h(
-                                      'g',
-                                      {
-                                        transform: 'translate(' +
-                                          ((activeNode.width / 2) - 10).toString() + ', '
-                                          + ((-activeNode.height / 2) - 14).toString() + ')',
-                                        onmousedown: unselectNode,
-                                        cursor: 'pointer'
-                                      },
-                                      [
-                                        h('circle', {
-                                          cx: '0',
-                                          cy: '0',
-                                          r: '10',
-                                          fill: 'rgba(255,255,255,0.5)'
-                                        }),
-                                        h('path', {
-                                          'stroke-width': '2',
-                                          d: 'M-6,-6 l12,12 M-6,6 l 12, -12'
-                                        })
-                                      ]
-                                    ),
-                                    h('g',
-                                      {
-                                        transform: 'translate(' + ((activeNode.width / 2) - 35).toString() +
-                                          ', ' + ((-activeNode.height / 2) - 14).toString() + ')',
-                                        onmousedown: showRelatedNodes,
-                                        onclick: showDropDown,
-                                        cursor: 'pointer'
-                                      },
-                                      [
-                                        h('circle', {
-                                          cx: '0',
-                                          cy: '0',
-                                          r: '10',
-                                          fill: 'rgba(255,255,255,0.5)'
-                                        }),
-                                        h('polygon', {
-                                          points: '-2,6 1,4 1,0 5,-5 -5,-5 -2,0 '
-                                        })
-                                      ]
-                                    )
+                                    h('circle', {
+                                      cx: '0',
+                                      cy: '0',
+                                      r: '10',
+                                      fill: 'rgba(255,255,255,0.5)'
+                                    }),
+                                    h('path', {
+                                      'stroke-width': '2',
+                                      d: 'M-6,-6 l12,12 M-6,6 l 12, -12'
+                                    })
                                   ]
-                                ])
-                            ] : [/*no active item*/]
-                          ])
+                                ),
+                                h('g',
+                                  {
+                                    transform: 'translate(' + ((activeNode.width / 2) - 35).toString() +
+                                      ', ' + ((-activeNode.height / 2) - 14).toString() + ')',
+                                    onmousedown: showRelatedNodes,
+                                    onclick: showDropDown,
+                                    cursor: 'pointer'
+                                  },
+                                  [
+                                    h('circle', {
+                                      cx: '0',
+                                      cy: '0',
+                                      r: '10',
+                                      fill: 'rgba(255,255,255,0.5)'
+                                    }),
+                                    h('polygon', {
+                                      points: '-2,6 1,4 1,0 5,-5 -5,-5 -2,0 '
+                                    })
+                                  ]
+                                )
+                              ]
+                            ])
+                        ] : [/*no active item*/]
                       ])
                   ])
               ])
           ])
-      ]);
-    }
-  };
+      ])
+  ]);
 
   function transformXYCoordinates(x: number, y: number) {
-    return toSVGCoordinates(svgElement, x, y, state.visualizationTransform.x, state.visualizationTransform.y, state.zoomFactor);
+    return toSVGCoordinates(state.svgElement!, x, y, state.visualizationTransform.x, state.visualizationTransform.y, state.zoomFactor);
   }
 
-  function processVisualizationEntry(visualizationEntry: VisualizationEntry, nodeDatas: NodeData[], nodeModels: Map<string, NodeLayout>) {
+  function processVisualizationEntry(visualizationEntry: VisualizationEntry) {
     let nodeData = nodeDatas.find(nd => nd.key === visualizationEntry.key);
     if (nodeData) {
-      nodeModels.set(
+      nodeLayouts.set(
         visualizationEntry.key,
         createDefaultNodeLayout(createNodeModel(visualizationEntry, nodeData), (evt) => {
           evt.preventDefault();
@@ -256,7 +253,7 @@ export let createGraph = (api: VisualizerAPI, projector: ProjectorService): Maqu
     } // current mouseposition on the SVG
 
     let currentMousePosition = toSVGCoordinates(
-      svgElement,
+      state.svgElement!,
       evt.pageX,
       evt.pageY,
       state.visualizationTransform.x,
@@ -295,7 +292,7 @@ export let createGraph = (api: VisualizerAPI, projector: ProjectorService): Maqu
   }
 
   function registerSVG(elem: SVGSVGElement) {
-    svgElement = elem;
+    state.svgElement = elem;
   }
 
   function unselectNode() {
@@ -342,4 +339,4 @@ export let createGraph = (api: VisualizerAPI, projector: ProjectorService): Maqu
       }
     }
   }
-};
+}

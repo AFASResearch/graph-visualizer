@@ -1,6 +1,7 @@
-import { h, Projector, ProjectorService } from 'maquette';
+import { h, ProjectorService } from 'maquette';
 import { EdgeData, NodeData, VisualizationEntry } from './api';
-import { createGraph } from './graph';
+import { createGraphState, renderGraph } from './graph';
+import { createSidebarState, renderSidebar } from './sidebar';
 
 export interface VisualizerAPI {
   getNodes(): NodeData[];
@@ -10,14 +11,27 @@ export interface VisualizerAPI {
   removeVisualizationEntry(entryKey: string): void;
 }
 
-export let createVisualizer = (api: VisualizerAPI, projector: ProjectorService) => {
-  let graph = createGraph(api, projector);
+export function createVisualizerState() {
   return {
-    render() {
-      return h('div.gravi', [
-        graph.render()
-        // renderAddButtonOrSidebar
-      ]);
-    }
+    sidebar: createSidebarState(),
+    graph: createGraphState(),
+    sidebarOpen: false
   };
-};
+}
+
+export type VisualizerState = ReturnType<typeof createVisualizerState>;
+
+export function renderVisualizer(state: VisualizerState, api: VisualizerAPI, projector: ProjectorService) {
+  return h('div.gravi', [
+    renderGraph(state.graph, api, projector),
+    state.sidebarOpen
+      ? renderSidebar(state.sidebar, api)
+      : h('button.gravi-open-sidebar-button', {
+        onclick() {
+          state.sidebarOpen = true;
+        }
+      }, [
+        '+'
+      ])
+  ]);
+}
