@@ -1,3 +1,5 @@
+import { List } from 'immutable';
+
 export interface NodeData {
   key: string;
   displayName: string;
@@ -14,11 +16,16 @@ export interface EdgeData {
   toLabel?: string;
 }
 
-export interface VisualizationEntry {
-  /**
-   * Key of a node
-   */
-  key: string;
+export interface NodePosition {
+  nodeKey: string;
   x: number;
   y: number;
+}
+
+export interface VisualizerAPI {
+  getNodes(): List<NodeData>;
+  getEdges(): List<EdgeData>;
+  getNodePositions(): List<NodePosition>;
+  updateVisualizationEntry(entry: NodePosition): void;
+  removeVisualizationEntry(entryKey: string): void;
 }

@@ -1,5 +1,5 @@
 import { h } from 'maquette';
-import { VisualizerAPI } from './visualizer';
+import { VisualizerAPI } from './api';
 
 export function createSidebarState() {
   return {

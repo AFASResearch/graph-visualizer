@@ -24,6 +24,7 @@
   "author": "",
   "license": "MIT",
   "dependencies": {
+    "immutable": "4.0.0-rc.12",
     "typescript-assistant": "^0.40.21"
   },
   "nyc": {

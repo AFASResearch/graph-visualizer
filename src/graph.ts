@@ -1,6 +1,5 @@
-import { h, ProjectorService } from 'maquette';
-import { VisualizerAPI } from './visualizer';
-import { EdgeData, NodeData, VisualizationEntry } from './api';
+import { h, ProjectorService, CalculationCache, VNode, createCache } from 'maquette';
+import { EdgeData, NodeData, NodePosition, VisualizerAPI } from './api';
 import { EdgeLayout, NodeLayout, NodeModel, XY } from './interfaces';
 import { snapToGrid, toSVGCoordinates } from './utils';
 import { createDefaultNodeLayout } from './node-layout/default-node-layout';
@@ -8,6 +7,7 @@ import { edgeLayoutFactory } from './edge-layout/edge-layout-factory';
 import { renderDragHandler } from './drag-handler';
 
 export interface GraphState {
+  renderCache: CalculationCache<VNode>;
   svgElement?: SVGSVGElement;
   activeNodeKey?: string;
   dragStartPosition?: XY;
@@ -18,6 +18,7 @@ export interface GraphState {
 
 export function createGraphState(): GraphState {
   return {
+    renderCache: createCache<VNode>(),
     zoomFactor: 0.65,
     visualizationTransform: {
       x: 0,
@@ -27,12 +28,14 @@ export function createGraphState(): GraphState {
 }
 
 export function renderGraph(state: GraphState, api: VisualizerAPI, projector: ProjectorService) {
-  let nodeDatas = api.getNodes();
+  let nodes = api.getNodes();
+  let nodePositions = api.getNodePositions();
+  let edges = api.getEdges();
   let activeNode: NodeLayout | undefined;
   let nodeLayouts = new Map<string, NodeLayout>();
-  api.getVisualizationEntries().forEach(visualizationEntry => processVisualizationEntry(visualizationEntry));
+  nodePositions.forEach(nodePosition => processVisualizationEntry(nodePosition));
   // edges
-  let relationLines = api.getEdges().map(e => processEdge(e, nodeLayouts));
+  let relationLines = edges.map(e => processEdge(e, nodeLayouts));
   if (state.activeNodeKey) {
     activeNode = nodeLayouts.get(state.activeNodeKey);
     if (!activeNode) {
@@ -81,7 +84,7 @@ export function renderGraph(state: GraphState, api: VisualizerAPI, projector: Pr
                         fill: 'none'
                       },
                       [
-                        relationLines.map((edge) => {
+                        relationLines.toArray().map((edge) => {
                           return edge?.renderLine();
                         })
                       ]
@@ -99,7 +102,7 @@ export function renderGraph(state: GraphState, api: VisualizerAPI, projector: Pr
                             key: 'relationlines decorations'
                           },
                           [
-                            relationLines.map((edge) => {
+                            relationLines.toArray().map((edge) => {
                               return edge?.renderDecorations();
                             })
                           ]),
@@ -195,14 +198,14 @@ export function renderGraph(state: GraphState, api: VisualizerAPI, projector: Pr
     return toSVGCoordinates(state.svgElement!, x, y, state.visualizationTransform.x, state.visualizationTransform.y, state.zoomFactor);
   }
 
-  function processVisualizationEntry(visualizationEntry: VisualizationEntry) {
-    let nodeData = nodeDatas.find(nd => nd.key === visualizationEntry.key);
+  function processVisualizationEntry(visualizationEntry: NodePosition) {
+    let nodeData = nodes.find(nd => nd.key === visualizationEntry.nodeKey);
     if (nodeData) {
       nodeLayouts.set(
-        visualizationEntry.key,
+        visualizationEntry.nodeKey,
         createDefaultNodeLayout(createNodeModel(visualizationEntry, nodeData), (evt) => {
           evt.preventDefault();
-          selectNode(visualizationEntry.key);
+          selectNode(visualizationEntry.nodeKey);
         })
       );
     }
@@ -220,7 +223,7 @@ export function renderGraph(state: GraphState, api: VisualizerAPI, projector: Pr
     return edgeLayoutFactory.createEdgeLayout(data, from, to);
   }
 
-  function createNodeModel(visualizationEntry: VisualizationEntry, nodeData: NodeData): NodeModel {
+  function createNodeModel(visualizationEntry: NodePosition, nodeData: NodeData): NodeModel {
     let x = visualizationEntry.x ?? 0;
     let y = visualizationEntry.y ?? 0;
     if (state.activeNodeKey === nodeData.key && state.dragPosition) {
@@ -313,11 +316,11 @@ export function renderGraph(state: GraphState, api: VisualizerAPI, projector: Pr
 
   function afterDragging() {
     if (state.activeNodeKey) {
-      let entry = api.getVisualizationEntries().find(e => e.key === state.activeNodeKey);
+      let entry = api.getNodePositions().find(e => e.nodeKey === state.activeNodeKey);
       if (entry) {
         let x = snapToGrid((entry.x ?? 0) + state.dragPosition!.x - state.dragStartPosition!.x);
         let y = snapToGrid((entry.y ?? 0) + state.dragPosition!.y - state.dragStartPosition!.y);
-        api.updateVisualizationEntry({ key: state.activeNodeKey, x, y });
+        api.updateVisualizationEntry({ nodeKey: state.activeNodeKey, x, y });
       }
     }
     state.dragStartPosition = undefined;

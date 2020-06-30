@@ -23,6 +23,14 @@ Algorithm: pure function executed on every render:
 - list can be closed using an 'x' button
 - click on item copies item to canvas, (just center left of popup) list remains open
 
+## caching (hobby thing)
+
+- use immutableJS, API returns immutable lists/maps
+- graph is cached by 3 API collections + all of state
+- each node has a cache
+- edges need state, cache according to endpoint-coordinates and edge data
+- nodes same solution as edge
+
 ## TODO
 
 - Add/remove nodes (list, search, etc)

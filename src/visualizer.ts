@@ -1,15 +1,7 @@
 import { h, ProjectorService } from 'maquette';
-import { EdgeData, NodeData, VisualizationEntry } from './api';
+import { VisualizerAPI } from './api';
 import { createGraphState, renderGraph } from './graph';
 import { createSidebarState, renderSidebar } from './sidebar';
-
-export interface VisualizerAPI {
-  getNodes(): NodeData[];
-  getEdges(): EdgeData[];
-  getVisualizationEntries(): VisualizationEntry[];
-  updateVisualizationEntry(entry: VisualizationEntry): void;
-  removeVisualizationEntry(entryKey: string): void;
-}
 
 export function createVisualizerState() {
   return {
