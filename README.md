@@ -25,19 +25,17 @@ Algorithm: pure function executed on every render:
 
 ## caching (hobby thing)
 
-- use immutableJS, API returns immutable lists/maps
-- graph is cached by 3 API collections + all of state
 - each node has a cache
 - edges need state, cache according to endpoint-coordinates and edge data
 - nodes same solution as edge
 
 ## TODO
 
+- caching of node and edge
 - Add/remove nodes (list, search, etc)
 - Navigate away
+- integrate!
 
 ## Future plans
 - Lock, unlock?
 - Multiple node-layouts
-- Investigate caching
-- Consistent architecture with regard to state and caching
