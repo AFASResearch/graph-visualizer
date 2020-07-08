@@ -1,25 +1,41 @@
-import { h, ProjectorService, CalculationCache, VNode, createCache } from 'maquette';
+import { createCache, h, ProjectorService, VNode } from 'maquette';
 import { EdgeData, NodeData, NodePosition, VisualizerAPI } from './api';
-import { EdgeLayout, NodeLayout, NodeModel, XY } from './interfaces';
-import { snapToGrid, toSVGCoordinates } from './utils';
-import { createDefaultNodeLayout } from './node-layout/default-node-layout';
-import { edgeLayoutFactory } from './edge-layout/edge-layout-factory';
+import { XY } from './interfaces';
+import { createMemoization, snapToGrid, toSVGCoordinates } from './utils';
+import { edgeFactory } from './edge-layout/edge-factory';
 import { renderDragHandler } from './drag-handler';
+import { createNodeState, NodeDimensions, NodeState, RenderedNode } from './node-layout/node-common';
+import { renderDefaultNodeLayout } from './node-layout/default-node-layout';
+import { createEdgeState, EdgeState } from './edge-layout/edge-common';
 
-export interface GraphState {
-  renderCache: CalculationCache<VNode>;
-  svgElement?: SVGSVGElement;
-  activeNodeKey?: string;
-  dragPosition?: XY;
-  dragStartPosition?: XY;
-  dragStartVisualizationTransform?: XY;
-  dragStartMousePosition?: XY;
-  zoomFactor: number;
-  visualizationTransform: XY;
+/**
+ * Used for keeping a record for each node for efficient rendering
+ */
+export interface VisibleNodeEntry {
+  readonly position: NodePosition;
+  readonly state: NodeState;
+  data?: NodeData;
+  renderedNode?: RenderedNode;
 }
 
-export function createGraphState(): GraphState {
+export interface VisibleEdgeEntry {
+  from: NodeDimensions;
+  to: NodeDimensions;
+  data: EdgeData;
+  readonly state: EdgeState;
+}
+
+export function createGraphState() {
   return {
+    svgElement: undefined as SVGSVGElement | undefined,
+    activeNodeKey: undefined as string | undefined,
+    dragPosition: undefined as XY | undefined,
+    dragStartPosition: undefined as XY | undefined,
+    dragStartVisualizationTransform: undefined as XY | undefined,
+    dragStartMousePosition: undefined as XY | undefined,
+    visibleNodesMemoization: createMemoization<ReadonlyMap<string, VisibleNodeEntry>>(),
+    visibleEdgesMemoization: createMemoization<ReadonlyMap<string, VisibleEdgeEntry>>(),
+    previousNodes: undefined as unknown,
     renderCache: createCache<VNode>(),
     zoomFactor: 1,
     visualizationTransform: {
@@ -29,23 +45,91 @@ export function createGraphState(): GraphState {
   };
 }
 
+export type GraphState = ReturnType<typeof createGraphState>;
+
 export function renderGraph(state: GraphState, api: VisualizerAPI, projector: ProjectorService) {
   let nodes = api.getNodes();
   let nodePositions = api.getNodePositions();
   let edges = api.getEdges();
+
   return state.renderCache.result(
     [nodes, edges, nodePositions, state.activeNodeKey, state.dragStartPosition, state.dragPosition, state.zoomFactor, state.visualizationTransform],
     () => {
-      let activeNode: NodeLayout | undefined;
-      let nodeLayouts = new Map<string, NodeLayout>();
-      nodePositions.forEach(nodePosition => processVisualizationEntry(nodePosition));
-      // edges
-      let relationLines = edges.map(e => processEdge(e, nodeLayouts));
-      if (state.activeNodeKey) {
-        activeNode = nodeLayouts.get(state.activeNodeKey);
-        if (!activeNode) {
-          state.activeNodeKey = undefined;
+      let visibleNodes = state.visibleNodesMemoization.result([nodePositions], () => {
+        state.previousNodes = undefined;
+        let oldVisibleNodes = state.visibleNodesMemoization.previousResult();
+        return new Map(nodePositions.map(np => {
+          let oldEntry = oldVisibleNodes?.get(np.nodeKey);
+          if (oldEntry && oldEntry.position === np) {
+            return [np.nodeKey, oldEntry];
+          }
+          return [np.nodeKey, { position: np, state: createNodeState() }];
+        }));
+      });
+      // update data on visibleNodes if needed
+      if (state.previousNodes !== nodes) {
+        state.previousNodes = nodes;
+        for (let entry of visibleNodes.values()) {
+          entry.data = undefined;
         }
+        for (let node of nodes) {
+          let nodeKey = node.key;
+          let visibleNode = visibleNodes.get(nodeKey);
+          if (visibleNode) {
+            visibleNode.data = node;
+          }
+        }
+      }
+
+      // render Each node, calculating their dimensions
+      for (let [nodeKey, entry] of [...visibleNodes.entries()]) {
+        if (entry.data) {
+          entry.renderedNode = renderDefaultNodeLayout(
+            entry.data,
+            entry.position,
+            nodeKey === state.activeNodeKey ? calculateDraggedPosition(entry.position) : undefined,
+            entry.state,
+            generateNodeMouseDownEventHander(nodeKey)
+          );
+        } else {
+          entry.renderedNode = undefined;
+        }
+      }
+
+      // update edges
+      let visibleEdges = state.visibleEdgesMemoization.result([visibleNodes, nodes, edges], () => {
+        let edgeEntries = edges.map(edgeData => {
+          let from = visibleNodes.get(edgeData.fromNode);
+          if (!from) {
+            return undefined;
+          }
+          let to = visibleNodes.get(edgeData.toNode);
+          if (!to) {
+            return undefined;
+          }
+          let previous = state.visibleEdgesMemoization.previousResult()?.get(edgeData.key);
+          if (previous) {
+            previous.from = from.renderedNode!.dimensions;
+            previous.to = to.renderedNode!.dimensions;
+            previous.data = edgeData;
+            return previous;
+          } else {
+            return {
+              from: from.renderedNode!.dimensions,
+              to: to.renderedNode!.dimensions,
+              data: edgeData,
+              state: createEdgeState()
+            };
+          }
+        }).filter(edge => !!edge) as VisibleEdgeEntry[];
+        return new Map(edgeEntries.map(e => [e.data.key, e]));
+      });
+
+      let renderedEdges = [...visibleEdges.values()].map(entry => edgeFactory.renderEdge(entry.data, entry.from, entry.to, entry.state));
+
+      let activeNode: NodeDimensions | undefined;
+      if (state.activeNodeKey) {
+        activeNode = visibleNodes.get(state.activeNodeKey)?.renderedNode?.dimensions;
       }
       return h('div.gravi-graph', [
         state.dragStartPosition ? renderDragHandler(afterDragging, onDragging) : undefined,
@@ -88,11 +172,7 @@ export function renderGraph(state: GraphState, api: VisualizerAPI, projector: Pr
                             key: 'relationlines layer',
                             fill: 'none'
                           },
-                          [
-                            relationLines.toArray().map((edge) => {
-                              return edge?.renderLine();
-                            })
-                          ]
+                          renderedEdges.map(edge => edge.line)
                         ),
                         // graph entities
                         h('g',
@@ -100,16 +180,14 @@ export function renderGraph(state: GraphState, api: VisualizerAPI, projector: Pr
                             key: 'entities layer'
                           },
                           [
-                            [...nodeLayouts.values()].map(node => node.render()),
+                            [...visibleNodes.values()].map(node => node.renderedNode?.vNode),
                             // graph relationlines decorations
                             h('g',
                               {
                                 key: 'relationlines decorations'
                               },
                               [
-                                relationLines.toArray().map((edge) => {
-                                  return edge?.renderDecorations();
-                                })
+                                renderedEdges.map(edge => edge.decorations)
                               ]),
                             (activeNode) ? [
                               h('rect', {
@@ -120,7 +198,7 @@ export function renderGraph(state: GraphState, api: VisualizerAPI, projector: Pr
                                 'pointer-events': 'none',
                                 display: state.dragStartPosition ? '' : 'none',
                                 rx: '6',
-                                transform: 'translate(' + activeNode.x + ',' + activeNode.y + ')',
+                                transform: 'translate(' + activeNode.center.x + ',' + activeNode.center.y + ')',
                                 x: (-activeNode.width / 2).toString(),
                                 y: (-activeNode.height / 2).toString(),
                                 width: activeNode.width.toString(),
@@ -133,7 +211,7 @@ export function renderGraph(state: GraphState, api: VisualizerAPI, projector: Pr
                                   fill: 'none',
                                   'stroke-width': '2',
                                   stroke: '#2896DD',
-                                  transform: 'translate(' + activeNode.x + ',' + activeNode.y + ')',
+                                  transform: 'translate(' + activeNode.center.x + ',' + activeNode.center.y + ')',
                                   display: state.dragStartPosition ? 'none' : ''
                                 },
                                 [
@@ -203,50 +281,18 @@ export function renderGraph(state: GraphState, api: VisualizerAPI, projector: Pr
           ]
         )
       ]);
-
-      function processVisualizationEntry(visualizationEntry: NodePosition) {
-        let nodeData = nodes.find(nd => nd.key === visualizationEntry.nodeKey);
-        if (nodeData) {
-          nodeLayouts.set(
-            visualizationEntry.nodeKey,
-            createDefaultNodeLayout(createNodeModel(visualizationEntry, nodeData), (evt) => {
-              evt.preventDefault();
-              selectNode(visualizationEntry.nodeKey);
-            })
-          );
-        }
-      }
     }
   );
 
+  function calculateDraggedPosition(position: NodePosition): XY {
+    return {
+      x: position.x + state.dragPosition!.x - state.dragStartPosition!.x,
+      y: position.y + state.dragPosition!.y - state.dragStartPosition!.y
+    };
+  }
+
   function transformXYCoordinates(x: number, y: number) {
     return toSVGCoordinates(state.svgElement!, x, y, state.visualizationTransform.x, state.visualizationTransform.y, state.zoomFactor);
-  }
-
-  function processEdge(data: EdgeData, visibleNodes: Map<string, NodeLayout>): EdgeLayout | undefined {
-    let from = visibleNodes.get(data.fromNode);
-    if (!from) {
-      return undefined;
-    }
-    let to = visibleNodes.get(data.toNode);
-    if (!to) {
-      return undefined;
-    }
-    return edgeLayoutFactory.createEdgeLayout(data, from, to);
-  }
-
-  function createNodeModel(visualizationEntry: NodePosition, nodeData: NodeData): NodeModel {
-    let x = visualizationEntry.x ?? 0;
-    let y = visualizationEntry.y ?? 0;
-    if (state.activeNodeKey === nodeData.key && state.dragPosition) {
-      x += state.dragPosition.x - state.dragStartPosition!.x;
-      y += state.dragPosition.y - state.dragStartPosition!.y;
-    }
-    return {
-      data: nodeData,
-      x,
-      y
-    };
   }
 
   function mouseWheelEventHandler(evt: WheelEvent) {
@@ -295,6 +341,13 @@ export function renderGraph(state: GraphState, api: VisualizerAPI, projector: Pr
       projector.scheduleRender();
     }
     );
+  }
+
+  function generateNodeMouseDownEventHander(nodeKey: string) {
+    return (evt: MouseEvent) => {
+      evt.preventDefault();
+      selectNode(nodeKey);
+    };
   }
 
   function mouseDownEventHandler(evt: MouseEvent) {

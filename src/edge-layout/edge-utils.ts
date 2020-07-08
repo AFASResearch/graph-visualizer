@@ -1,9 +1,10 @@
-import { Align, DockPosition, NodeLayout, XY } from '../interfaces';
-import { h, VNode, VNodeChild, VNodeChildren } from 'maquette';
+import { Align, DockPosition, XY } from '../interfaces';
+import { h, VNodeChild } from 'maquette';
+import { NodeDimensions } from '../node-layout/node-common';
 
-export function intersectionWithEntity(from: XY, entity: NodeLayout): DockPosition {
-  let dx = entity.x - from.x;
-  let dy = entity.y - from.y;
+export function intersectionWithEntity(from: XY, entity: NodeDimensions): DockPosition {
+  let dx = entity.center.x - from.x;
+  let dy = entity.center.y - from.y;
   let adx = Math.abs(dx);
   let ady = Math.abs(dy);
   let entityWidthHeightRatio = (entity.width - 40) / entity.height; // -40: angle must not be too sharp
@@ -39,7 +40,7 @@ export function intersectionWithEntity(from: XY, entity: NodeLayout): DockPositi
   let labelAlign: Align = topOrBottom
     ? { vertical: dy >= 0 ? 'top' : 'bottom', horizontal: dx >= 0 ? 'right' : 'left' }
     : { vertical: dy >= 0 ? 'bottom' : 'top', horizontal: dx >= 0 ? 'left' : 'right' };
-  return { x: entity.x + toX, y: entity.y + toY, labelAlign };
+  return { x: entity.center.x + toX, y: entity.center.y + toY, labelAlign };
 }
 
 const LABEL_FONT_SIZE = 14;

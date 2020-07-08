@@ -1,25 +1,24 @@
 import { EdgeData } from '../api';
-import { EdgeLayout, NodeLayout } from '../interfaces';
 import { h } from 'maquette';
 import { intersectionWithEntity } from './edge-utils';
+import { RenderedEdge } from './edge-common';
+import { NodeDimensions } from '../node-layout/node-common';
 
-export function createDiamond(data: EdgeData, from: NodeLayout, to: NodeLayout): EdgeLayout {
+export function renderDiamond(data: EdgeData, from: NodeDimensions, to: NodeDimensions): RenderedEdge {
+  let startPosition = intersectionWithEntity(to.center, from);
+  let endPosition = intersectionWithEntity(from.center, to);
   return {
-    renderLine: () => {
-      let startPosition = intersectionWithEntity(to, from);
-      let endPosition = intersectionWithEntity(from, to);
-      return h('path', {
-        key: data,
-        'stroke-width': '1',
-        stroke: 'black',
-        d: renderPathWithDiamond(startPosition.x, startPosition.y, endPosition.x, endPosition.y)
-      }, []);
-    },
-    renderDecorations: () => undefined
+    line: h('path', {
+      key: data,
+      'stroke-width': '1',
+      stroke: 'black',
+      d: renderDiamondLine(startPosition.x, startPosition.y, endPosition.x, endPosition.y)
+    }, []),
+    decorations: undefined
   };
 }
 
-function renderPathWithDiamond(fromX: number, fromY: number, toX: number, toY: number) {
+function renderDiamondLine(fromX: number, fromY: number, toX: number, toY: number) {
   let dx = toX - fromX;
   let dy = toY - fromY;
   let length = Math.sqrt(dx * dx + dy * dy);

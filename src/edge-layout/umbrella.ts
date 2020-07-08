@@ -1,24 +1,23 @@
 import { EdgeData } from '../api';
-import { EdgeLayout, NodeLayout } from '../interfaces';
 import { h } from 'maquette';
+import { RenderedEdge } from './edge-common';
+import { NodeDimensions } from '../node-layout/node-common';
 
-export function createUmbrella(data: EdgeData, from: NodeLayout, to: NodeLayout): EdgeLayout {
+export function renderUmbrella(data: EdgeData, from: NodeDimensions, to: NodeDimensions): RenderedEdge {
+  let startPosition = { x: from.center.x, y: from.top };
+  let endPosition = { x: to.center.x, y: to.bottom };
   return {
-    renderLine: () => {
-      let startPosition = { x: from.x, y: from.top };
-      let endPosition = { x: to.x, y: to.bottom };
-      return h('path', {
-        key: data,
-        'stroke-width': '1',
-        stroke: 'black',
-        d: renderUmbrella(startPosition.x, startPosition.y, endPosition.x, endPosition.y)
-      }, []);
-    },
-    renderDecorations: () => undefined
+    line: h('path', {
+      key: data,
+      'stroke-width': '1',
+      stroke: 'black',
+      d: renderUmbrellaLine(startPosition.x, startPosition.y, endPosition.x, endPosition.y)
+    }, []),
+    decorations: undefined
   };
 }
 
-function renderUmbrella(fromX: number, fromY: number, toX: number, toY: number) {
+function renderUmbrellaLine(fromX: number, fromY: number, toX: number, toY: number) {
   return 'M' + toX + ',' + (toY + 10)
     + 'l-5,0 l5,-10 l5,10 l-5,0 l0,20 '
     + 'l' + (fromX - toX) + ',0 '

@@ -1,30 +1,27 @@
 import { EdgeData } from '../api';
-import { EdgeLayout, NodeLayout } from '../interfaces';
 import { h } from 'maquette';
 import { intersectionWithEntity, renderLabel } from './edge-utils';
+import { NodeDimensions } from '../node-layout/node-common';
+import { RenderedEdge } from './edge-common';
 
-export function createArrow(data: EdgeData, from: NodeLayout, to: NodeLayout): EdgeLayout {
-  let startPosition = intersectionWithEntity(to, from);
-  let endPosition = intersectionWithEntity(from, to);
+export function renderArrow(data: EdgeData, from: NodeDimensions, to: NodeDimensions): RenderedEdge {
+  let startPosition = intersectionWithEntity(to.center, from);
+  let endPosition = intersectionWithEntity(from.center, to);
   return {
-    renderLine: () => {
-      return h('path', {
-        key: data,
-        'stroke-width': '1',
-        stroke: 'black',
-        d: renderPathWithArrow(startPosition.x, startPosition.y, endPosition.x, endPosition.y)
-      }, []);
-    },
-    renderDecorations: () => {
-      return [
-        renderLabel(data.fromLabel, startPosition, from),
-        renderLabel(data.toLabel, endPosition, to)
-      ];
-    }
+    line: h('path', {
+      key: data,
+      'stroke-width': '1',
+      stroke: 'black',
+      d: renderArrowLine(startPosition.x, startPosition.y, endPosition.x, endPosition.y)
+    }, []),
+    decorations: [
+      renderLabel(data.fromLabel, startPosition, from),
+      renderLabel(data.toLabel, endPosition, to)
+    ]
   };
 }
 
-function renderPathWithArrow(fromX: number, fromY: number, toX: number, toY: number) {
+function renderArrowLine(fromX: number, fromY: number, toX: number, toY: number) {
   let dx = toX - fromX;
   let dy = toY - fromY;
   let length = Math.sqrt(dx * dx + dy * dy);

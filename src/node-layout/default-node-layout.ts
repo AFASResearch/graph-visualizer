@@ -1,5 +1,7 @@
-import { NodeLayout, NodeModel } from '../interfaces';
-import { VNode, h } from 'maquette';
+import { XY } from '../interfaces';
+import { h } from 'maquette';
+import { NodeDimensions, NodeState, RenderedNode } from './node-common';
+import { NodeData, NodePosition } from '../api';
 
 const DEFAULT_WIDTH = 250;
 const DEFAULT_FONT_SIZE = 18;
@@ -7,34 +9,44 @@ const DEFAULT_FONT_SIZE = 18;
 /**
  * Instances only live shortly during the render cycle, so edges can position themselves accordingly
  */
-export let createDefaultNodeLayout = (model: NodeModel, mouseDownEventHandler: (evt: MouseEvent) => void): NodeLayout => {
-  let width: number = DEFAULT_WIDTH;
-  let height = 75;
-  let fontSize = DEFAULT_FONT_SIZE;
+export function renderDefaultNodeLayout(
+  data: NodeData,
+  position: NodePosition,
+  dragPosition: XY | undefined,
+  state: NodeState,
+  mouseDownEventHandler: (evt: MouseEvent) => void
+): RenderedNode {
+  return state.renderMemoization.result([data, position, dragPosition], () => {
+    let width: number = DEFAULT_WIDTH;
+    let height = 75;
+    let fontSize = DEFAULT_FONT_SIZE;
+    let center: XY = dragPosition ?? position;
 
-  return {
-    model,
-    x: model.x,
-    y: model.y,
-    left: model.x - (width / 2),
-    right: model.x + (width / 2),
-    bottom: model.y + (height / 2),
-    top: model.y - (height / 2),
-    height: height,
-    width: width,
-    render(): VNode {
-      let stroke = 'black';
-      let fill = 'white';
-      let headerColor = 'gray';
-      let header2Color = 'gray';
-      return h(
+    let stroke = 'black';
+    let fill = 'white';
+    let headerColor = 'gray';
+    let header2Color = 'gray';
+
+    let dimensions: NodeDimensions = {
+      center,
+      left: center.x - (width / 2),
+      right: center.x + (width / 2),
+      bottom: center.y + (height / 2),
+      top: center.y - (height / 2),
+      height: height,
+      width: width
+    };
+
+    return {
+      dimensions,
+      vNode: h(
         'g',
         {
-          key: model,
+          key: position,
           cursor: 'move',
           fill,
           stroke,
-          transform: 'translate(' + (model.x - (width / 2)) + ',' + (model.y - (height / 2)) + ')',
+          transform: `translate(${dimensions.left},${dimensions.top})`,
           onmousedown: mouseDownEventHandler
         },
         [
@@ -62,7 +74,7 @@ export let createDefaultNodeLayout = (model: NodeModel, mouseDownEventHandler: (
             'font-family': 'Arial',
             fill: headerColor,
             'font-weight': '400'
-          }, [model.data.displayName] // type?
+          }, [data.typeName]
           ),
           h(
             'text',
@@ -77,22 +89,23 @@ export let createDefaultNodeLayout = (model: NodeModel, mouseDownEventHandler: (
               fill: header2Color,
               'font-weight': '400'
             },
-            [makeSafeTitle(model.data.displayName)]
+            [makeSafeTitle(data.displayName)]
           ),
-          h('title', {}, [model.data.displayName])
-        ]);
-    }
-  };
+          h('title', {}, [data.displayName])
+        ]
+      )
+    };
+  });
+}
 
-  function makeSafeTitle(tl: string): string {
-    return truncateWithEllipses(tl.replace('<', '').replace('>', ''), 24);
-  }
+function makeSafeTitle(tl: string): string {
+  return truncateWithEllipses(tl.replace('<', '').replace('>', ''), 24);
+}
 
-  function truncateWithEllipses(text: string, max: number) {
-    if (text.length > max) {
-      return text.substr(0, max - 1) + '...';
-    } else {
-      return text;
-    }
+function truncateWithEllipses(text: string, max: number) {
+  if (text.length > max) {
+    return text.substr(0, max - 1) + '...';
+  } else {
+    return text;
   }
-};
+}

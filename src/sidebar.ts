@@ -18,7 +18,7 @@ export function renderSidebar(state: SidebarState, api: VisualizerAPI) {
       }
     }),
     h('ul.gravi-list', [
-      api.getNodes().toArray().map(n => h('li', { key: n }, [n.displayName]))
+      api.getNodes().map(n => h('li', { key: n }, [n.displayName]))
     ])
   ]);
 }

@@ -1,24 +1,23 @@
 import { EdgeData } from '../api';
-import { EdgeLayout, NodeLayout } from '../interfaces';
 import { intersectionWithEntity } from './edge-utils';
 import { h } from 'maquette';
+import { RenderedEdge } from './edge-common';
+import { NodeDimensions } from '../node-layout/node-common';
 
 /**
  * Only works well at the bottom.
  */
-export function createAngularWithDiamond(data: EdgeData, from: NodeLayout, to: NodeLayout): EdgeLayout {
-  let startPosition = intersectionWithEntity(to, from);
-  let endPosition = intersectionWithEntity(from, to);
+export function renderAngularWithDiamond(data: EdgeData, from: NodeDimensions, to: NodeDimensions): RenderedEdge {
+  let startPosition = intersectionWithEntity(to.center, from);
+  let endPosition = intersectionWithEntity(from.center, to);
   return {
-    renderLine: () => {
-      return h('path', {
-        key: data,
-        'stroke-width': '1',
-        stroke: 'black',
-        d: renderAngularPathWithDiamond(startPosition.x, startPosition.y, endPosition.x, endPosition.y)
-      }, []);
-    },
-    renderDecorations: () => undefined
+    line: h('path', {
+      key: data,
+      'stroke-width': '1',
+      stroke: 'black',
+      d: renderAngularPathWithDiamond(startPosition.x, startPosition.y, endPosition.x, endPosition.y)
+    }, []),
+    decorations: undefined
   };
 }
 
