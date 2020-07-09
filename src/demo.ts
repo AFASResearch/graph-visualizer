@@ -10,7 +10,7 @@ require('./demo.css');
 let domNode = document.body;
 let projector = createProjector();
 
-let currentEntries: ReadonlyArray<NodePosition> = [
+let positions: ReadonlyArray<NodePosition> = [
   { nodeKey: 'A', x: 0, y: 0 },
   { nodeKey: 'B', x: 100, y: 100 }
 ];
@@ -21,17 +21,17 @@ let nodes: ReadonlyArray<NodeData> = [
 ];
 
 let edges: ReadonlyArray<EdgeData> = [
-  { key: 'ab', displayName: 'a to b', fromNode: 'A', toNode: 'B', style: 'arrow', fromLabel: '0..1', toLabel: '*' }
+  { key: 'ab', displayName: 'a to b', fromNode: 'A', toNode: 'B', style: 'arrow', fromLabel: '0..1', toLabel: '＊' }
 ];
 
 let api: VisualizerAPI = {
   getNodePositions() {
-    return currentEntries;
+    return positions;
   },
   getNodes: () => nodes,
   getEdges: () => edges,
   updateVisualizationEntry: (newEntry) => {
-    currentEntries = [...currentEntries.filter(e => e.nodeKey !== newEntry.nodeKey), newEntry];
+    positions = [...positions.filter(e => e.nodeKey !== newEntry.nodeKey), newEntry];
   },
   removeVisualizationEntry: () => undefined
 };

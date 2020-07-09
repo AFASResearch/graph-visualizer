@@ -19,8 +19,6 @@ export interface VisibleNodeEntry {
 }
 
 export interface VisibleEdgeEntry {
-  from: NodeDimensions;
-  to: NodeDimensions;
   data: EdgeData;
   readonly state: EdgeState;
 }
@@ -29,10 +27,12 @@ export function createGraphState() {
   return {
     svgElement: undefined as SVGSVGElement | undefined,
     activeNodeKey: undefined as string | undefined,
-    dragPosition: undefined as XY | undefined,
-    dragStartPosition: undefined as XY | undefined,
-    dragStartVisualizationTransform: undefined as XY | undefined,
-    dragStartMousePosition: undefined as XY | undefined,
+    dragging: undefined as undefined | {
+      position: XY;
+      readonly startPosition: XY;
+      readonly startVisualizationTransform: XY;
+      readonly startMousePosition: XY
+    },
     visibleNodesMemoization: createMemoization<ReadonlyMap<string, VisibleNodeEntry>>(),
     visibleEdgesMemoization: createMemoization<ReadonlyMap<string, VisibleEdgeEntry>>(),
     previousNodes: undefined as unknown,
@@ -53,7 +53,7 @@ export function renderGraph(state: GraphState, api: VisualizerAPI, projector: Pr
   let edges = api.getEdges();
 
   return state.renderCache.result(
-    [nodes, edges, nodePositions, state.activeNodeKey, state.dragStartPosition, state.dragPosition, state.zoomFactor, state.visualizationTransform],
+    [nodes, edges, nodePositions, state.activeNodeKey, state.dragging?.position, state.zoomFactor, state.visualizationTransform],
     () => {
       let visibleNodes = state.visibleNodesMemoization.result([nodePositions], () => {
         state.previousNodes = undefined;
@@ -87,7 +87,7 @@ export function renderGraph(state: GraphState, api: VisualizerAPI, projector: Pr
           entry.renderedNode = renderDefaultNodeLayout(
             entry.data,
             entry.position,
-            nodeKey === state.activeNodeKey ? calculateDraggedPosition(entry.position) : undefined,
+            nodeKey === state.activeNodeKey && state.dragging ? calculateDraggedPosition(entry.position) : undefined,
             entry.state,
             generateNodeMouseDownEventHander(nodeKey)
           );
@@ -100,23 +100,19 @@ export function renderGraph(state: GraphState, api: VisualizerAPI, projector: Pr
       let visibleEdges = state.visibleEdgesMemoization.result([visibleNodes, nodes, edges], () => {
         let edgeEntries = edges.map(edgeData => {
           let from = visibleNodes.get(edgeData.fromNode);
-          if (!from) {
+          if (!from || !from.renderedNode) {
             return undefined;
           }
           let to = visibleNodes.get(edgeData.toNode);
-          if (!to) {
+          if (!to || !to.renderedNode) {
             return undefined;
           }
           let previous = state.visibleEdgesMemoization.previousResult()?.get(edgeData.key);
           if (previous) {
-            previous.from = from.renderedNode!.dimensions;
-            previous.to = to.renderedNode!.dimensions;
             previous.data = edgeData;
             return previous;
           } else {
             return {
-              from: from.renderedNode!.dimensions,
-              to: to.renderedNode!.dimensions,
               data: edgeData,
               state: createEdgeState()
             };
@@ -125,14 +121,19 @@ export function renderGraph(state: GraphState, api: VisualizerAPI, projector: Pr
         return new Map(edgeEntries.map(e => [e.data.key, e]));
       });
 
-      let renderedEdges = [...visibleEdges.values()].map(entry => edgeFactory.renderEdge(entry.data, entry.from, entry.to, entry.state));
+      let renderedEdges = [...visibleEdges.values()].map(entry => edgeFactory.renderEdge(
+        entry.data,
+        visibleNodes.get(entry.data.fromNode)!.renderedNode!.dimensions,
+        visibleNodes.get(entry.data.toNode)!.renderedNode!.dimensions,
+        entry.state
+      ));
 
       let activeNode: NodeDimensions | undefined;
       if (state.activeNodeKey) {
         activeNode = visibleNodes.get(state.activeNodeKey)?.renderedNode?.dimensions;
       }
       return h('div.gravi-graph', [
-        state.dragStartPosition ? renderDragHandler(afterDragging, onDragging) : undefined,
+        state.dragging ? renderDragHandler(afterDragging, onDragging) : undefined,
         h('svg',
           {
             preserveAspectRatio: 'xMidYMid slice',
@@ -196,7 +197,7 @@ export function renderGraph(state: GraphState, api: VisualizerAPI, projector: Pr
                                 stroke: '#2896DD',
                                 fill: 'none',
                                 'pointer-events': 'none',
-                                display: state.dragStartPosition ? '' : 'none',
+                                display: state.dragging ? '' : 'none',
                                 rx: '6',
                                 transform: 'translate(' + activeNode.center.x + ',' + activeNode.center.y + ')',
                                 x: (-activeNode.width / 2).toString(),
@@ -212,7 +213,7 @@ export function renderGraph(state: GraphState, api: VisualizerAPI, projector: Pr
                                   'stroke-width': '2',
                                   stroke: '#2896DD',
                                   transform: 'translate(' + activeNode.center.x + ',' + activeNode.center.y + ')',
-                                  display: state.dragStartPosition ? 'none' : ''
+                                  display: state.dragging ? 'none' : ''
                                 },
                                 [
                                   h('rect',
@@ -285,9 +286,10 @@ export function renderGraph(state: GraphState, api: VisualizerAPI, projector: Pr
   );
 
   function calculateDraggedPosition(position: NodePosition): XY {
+    let dragging = state.dragging!;
     return {
-      x: position.x + state.dragPosition!.x - state.dragStartPosition!.x,
-      y: position.y + state.dragPosition!.y - state.dragStartPosition!.y
+      x: position.x + dragging.position.x - dragging.startPosition.x,
+      y: position.y + dragging.position.y - dragging.startPosition.y
     };
   }
 
@@ -351,10 +353,13 @@ export function renderGraph(state: GraphState, api: VisualizerAPI, projector: Pr
   }
 
   function mouseDownEventHandler(evt: MouseEvent) {
-    state.dragStartMousePosition = { x: evt.x, y: evt.y };
-    state.dragStartPosition = transformXYCoordinates(evt.x, evt.y);
-    state.dragPosition = state.dragStartPosition;
-    state.dragStartVisualizationTransform = state.visualizationTransform;
+    let startPosition = transformXYCoordinates(evt.x, evt.y);
+    state.dragging = {
+      position: startPosition,
+      startPosition,
+      startMousePosition: { x: evt.x, y: evt.y },
+      startVisualizationTransform: state.visualizationTransform
+    };
     if (!evt.defaultPrevented) {
       state.activeNodeKey = undefined;
       evt.preventDefault();
@@ -383,30 +388,30 @@ export function renderGraph(state: GraphState, api: VisualizerAPI, projector: Pr
 
   function afterDragging() {
     if (state.activeNodeKey) {
+      let drag = state.dragging!;
       let entry = api.getNodePositions().find(e => e.nodeKey === state.activeNodeKey);
       if (entry) {
-        let x = snapToGrid((entry.x ?? 0) + state.dragPosition!.x - state.dragStartPosition!.x);
-        let y = snapToGrid((entry.y ?? 0) + state.dragPosition!.y - state.dragStartPosition!.y);
+        let x = snapToGrid((entry.x ?? 0) + drag.position.x - drag.startPosition.x);
+        let y = snapToGrid((entry.y ?? 0) + drag.position.y - drag.startPosition.y);
         api.updateVisualizationEntry({ nodeKey: state.activeNodeKey, x, y });
       }
     }
-    state.dragStartPosition = undefined;
-    state.dragPosition = undefined;
+    state.dragging = undefined;
   }
 
   function onDragging(mousePosition: XY) {
-    if (state.dragStartPosition) {
+    if (state.dragging) {
       let position = transformXYCoordinates(mousePosition.x, mousePosition.y);
       if (!state.activeNodeKey) {
-        let oldPosition = transformXYCoordinates(state.dragStartMousePosition!.x, state.dragStartMousePosition!.y);
+        let oldPosition = transformXYCoordinates(state.dragging.startMousePosition.x, state.dragging.startMousePosition.y);
         let dx = position.x - oldPosition.x;
         let dy = position.y - oldPosition.y;
         state.visualizationTransform = {
-          x: state.dragStartVisualizationTransform!.x + dx * state.zoomFactor,
-          y: state.dragStartVisualizationTransform!.y + dy * state.zoomFactor
+          x: state.dragging.startVisualizationTransform.x + dx * state.zoomFactor,
+          y: state.dragging.startVisualizationTransform.y + dy * state.zoomFactor
         };
       }
-      state.dragPosition = position;
+      state.dragging.position = position;
     }
   }
 }
