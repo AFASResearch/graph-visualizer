@@ -17,7 +17,7 @@ export function renderVisualizer(state: VisualizerState, api: VisualizerAPI, pro
   return h('div.gravi', [
     renderGraph(state.graph, api, projector),
     state.sidebarOpen
-      ? renderSidebar(state.sidebar, api)
+      ? renderSidebar(state.sidebar, onClose, api)
       : h('button.gravi-open-sidebar-button', {
         onclick() {
           state.sidebarOpen = true;
@@ -26,4 +26,8 @@ export function renderVisualizer(state: VisualizerState, api: VisualizerAPI, pro
         '+'
       ])
   ]);
+
+  function onClose() {
+    state.sidebarOpen = false;
+  }
 }
