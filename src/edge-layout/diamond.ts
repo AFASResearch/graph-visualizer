@@ -5,8 +5,8 @@ import { RenderedEdge } from './edge-common';
 import { NodeDimensions } from '../node-layout/node-common';
 
 export function renderDiamond(data: EdgeData, from: NodeDimensions, to: NodeDimensions): RenderedEdge {
-  let startPosition = intersectionWithEntity(to.center, from);
-  let endPosition = intersectionWithEntity(from.center, to);
+  let startPosition = intersectionWithEntity(from.center, to);
+  let endPosition = intersectionWithEntity(to.center, from);
   return {
     line: h('path', {
       key: data,

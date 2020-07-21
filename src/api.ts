@@ -23,9 +23,9 @@ export interface NodePosition {
 
 export interface VisualizerAPI {
   /**
-   * Contract: producer may not make changes to the result, but should provide a new ReadonlyArray object
+   * Contract: producer may not make changes to the result, but should provide a new ReadonlyMap object
    */
-  getNodes(): ReadonlyArray<NodeData>;
+  getNodes(): ReadonlyMap<string, NodeData>;
   /**
    * Contract: producer may not make changes to the result, but should provide a new ReadonlyArray object
    */

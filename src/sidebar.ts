@@ -1,11 +1,11 @@
 import { h, VNode } from 'maquette';
 import { EdgeData, NodeData, VisualizerAPI } from './api';
 import { createMemoization } from './utils';
+import { XY } from './interfaces';
 
 export function createSidebarState() {
   return {
     searchText: '',
-    filterNodeKey: undefined as string | undefined,
     draggingNodeKey: undefined as string | undefined,
     renderMemoization: createMemoization<VNode>(),
     resultsMemoization: createMemoization<NodeData[]>()
@@ -18,15 +18,21 @@ function edgeExists(node: NodeData, otherNodeKey: string, edges: ReadonlyArray<E
   return edges.some(e => (e.fromNode === otherNodeKey && e.toNode === node.key) || (e.toNode === otherNodeKey && e.fromNode === node.key));
 }
 
-export function renderSidebar(state: SidebarState, onClose: (evt: MouseEvent) => void, api: VisualizerAPI) {
+export function renderSidebar(
+  state: SidebarState,
+  filterNodeKey: string | undefined,
+  onClose: (evt: MouseEvent) => void,
+  onDragStart: (nodeKey: string, anchorScreenPosition: XY, mousePosition: XY) => void,
+  api: VisualizerAPI
+) {
   let positions = api.getNodePositions();
   let nodes = api.getNodes();
   let edges = api.getEdges();
-  return state.renderMemoization.result([positions, nodes, edges, state.searchText, state.draggingNodeKey, state.filterNodeKey], () => {
-    let results = state.resultsMemoization.result([nodes, state.searchText, state.filterNodeKey, state.filterNodeKey ? edges : undefined], () => {
-      let filteredNodes = nodes.filter(n =>
+  return state.renderMemoization.result([positions, nodes, edges, state.searchText, state.draggingNodeKey, filterNodeKey], () => {
+    let results = state.resultsMemoization.result([nodes, state.searchText, filterNodeKey, filterNodeKey ? edges : undefined], () => {
+      let filteredNodes = [...nodes.values()].filter(n =>
         (state.searchText ? n.displayName.toLowerCase().includes(state.searchText) : true) &&
-        (state.filterNodeKey ? edgeExists(n, state.filterNodeKey, edges) : true));
+        (filterNodeKey ? edgeExists(n, filterNodeKey, edges) : true));
       filteredNodes.sort((a, b) => a.displayName.localeCompare(b.displayName));
       return filteredNodes;
     });
@@ -44,7 +50,14 @@ export function renderSidebar(state: SidebarState, onClose: (evt: MouseEvent) =>
         }
       }),
       h('ul.gravi-list', [
-        results.map(n => h('li', { key: n }, [n.displayName]))
+        results.map(n => h('li', {
+          key: n,
+          onmousedown(evt: MouseEvent) {
+            let element = evt.target! as HTMLElement;
+            let rect = element.getBoundingClientRect();
+            onDragStart(n.key, { x: rect.left, y: (rect.top + rect.bottom) / 2 }, { x: evt.x, y: evt.y });
+          }
+        }, [n.displayName]))
       ])
     ]);
   });

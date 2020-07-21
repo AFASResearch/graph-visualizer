@@ -3,7 +3,7 @@ import { h } from 'maquette';
 import { NodeDimensions, NodeState, RenderedNode } from './node-common';
 import { NodeData, NodePosition } from '../api';
 
-const DEFAULT_WIDTH = 250;
+const DEFAULT_WIDTH = 230;
 const DEFAULT_FONT_SIZE = 18;
 
 /**
@@ -18,7 +18,7 @@ export function renderDefaultNodeLayout(
 ): RenderedNode {
   return state.renderMemoization.result([data, position, dragPosition], () => {
     let width: number = DEFAULT_WIDTH;
-    let height = 75;
+    let height = 70;
     let fontSize = DEFAULT_FONT_SIZE;
     let center: XY = dragPosition ?? position;
 

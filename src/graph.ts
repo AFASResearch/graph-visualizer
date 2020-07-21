@@ -28,6 +28,7 @@ export function createGraphState() {
     svgElement: undefined as SVGSVGElement | undefined,
     activeNodeKey: undefined as string | undefined,
     dragging: undefined as undefined | {
+      newNode?: NodePosition,
       position: XY;
       readonly startPosition: XY;
       readonly startVisualizationTransform: XY;
@@ -47,7 +48,30 @@ export function createGraphState() {
 
 export type GraphState = ReturnType<typeof createGraphState>;
 
-export function renderGraph(state: GraphState, api: VisualizerAPI, projector: ProjectorService) {
+export function renderGraph(
+  state: GraphState,
+  dragStart: undefined | { nodeKey: string, anchorScreenPosition: XY, mousePosition: XY },
+  filterOnNode: (nodeKey: string) => void,
+  api: VisualizerAPI,
+  projector: ProjectorService
+) {
+  if (dragStart) {
+    state.activeNodeKey = undefined;
+    // a one-time instruction passed as an argument
+    let anchorPosition = transformXYCoordinates(dragStart.anchorScreenPosition.x, dragStart.anchorScreenPosition.y);
+    state.dragging = {
+      newNode: {
+        nodeKey: dragStart.nodeKey,
+        x: anchorPosition.x - 115,
+        y: anchorPosition.y
+      },
+      position: anchorPosition,
+      startPosition: anchorPosition,
+      startVisualizationTransform: state.visualizationTransform,
+      startMousePosition: dragStart.mousePosition
+    };
+  }
+
   let nodes = api.getNodes();
   let nodePositions = api.getNodePositions();
   let edges = api.getEdges();
@@ -55,16 +79,20 @@ export function renderGraph(state: GraphState, api: VisualizerAPI, projector: Pr
   return state.renderCache.result(
     [nodes, edges, nodePositions, state.activeNodeKey, state.dragging?.position, state.zoomFactor, state.visualizationTransform],
     () => {
-      let visibleNodes = state.visibleNodesMemoization.result([nodePositions], () => {
+      let visibleNodes = state.visibleNodesMemoization.result([nodePositions, state.dragging?.newNode], () => {
         state.previousNodes = undefined;
         let oldVisibleNodes = state.visibleNodesMemoization.previousResult();
-        return new Map(nodePositions.map(np => {
+        let result = new Map(nodePositions.map(np => {
           let oldEntry = oldVisibleNodes?.get(np.nodeKey);
           if (oldEntry && oldEntry.position === np) {
             return [np.nodeKey, oldEntry];
           }
           return [np.nodeKey, { position: np, state: createNodeState() }];
         }));
+        if (state.dragging?.newNode) {
+          result.set(state.dragging.newNode.nodeKey, { position: state.dragging.newNode, state: createNodeState() });
+        }
+        return result;
       });
       // update data on visibleNodes if needed
       if (state.previousNodes !== nodes) {
@@ -72,7 +100,7 @@ export function renderGraph(state: GraphState, api: VisualizerAPI, projector: Pr
         for (let entry of visibleNodes.values()) {
           entry.data = undefined;
         }
-        for (let node of nodes) {
+        for (let node of nodes.values()) {
           let nodeKey = node.key;
           let visibleNode = visibleNodes.get(nodeKey);
           if (visibleNode) {
@@ -87,7 +115,8 @@ export function renderGraph(state: GraphState, api: VisualizerAPI, projector: Pr
           entry.renderedNode = renderDefaultNodeLayout(
             entry.data,
             entry.position,
-            nodeKey === state.activeNodeKey && state.dragging ? calculateDraggedPosition(entry.position) : undefined,
+            state.dragging && (nodeKey === state.activeNodeKey || state.dragging.newNode === entry.position)
+              ? calculateDraggedPosition(entry.position) : undefined,
             entry.state,
             generateNodeMouseDownEventHander(nodeKey)
           );
@@ -232,7 +261,7 @@ export function renderGraph(state: GraphState, api: VisualizerAPI, projector: Pr
                                         transform: 'translate(' +
                                           ((activeNode.width / 2) - 10).toString() + ', '
                                           + ((-activeNode.height / 2) - 14).toString() + ')',
-                                        onmousedown: unselectNode,
+                                        onmousedown: hideActiveNode,
                                         cursor: 'pointer'
                                       },
                                       [
@@ -252,8 +281,7 @@ export function renderGraph(state: GraphState, api: VisualizerAPI, projector: Pr
                                       {
                                         transform: 'translate(' + ((activeNode.width / 2) - 35).toString() +
                                           ', ' + ((-activeNode.height / 2) - 14).toString() + ')',
-                                        onmousedown: showRelatedNodes,
-                                        onclick: showDropDown,
+                                        onmousedown: filterRelatedNodes,
                                         cursor: 'pointer'
                                       },
                                       [
@@ -370,7 +398,8 @@ export function renderGraph(state: GraphState, api: VisualizerAPI, projector: Pr
     state.svgElement = elem;
   }
 
-  function unselectNode() {
+  function hideActiveNode() {
+    api.removeVisualizationEntry(state.activeNodeKey!);
     state.activeNodeKey = undefined;
   }
 
@@ -378,22 +407,19 @@ export function renderGraph(state: GraphState, api: VisualizerAPI, projector: Pr
     state.activeNodeKey = key;
   }
 
-  function showRelatedNodes() {
-    // wip
-  }
-
-  function showDropDown() {
-    // wip
+  function filterRelatedNodes() {
+    filterOnNode(state.activeNodeKey!);
   }
 
   function afterDragging() {
-    if (state.activeNodeKey) {
+    let activeNodeKey = state.dragging?.newNode?.nodeKey ?? state.activeNodeKey;
+    if (activeNodeKey) {
       let drag = state.dragging!;
-      let entry = api.getNodePositions().find(e => e.nodeKey === state.activeNodeKey);
+      let entry = state.dragging?.newNode ?? api.getNodePositions().find(e => e.nodeKey === activeNodeKey);
       if (entry) {
         let x = snapToGrid((entry.x ?? 0) + drag.position.x - drag.startPosition.x);
         let y = snapToGrid((entry.y ?? 0) + drag.position.y - drag.startPosition.y);
-        api.updateVisualizationEntry({ nodeKey: state.activeNodeKey, x, y });
+        api.updateVisualizationEntry({ nodeKey: activeNodeKey, x, y });
       }
     }
     state.dragging = undefined;
@@ -402,7 +428,7 @@ export function renderGraph(state: GraphState, api: VisualizerAPI, projector: Pr
   function onDragging(mousePosition: XY) {
     if (state.dragging) {
       let position = transformXYCoordinates(mousePosition.x, mousePosition.y);
-      if (!state.activeNodeKey) {
+      if (!state.activeNodeKey && !state.dragging.newNode) {
         let oldPosition = transformXYCoordinates(state.dragging.startMousePosition.x, state.dragging.startMousePosition.y);
         let dx = position.x - oldPosition.x;
         let dy = position.y - oldPosition.y;
