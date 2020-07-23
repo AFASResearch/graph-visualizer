@@ -18,10 +18,8 @@ Algorithm: pure function executed on every render:
 
 ## TODO
 
-- Navigate out
-- Integrate!
-
 ## Future plans / niceties
+- do not start dragging when clicking buttons
 - Show/remove filter on node
 - Gray out existing nodes, center on click
 - button styling

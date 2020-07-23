@@ -100,5 +100,8 @@ export let demoData: VisualizerAPI = {
   },
   removeVisualizationEntry: (oldEntryKey) => {
     positions = positions.filter(e => e.nodeKey !== oldEntryKey);
+  },
+  onNavigate(key: string) {
+    alert(`Navigate to ${key}`);
   }
 };

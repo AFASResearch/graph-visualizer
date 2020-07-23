@@ -1,6 +1,6 @@
 import { createProjector } from 'maquette';
-import { createVisualizerState, renderVisualizer } from './visualizer';
-import { EdgeData, NodeData, NodePosition, VisualizerAPI } from './api';
+import { createVisualizer } from './visualizer';
+import { EdgeData, NodeData, NodePosition } from './api';
 import { demoData } from './demo-data';
 
 // tslint:disable-next-line:no-var-requires
@@ -25,6 +25,10 @@ let edges: ReadonlyArray<EdgeData> = [
   { key: 'ab', displayName: 'a to b', fromNode: 'A', toNode: 'B', style: 'arrow', fromLabel: '0..1', toLabel: '＊' }
 ];
 
-let visualizerState = createVisualizerState();
+let visualizer = createVisualizer(demoData, projector);
 
-projector.append(domNode, () => renderVisualizer(visualizerState, demoData, projector));
+function onNavigate(key: string) {
+  alert(`navigate to ${key}`);
+}
+
+projector.append(domNode, () => visualizer.render()!);

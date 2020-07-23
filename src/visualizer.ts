@@ -1,10 +1,10 @@
-import { h, ProjectorService } from 'maquette';
+import { h, MaquetteComponent, ProjectorService } from 'maquette';
 import { VisualizerAPI } from './api';
 import { createGraphState, renderGraph } from './graph';
 import { createSidebarState, renderSidebar } from './sidebar';
 import { XY } from './interfaces';
 
-export function createVisualizerState() {
+function createVisualizerState() {
   return {
     sidebar: createSidebarState(),
     graph: createGraphState(),
@@ -18,9 +18,9 @@ export function createVisualizerState() {
   };
 }
 
-export type VisualizerState = ReturnType<typeof createVisualizerState>;
+type VisualizerState = ReturnType<typeof createVisualizerState>;
 
-export function renderVisualizer(state: VisualizerState, api: VisualizerAPI, projector: ProjectorService) {
+function renderVisualizer(state: VisualizerState, api: VisualizerAPI, projector: ProjectorService) {
   let dragStart = state.dragStart;
   state.dragStart = undefined;
   return h('div.gravi', [
@@ -48,5 +48,14 @@ export function renderVisualizer(state: VisualizerState, api: VisualizerAPI, pro
   function filterOnNode(nodeKey: string) {
     state.sidebarOpen = true;
     state.filterNodeKey = nodeKey;
+  }
+}
+
+export function createVisualizer(api: VisualizerAPI, projector: ProjectorService): MaquetteComponent {
+  let state = createVisualizerState();
+  return {
+    render() {
+      return renderVisualizer(state, api, projector);
+    }
   }
 }

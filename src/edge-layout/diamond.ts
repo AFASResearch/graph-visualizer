@@ -1,20 +1,23 @@
 import { EdgeData } from '../api';
 import { h } from 'maquette';
-import { intersectionWithEntity } from './edge-utils';
+import { intersectionWithEntity, renderLabel } from './edge-utils';
 import { RenderedEdge } from './edge-common';
 import { NodeDimensions } from '../node-layout/node-common';
 
 export function renderDiamond(data: EdgeData, from: NodeDimensions, to: NodeDimensions): RenderedEdge {
-  let startPosition = intersectionWithEntity(from.center, to);
-  let endPosition = intersectionWithEntity(to.center, from);
+  let startPosition = intersectionWithEntity(to.center, from);
+  let endPosition = intersectionWithEntity(from.center, to);
   return {
     line: h('path', {
       key: data,
       'stroke-width': '1',
       stroke: 'black',
-      d: renderDiamondLine(startPosition.x, startPosition.y, endPosition.x, endPosition.y)
+      d: renderDiamondLine(endPosition.x, endPosition.y, startPosition.x, startPosition.y)
     }, []),
-    decorations: undefined
+    decorations: [
+      renderLabel(data.fromLabel, startPosition, from),
+      renderLabel(data.toLabel, endPosition, to)
+    ]
   };
 }
 

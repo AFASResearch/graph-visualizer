@@ -295,7 +295,27 @@ export function renderGraph(
                                           points: '-2,6 1,4 1,0 5,-5 -5,-5 -2,0 '
                                         })
                                       ]
-                                    )
+                                    ),
+                                    api.onNavigate ? h('g',
+                                      {
+                                        transform: 'translate(' + (-(activeNode.width / 2) + 10).toString() +
+                                          ', ' + ((-activeNode.height / 2) - 14).toString() + ')',
+                                        onmousedown: navigateToActiveNode,
+                                        cursor: 'pointer'
+                                      },
+                                      [
+                                        h('circle', {
+                                          cx: '0',
+                                          cy: '0',
+                                          r: '10',
+                                          fill: 'rgba(255,255,255,0.5)'
+                                        }),
+                                        h('path', {
+                                          'stroke-width': '2',
+                                          d: 'M-4,4 l8,-8 m-6,0 l6,0 l0,6'
+                                        })
+                                      ]
+                                    ) : undefined
                                   ]
                                 ])
                             ] : [/*no active item*/]
@@ -398,9 +418,16 @@ export function renderGraph(
     state.svgElement = elem;
   }
 
-  function hideActiveNode() {
+  function hideActiveNode(evt: MouseEvent) {
     api.removeVisualizationEntry(state.activeNodeKey!);
     state.activeNodeKey = undefined;
+    evt.preventDefault();
+  }
+
+  function navigateToActiveNode(evt: MouseEvent) {
+    api.onNavigate!(state.activeNodeKey!);
+    state.activeNodeKey = undefined;
+    evt.preventDefault();
   }
 
   function selectNode(key: string) {

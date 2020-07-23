@@ -36,4 +36,5 @@ export interface VisualizerAPI {
   getNodePositions(): ReadonlyArray<NodePosition>;
   updateVisualizationEntry(entry: NodePosition): void;
   removeVisualizationEntry(entryKey: string): void;
+  onNavigate?(nodeKey: string): void;
 }
