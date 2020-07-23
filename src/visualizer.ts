@@ -1,4 +1,4 @@
-import { h, MaquetteComponent, ProjectorService } from 'maquette';
+import { h, MaquetteComponent, ProjectorService, VNode } from 'maquette';
 import { VisualizerAPI } from './api';
 import { createGraphState, renderGraph } from './graph';
 import { createSidebarState, renderSidebar } from './sidebar';
@@ -51,10 +51,14 @@ function renderVisualizer(state: VisualizerState, api: VisualizerAPI, projector:
   }
 }
 
-export function createVisualizer(api: VisualizerAPI, projector: ProjectorService): MaquetteComponent {
+export interface VisualizerComponent {
+  render(api: VisualizerAPI, projector: ProjectorService): VNode;
+}
+
+export function createVisualizer(): VisualizerComponent {
   let state = createVisualizerState();
   return {
-    render() {
+    render(api: VisualizerAPI, projector: ProjectorService) {
       return renderVisualizer(state, api, projector);
     }
   }

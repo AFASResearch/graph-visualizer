@@ -25,10 +25,10 @@ let edges: ReadonlyArray<EdgeData> = [
   { key: 'ab', displayName: 'a to b', fromNode: 'A', toNode: 'B', style: 'arrow', fromLabel: '0..1', toLabel: '＊' }
 ];
 
-let visualizer = createVisualizer(demoData, projector);
+let visualizer = createVisualizer();
 
 function onNavigate(key: string) {
   alert(`navigate to ${key}`);
 }
 
-projector.append(domNode, () => visualizer.render()!);
+projector.append(domNode, () => visualizer.render(demoData, projector));
