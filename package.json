@@ -14,7 +14,7 @@
     "release": "tsa release",
     "fix": "tsa fix",
     "clean": "tsa clean",
-    "dist": "tsc -p ./src/tsconfig.json",
+    "dist": "tsc -p ./src/tsconfig.json && ncp ./src/gravi.css ./dist/gravi.css",
     "ci": "tsa ci",
     "coverage-show": "open-cli build/coverage/index.html"
   },
@@ -74,6 +74,7 @@
     "koa": "^2.13.0",
     "koa-static": "^5.0.0",
     "maquette": "^3.3.7",
+    "ncp": "2.0.0",
     "style-loader": "1.2.1",
     "ts-loader": "8.0.1",
     "webpack": "4.43.0",
