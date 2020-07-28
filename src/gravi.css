@@ -50,12 +50,15 @@
 }
 
 .gravi-sidebar > ul {
-  flex: 1 0 auto;
+  flex: 1 1 auto;
   overflow-y: scroll;
+  overflow-x: hidden;
   border-top: 1px solid lightgray;
   display: flex;
   flex-direction: column;
   padding: 0;
+  margin: 0;
+  width: 240px;
 }
 
 .gravi-sidebar > ul > li {
