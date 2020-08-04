@@ -5,6 +5,7 @@ import { renderDiamond } from './diamond';
 import { renderUmbrella } from './umbrella';
 import { NodeDimensions } from '../node-layout/node-common';
 import { EdgeState, RenderedEdge } from './edge-common';
+import { renderLightning } from './lightning';
 
 export let edgeFactory = {
   renderEdge(data: EdgeData, from: NodeDimensions, to: NodeDimensions, state: EdgeState): RenderedEdge {
@@ -16,6 +17,8 @@ export let edgeFactory = {
           return renderDiamond(data, from, to);
         case 'umbrella':
           return renderUmbrella(data, from, to);
+        case 'lightning':
+          return renderLightning(data, from, to);
       }
       return renderArrow(data, from, to);
     });

@@ -7,6 +7,7 @@ import { renderDragHandler } from './drag-handler';
 import { createNodeState, NodeDimensions, NodeState, RenderedNode } from './node-layout/node-common';
 import { renderDefaultNodeLayout } from './node-layout/default-node-layout';
 import { createEdgeState, EdgeState } from './edge-layout/edge-common';
+import { renderNode } from './node-layout/node-factory';
 
 /**
  * Used for keeping a record for each node for efficient rendering
@@ -112,7 +113,7 @@ export function renderGraph(
       // render Each node, calculating their dimensions
       for (let [nodeKey, entry] of [...visibleNodes.entries()]) {
         if (entry.data) {
-          entry.renderedNode = renderDefaultNodeLayout(
+          entry.renderedNode = renderNode(
             entry.data,
             entry.position,
             state.dragging && (nodeKey === state.activeNodeKey || state.dragging.newNode === entry.position)

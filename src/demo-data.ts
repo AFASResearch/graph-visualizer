@@ -3921,6 +3921,9 @@ let data: any = {
 
 let nodes = new Map<string, NodeData>();
 for (let [key, value] of Object.entries(data.nodes)) {
+  if (!(value as any).displayName) {
+    (value as any).displayName = '?';
+  }
   nodes.set(key, value as any);
 }
 

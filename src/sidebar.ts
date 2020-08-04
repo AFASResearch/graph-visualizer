@@ -33,7 +33,7 @@ export function renderSidebar(
       let filteredNodes = [...nodes.values()].filter(n =>
         (state.searchText ? n.displayName.toLowerCase().includes(state.searchText) : true) &&
         (filterNodeKey ? edgeExists(n, filterNodeKey, edges) : true));
-      filteredNodes.sort((a, b) => (a.displayName ?? '').localeCompare(b.displayName));
+      filteredNodes.sort((a, b) => a.displayName.localeCompare(b.displayName));
       return filteredNodes;
     });
     return h('div.gravi-sidebar', [
