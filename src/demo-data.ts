@@ -3929,6 +3929,16 @@ for (let [key, value] of Object.entries(data.nodes)) {
 
 let positions = data.positions as ReadonlyArray<NodePosition>;
 
+let positionsJson = window.localStorage['positions'];
+if (positionsJson) {
+  positions = JSON.parse(positionsJson);
+}
+
+function savePositions() {
+  positionsJson = JSON.stringify(positions);
+  window.localStorage['positions'] = positionsJson;
+}
+
 export let demoData: VisualizerAPI = {
   getNodes: () => nodes,
   getEdges: () => data.edges,
@@ -3937,9 +3947,11 @@ export let demoData: VisualizerAPI = {
     let newPositions = positions.filter(e => e.nodeKey !== newEntry.nodeKey);
     newPositions.push(newEntry);
     positions = newPositions;
+    savePositions();
   },
   removeVisualizationEntry: (oldEntryKey) => {
     positions = positions.filter(e => e.nodeKey !== oldEntryKey);
+    savePositions();
   },
   onNavigate(key: string) {
     alert(`Navigate to ${key}`);

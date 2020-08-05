@@ -19,7 +19,7 @@ export function renderUmbrella(data: EdgeData, from: NodeDimensions, to: NodeDim
 
 function renderUmbrellaLine(fromX: number, fromY: number, toX: number, toY: number) {
   return 'M' + toX + ',' + (toY + 10)
-    + 'l-5,0 l5,-10 l5,10 l-5,0 l0,20 '
+    + 'l-8,0 l8,-10 l8,10 l-8,0 l0,20 '
     + 'l' + (fromX - toX) + ',0 '
     + 'L' + fromX + ',' + fromY;
 }

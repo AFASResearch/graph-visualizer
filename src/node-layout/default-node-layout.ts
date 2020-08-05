@@ -79,6 +79,8 @@ export function renderDefaultNodeLayout(
           {
             'text-anchor': 'middle',
             'font-size': fontSize.toString(),
+            lengthAdjust: 'spacingAndGlyphs',
+            textLength: data.displayName.length > 24 ? '210' : '', // pragmatic way to only shrink, never grow
             x: (width / 2).toString(),
             y: '4',
             'stroke-width': '0',
@@ -96,13 +98,5 @@ export function renderDefaultNodeLayout(
 }
 
 function makeSafeTitle(tl: string): string {
-  return truncateWithEllipses(tl.replace('<', '').replace('>', ''), 24);
-}
-
-function truncateWithEllipses(text: string, max: number) {
-  if (text.length > max) {
-    return text.substr(0, max - 1) + '...';
-  } else {
-    return text;
-  }
+  return tl.replace('<', '').replace('>', '');
 }

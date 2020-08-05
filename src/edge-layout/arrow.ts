@@ -24,13 +24,9 @@ export function renderArrow(data: EdgeData, from: NodeDimensions, to: NodeDimens
 function renderArrowLine(fromX: number, fromY: number, toX: number, toY: number) {
   let dx = toX - fromX;
   let dy = toY - fromY;
-  let length = Math.sqrt(dx * dx + dy * dy);
-  let ndx = dx;
-  let ndy = dy;
-  if (length !== 0) {
-    ndx = dx / length;
-    ndy = dy / length;
-  }
+  let length = Math.hypot(dx, dy) || 0.01;
+  let ndx = dx / length;
+  let ndy = dy / length;
   return 'M' + toX + ',' + toY
     + ' l' + (-8 * ndx - 3 * ndy) + ',' + (-8 * ndy + 3 * ndx)
     + ' m' + (8 * ndx + 3 * ndy) + ',' + (8 * ndy - 3 * ndx)

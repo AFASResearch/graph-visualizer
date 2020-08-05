@@ -3,6 +3,7 @@ import { XY } from '../interfaces';
 import { NodeState } from './node-common';
 import { renderSmallCircleNodeLayout } from './small-circle-node-layout';
 import { renderDefaultNodeLayout } from './default-node-layout';
+import { renderBigCircleNodeLayout } from './big-circle-node-layout';
 
 export function renderNode(
   data: NodeData,
@@ -13,6 +14,8 @@ export function renderNode(
 ) {
   return state.renderMemoization.result([data, position, dragPosition], () => {
     switch (data.style) {
+      case 'big-circle':
+        return renderBigCircleNodeLayout(data, position, dragPosition, mouseDownEventHandler);
       case 'small-circle':
         return renderSmallCircleNodeLayout(data, position, dragPosition, mouseDownEventHandler);
       default:

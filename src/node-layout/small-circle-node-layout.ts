@@ -20,12 +20,14 @@ export function renderSmallCircleNodeLayout(
     bottom: center.y + (diameter / 2),
     top: center.y - (diameter / 2),
     height: diameter,
-    width: diameter
+    width: diameter,
+    diameter
   };
 
   return {
     dimensions,
     vNode: h('circle', {
+      key: data,
       cx: center.x,
       cy: center.y,
       r: diameter / 2,

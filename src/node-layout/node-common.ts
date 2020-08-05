@@ -9,6 +9,7 @@ export interface NodeDimensions {
   readonly top: number;
   readonly height: number;
   readonly width: number;
+  readonly diameter?: number;
 }
 
 export interface RenderedNode {

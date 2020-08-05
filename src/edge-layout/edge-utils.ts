@@ -11,30 +11,36 @@ export function intersectionWithEntity(from: XY, entity: NodeDimensions): DockPo
   let topOrBottom = adx / ady < entityWidthHeightRatio;
   let toX: number;
   let toY: number;
-  if (topOrBottom) {
-    toX = -dx * (entity.height / 2) / ady;
-    toY = dy > 0 ? -entity.height / 2 : entity.height / 2;
-    // move away from the rounded borders
-    let maxX = entity.width / 2 - 10;
-    if (toX > maxX) {
-      toX = maxX;
-    }
-    if (toX < -maxX) {
-      toX = -maxX;
-    }
+  if (entity.diameter) {
+    let length = Math.hypot(dx, dy);
+    toX = (dx / length) * entity.diameter / 2;
+    toY = (dy / length) * entity.diameter / 2;
   } else {
-    toX = dx > 0 ? -entity.width / 2 : entity.width / 2;
-    toY = -dy * (entity.width / 2);
-    if (adx !== 0) {
-      toY /= adx;
-    }
-    // move away from the rounded borders
-    let maxY = entity.height / 2 - 10;
-    if (toY > maxY) {
-      toY = maxY;
-    }
-    if (toY < -maxY) {
-      toY = -maxY;
+    if (topOrBottom) {
+      toX = -dx * (entity.height / 2) / ady;
+      toY = dy > 0 ? -entity.height / 2 : entity.height / 2;
+      // move away from the rounded borders
+      let maxX = entity.width / 2 - 10;
+      if (toX > maxX) {
+        toX = maxX;
+      }
+      if (toX < -maxX) {
+        toX = -maxX;
+      }
+    } else {
+      toX = dx > 0 ? -entity.width / 2 : entity.width / 2;
+      toY = -dy * (entity.width / 2);
+      if (adx !== 0) {
+        toY /= adx;
+      }
+      // move away from the rounded borders
+      let maxY = entity.height / 2 - 10;
+      if (toY > maxY) {
+        toY = maxY;
+      }
+      if (toY < -maxY) {
+        toY = -maxY;
+      }
     }
   }
   let labelAlign: Align = topOrBottom
