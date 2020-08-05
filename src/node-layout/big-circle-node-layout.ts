@@ -40,7 +40,7 @@ export function renderBigCircleNodeLayout(
         'font-size': '18',
         'text-anchor': 'middle',
         lengthAdjust: 'spacingAndGlyphs',
-        textLength: data.displayName.length > 16 ? '145' : '', // pragmatic way to only shrink, never grow
+        textLength: data.displayName.length > 16 ? '145' : undefined, // pragmatic way to only shrink, never grow
         x: `${center.x}`,
         y: `${center.y}`,
         'stroke-width': '0',

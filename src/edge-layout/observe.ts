@@ -4,10 +4,11 @@ import { RenderedEdge } from './edge-common';
 import { h } from 'maquette';
 import { intersectionWithEntity } from './edge-utils';
 
-const sizeLength = 8;
-const halfSizeWidth = 4.6;
+const sizeLength = 20;
+const halfSizeWidth = 4;
+const offset = 12;
 
-export function renderDottedTriangle(data: EdgeData, from: NodeDimensions, to: NodeDimensions): RenderedEdge {
+export function renderObserve(data: EdgeData, from: NodeDimensions, to: NodeDimensions): RenderedEdge {
   let start = from.center;
   let end = intersectionWithEntity(start, to);
   let dx = end.x - start.x;
@@ -17,20 +18,18 @@ export function renderDottedTriangle(data: EdgeData, from: NodeDimensions, to: N
   let ndx = dx / length;
   let ndy = dy / length;
 
-  let centerPos = `${end.x - sizeLength * ndx},${end.y - sizeLength * ndy}`;
+  let centerPos = `${end.x - (sizeLength + offset) * ndx},${end.y - (sizeLength + offset) * ndy}`;
 
   return {
     line: h('path', {
       key: data,
       'stroke-width': '1',
       stroke: 'black',
-      'stroke-dasharray': '2 1',
       d: `M${centerPos}`
-        + ` l${ndy * halfSizeWidth},${-ndx * halfSizeWidth}`
-        + ` L${end.x},${end.y}`
+        + ` l${ndx * sizeLength + ndy * halfSizeWidth},${ndy * sizeLength - ndx * halfSizeWidth}`
         + ` M${centerPos}`
-        + ` l${-ndy * halfSizeWidth},${ndx * halfSizeWidth}`
-        + ` L${end.x},${end.y}`
+        + ` l${ndx * sizeLength - ndy * halfSizeWidth},${ndy * sizeLength + ndx * halfSizeWidth}`
+        + ` l${ndy * halfSizeWidth * 2},${-ndx * halfSizeWidth * 2}`
         + ` M${centerPos}`
         + ` L${start.x},${start.y}`
     }),

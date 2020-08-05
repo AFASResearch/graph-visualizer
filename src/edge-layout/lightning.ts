@@ -3,7 +3,7 @@ import { NodeDimensions } from '../node-layout/node-common';
 import { RenderedEdge } from './edge-common';
 import { h } from 'maquette';
 
-const diameter = 16;
+const diameter = 12;
 
 export function renderLightning(data: EdgeData, from: NodeDimensions, to: NodeDimensions): RenderedEdge {
   let start = from.center;

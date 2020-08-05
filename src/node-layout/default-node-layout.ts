@@ -80,7 +80,7 @@ export function renderDefaultNodeLayout(
             'text-anchor': 'middle',
             'font-size': fontSize.toString(),
             lengthAdjust: 'spacingAndGlyphs',
-            textLength: data.displayName.length > 24 ? '210' : '', // pragmatic way to only shrink, never grow
+            textLength: data.displayName.length > 24 ? '210' : undefined, // pragmatic way to only shrink, never grow
             x: (width / 2).toString(),
             y: '4',
             'stroke-width': '0',

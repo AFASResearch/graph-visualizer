@@ -7,6 +7,7 @@ import { NodeDimensions } from '../node-layout/node-common';
 import { EdgeState, RenderedEdge } from './edge-common';
 import { renderLightning } from './lightning';
 import { renderDottedTriangle } from './dotted-triangle';
+import { renderObserve } from './observe';
 
 export let edgeFactory = {
   renderEdge(data: EdgeData, from: NodeDimensions, to: NodeDimensions, state: EdgeState): RenderedEdge {
@@ -22,6 +23,8 @@ export let edgeFactory = {
           return renderLightning(data, from, to);
         case 'dotted-triangle':
           return renderDottedTriangle(data, from, to);
+        case 'observe':
+          return renderObserve(data, from, to);
       }
       return renderArrow(data, from, to);
     });
