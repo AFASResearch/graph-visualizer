@@ -2,6 +2,7 @@
   "name": "graph-visualizer",
   "version": "0.7.0",
   "description": "discover nodes and edges in a flexible way",
+  "main": "./dist/cjs/index.js",
   "module": "./dist/index.js",
   "types": "./dist/index.d.ts",
   "scripts": {
@@ -14,7 +15,7 @@
     "release": "tsa release",
     "fix": "tsa fix",
     "clean": "tsa clean",
-    "dist": "tsc -p ./src/tsconfig.json && ncp ./src/gravi.css ./dist/gravi.css",
+    "dist": "tsc -p ./src/tsconfig.json && tsc -p src -m commonjs --outDir dist/cjs && ncp ./src/gravi.css ./dist/gravi.css",
     "ci": "tsa ci",
     "coverage-show": "open-cli build/coverage/index.html"
   },
