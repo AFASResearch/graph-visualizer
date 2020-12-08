@@ -1,5 +1,14 @@
 # Graph visualizer
 
+Displays the nodes and edges from a dataset that the user can specify.
+Meant to be integrated in other applications.
+
+To see a demo, execute
+`npm run start`
+
+To embed in another application, use `npm install graph-visualizer`, create a visualizer using `createVisualizer` and add its `render` function to a
+ `maquette` projector.
+
 ## Internals
 
 Algorithm: pure function executed on every render:
@@ -15,8 +24,6 @@ Algorithm: pure function executed on every render:
 - 'Session' state:
   - zoom, transform
   - selected node
-
-## TODO
 
 ## Future plans / niceties
 - do not start dragging when clicking buttons
