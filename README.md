@@ -26,8 +26,8 @@ Algorithm: pure function executed on every render:
   - selected node
 
 ## Future plans / niceties
-- do not start dragging when clicking buttons
-- Show/remove filter on node
 - Gray out existing nodes, center on click
-- button styling
-- Multiple node-layouts
+- hover for long names in sidebar
+- Dark mode
+- Styling
+- Touch support
