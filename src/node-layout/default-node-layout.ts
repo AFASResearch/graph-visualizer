@@ -22,7 +22,7 @@ export function renderDefaultNodeLayout(
 
   let stroke = 'black';
   let fill = 'white';
-  let headerColor = 'gray';
+  let headerColor = 'black';
   let header2Color = 'gray';
 
   let dimensions: NodeDimensions = {
@@ -37,14 +37,14 @@ export function renderDefaultNodeLayout(
 
   return {
     dimensions,
-    vNode: h(
-      'g',
+    vNode: h('g',
       {
         key: position,
         cursor: 'move',
         fill,
         stroke,
         transform: `translate(${dimensions.left},${dimensions.top})`,
+        'data-nodetype': data.typeName,
         onmousedown: mouseDownEventHandler
       },
       [
@@ -62,7 +62,8 @@ export function renderDefaultNodeLayout(
         h('path', {
           d: 'M0,6 Q0,0 6,0 l' + (width - 12) + ',0 q6,0 6,6 l0,14 L0,20 0,6z',
           fill,
-          stroke
+          stroke,
+          'data-nodeelement': 'title'
         }),
         h('text', {
           'font-size': '14',

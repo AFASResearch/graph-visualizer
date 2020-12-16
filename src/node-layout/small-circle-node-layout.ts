@@ -34,7 +34,9 @@ export function renderSmallCircleNodeLayout(
       fill: 'white',
       stroke: 'black',
       'stroke-width': 1,
+      'data-nodetype': data.typeName,
+      title: data.displayName,
       onmousedown: mouseDownEventHandler
-    })
+    }, [h('title', { id: 'unique-id' }, [data.displayName])])
   };
 }

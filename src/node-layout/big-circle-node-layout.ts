@@ -34,6 +34,7 @@ export function renderBigCircleNodeLayout(
         fill: 'white',
         stroke: 'black',
         'stroke-width': 1,
+        'data-nodetype': data.typeName,
         onmousedown: mouseDownEventHandler
       }),
       h('text', {
