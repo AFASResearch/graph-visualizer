@@ -19,7 +19,7 @@ export function renderNode(
         return renderBigCircleNodeLayout(data, position, dragPosition, mouseDownEventHandler);
       case 'small-circle':
         return renderSmallCircleNodeLayout(data, position, dragPosition, mouseDownEventHandler);
-        case 'database':
+      case 'database':
         return renderDatabaseNodeLayout(data, position, dragPosition, mouseDownEventHandler);
       default:
         return renderDefaultNodeLayout(data, position, dragPosition, mouseDownEventHandler);

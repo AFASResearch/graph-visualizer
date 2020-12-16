@@ -42,7 +42,7 @@ export function renderDatabaseNodeLayout(
           y: ellipseDiameterHeight * 2,
           fill: 'white',
           stroke: 'black',
-          filter: 'none',
+          filter: 'none'
         }),
         h('ellipse', {
           key: data,

@@ -31,10 +31,16 @@ export interface VisualizerAPI {
    */
   getEdges(): ReadonlyArray<EdgeData>;
   /**
+   *
+   */
+  edgeExists(nodeKey: string, otherNodeKey: string): boolean;
+  /**
    * Contract: producer may not make changes to the result, but should provide a new ReadonlyArray object
    */
   getNodePositions(): ReadonlyArray<NodePosition>;
   updateVisualizationEntry(entry: NodePosition): void;
   removeVisualizationEntry(entryKey: string): void;
   onNavigate?(nodeKey: string): void;
+
+  getNodeCountPerType(): any
 }

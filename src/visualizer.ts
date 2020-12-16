@@ -1,6 +1,6 @@
 import { h, MaquetteComponent, ProjectorService, VNode } from 'maquette';
 import { VisualizerAPI } from './api';
-import { createGraphState, renderGraph } from './graph';
+import { createGraphState, renderGraph, renderGraphSummary } from './graph';
 import { createSidebarState, renderSidebar } from './sidebar';
 import { XY } from './interfaces';
 
@@ -34,7 +34,8 @@ function renderVisualizer(state: VisualizerState, api: VisualizerAPI, projector:
         }
       }, [
         '+'
-      ])
+      ]),
+    renderGraphSummary(state.graph, api)
   ]);
 
   function onClose() {

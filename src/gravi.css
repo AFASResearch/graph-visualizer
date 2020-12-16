@@ -22,6 +22,17 @@
   cursor: move;
 }
 
+.gravi-summary {
+  height: 30px;
+  width: 100%;
+  background-color: #ccc;
+  position: absolute;
+  bottom: 0px;
+  padding: auto;
+  line-height: 30px;
+  padding-left: 10px;
+}
+
 .gravi-open-sidebar-button {
   position: absolute;
   top: 6px;
