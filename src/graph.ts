@@ -25,6 +25,23 @@ export interface VisibleEdgeEntry {
 }
 
 export function createGraphState() {
+
+  let state: any = {};
+  let stateJson = window.localStorage['state'];
+  if (stateJson) {
+    state = JSON.parse(stateJson);
+  }
+  state.zoomFactor = state.zoomFactor || 1;
+  state.visualizationTransform = state.visualizationTransform || {
+    x: 0,
+    y: 0
+  };
+
+  function saveState() {
+    stateJson = JSON.stringify(state);
+    window.localStorage['state'] = stateJson;
+  }
+
   return {
     svgElement: undefined as SVGSVGElement | undefined,
     activeNodeKey: undefined as string | undefined,
@@ -39,15 +56,28 @@ export function createGraphState() {
     visibleEdgesMemoization: createMemoization<ReadonlyMap<string, VisibleEdgeEntry>>(),
     previousNodes: undefined as unknown,
     renderCache: createCache<VNode>(),
-    zoomFactor: 1,
-    visualizationTransform: {
-      x: 0,
-      y: 0
+    getZoomFactor: () => state.zoomFactor,
+    setZoomFactor: (zoomFactor: number) => {
+      state.zoomFactor = zoomFactor;
+      saveState();
+    },
+    getVisualizationTransform: () => state.visualizationTransform,
+    setVisualizationTransform: (transform: any) => {
+      state.visualizationTransform = transform;
+      saveState();
     }
   };
 }
 
 export type GraphState = ReturnType<typeof createGraphState>;
+
+export function renderGraphSummary(state: GraphState, api: VisualizerAPI) {
+  let nodes = api.getNodes();
+  let edges = api.getEdges();
+
+  let nodeTypeSummary = Object.entries(api.getNodeCountPerType()).map(entry => `${entry[1]} ${entry[0]}`);
+  return h('div.gravi-summary', {}, [`${nodes.size} nodes (${nodeTypeSummary.join(', ')}), ${edges.length} edges`]);
+}
 
 export function renderGraph(
   state: GraphState,
@@ -68,7 +98,7 @@ export function renderGraph(
       },
       position: anchorPosition,
       startPosition: anchorPosition,
-      startVisualizationTransform: state.visualizationTransform,
+      startVisualizationTransform: state.getVisualizationTransform(),
       startMousePosition: dragStart.mousePosition
     };
   }
@@ -78,7 +108,7 @@ export function renderGraph(
   let edges = api.getEdges();
 
   return state.renderCache.result(
-    [nodes, edges, nodePositions, state.activeNodeKey, state.dragging?.position, state.zoomFactor, state.visualizationTransform],
+    [nodes, edges, nodePositions, state.activeNodeKey, state.dragging?.position, state.getZoomFactor(), state.getVisualizationTransform()],
     () => {
       let visibleNodes = state.visibleNodesMemoization.result([nodePositions, state.dragging?.newNode], () => {
         state.previousNodes = undefined;
@@ -162,6 +192,7 @@ export function renderGraph(
       if (state.activeNodeKey) {
         activeNode = visibleNodes.get(state.activeNodeKey)?.renderedNode?.dimensions;
       }
+      let visualizationTransform = state.getVisualizationTransform();
       return h('div.gravi-graph', [
         state.dragging ? renderDragHandler(afterDragging, onDragging) : undefined,
         h('svg',
@@ -188,13 +219,13 @@ export function renderGraph(
                 }),
                 h('g',
                   {
-                    transform: 'translate(' + state.visualizationTransform.x + ',' + state.visualizationTransform.y + ')',
-                    'data-transform': { x: state.visualizationTransform.x, y: state.visualizationTransform.y }
+                    transform: 'translate(' + visualizationTransform.x + ',' + visualizationTransform.y + ')',
+                    'data-transform': { x: visualizationTransform.x, y: visualizationTransform.y }
                   },
                   [
                     h('g',
                       {
-                        transform: 'scale(' + state.zoomFactor + ')'
+                        transform: 'scale(' + state.getZoomFactor() + ')'
                       },
                       [
                         // graph relationlines
@@ -343,20 +374,20 @@ export function renderGraph(
   }
 
   function transformXYCoordinates(x: number, y: number) {
-    return toSVGCoordinates(state.svgElement!, x, y, state.visualizationTransform.x, state.visualizationTransform.y, state.zoomFactor);
+    return toSVGCoordinates(state.svgElement!, x, y, state.getVisualizationTransform().x, state.getVisualizationTransform().y, state.getZoomFactor());
   }
 
   function mouseWheelEventHandler(evt: WheelEvent) {
     evt.preventDefault();
     // setting new zoom
-    let oldZoomFactor = state.zoomFactor;
+    let oldZoomFactor = state.getZoomFactor();
     let zoom = (evt.deltaY / 120) > 0 ? 0.8 : 1.25;
-    state.zoomFactor = state.zoomFactor * zoom;
+    let zoomFactor = oldZoomFactor * zoom;
 
     // calculation transform by mouse position
     function calculateNewMousePosition(mousePosition: XY) {
       let calculate = (pos: number): number => {
-        return (pos / state.zoomFactor) * oldZoomFactor;
+        return (pos / zoomFactor) * oldZoomFactor;
       };
       return {
         x: calculate(mousePosition.x),
@@ -368,21 +399,23 @@ export function renderGraph(
       state.svgElement!,
       evt.pageX,
       evt.pageY,
-      state.visualizationTransform.x,
-      state.visualizationTransform.y,
-      state.zoomFactor);
+      state.getVisualizationTransform().x,
+      state.getVisualizationTransform().y,
+      zoomFactor);
 
     // calculate the new mouse position after zooming
     let newMousePosition = calculateNewMousePosition(currentMousePosition);
 
     let mouseDelta = {
-      x: (newMousePosition.x - currentMousePosition.x) * state.zoomFactor,
-      y: (newMousePosition.y - currentMousePosition.y) * state.zoomFactor
+      x: (newMousePosition.x - currentMousePosition.x) * zoomFactor,
+      y: (newMousePosition.y - currentMousePosition.y) * zoomFactor
     };
-    state.visualizationTransform = {
-      x: state.visualizationTransform.x + (mouseDelta.x / oldZoomFactor) * state.zoomFactor,
-      y: state.visualizationTransform.y + (mouseDelta.y / oldZoomFactor) * state.zoomFactor
-    };
+    state.setVisualizationTransform({
+      x: state.getVisualizationTransform().x + (mouseDelta.x / oldZoomFactor) * zoomFactor,
+      y: state.getVisualizationTransform().y + (mouseDelta.y / oldZoomFactor) * zoomFactor
+    });
+
+    state.setZoomFactor(zoomFactor);
   }
 
   function fixOnWheel(elem: HTMLElement) {
@@ -407,7 +440,7 @@ export function renderGraph(
       position: startPosition,
       startPosition,
       startMousePosition: { x: evt.x, y: evt.y },
-      startVisualizationTransform: state.visualizationTransform
+      startVisualizationTransform: state.getVisualizationTransform()
     };
     if (!evt.defaultPrevented) {
       state.activeNodeKey = undefined;
@@ -460,10 +493,10 @@ export function renderGraph(
         let oldPosition = transformXYCoordinates(state.dragging.startMousePosition.x, state.dragging.startMousePosition.y);
         let dx = position.x - oldPosition.x;
         let dy = position.y - oldPosition.y;
-        state.visualizationTransform = {
-          x: state.dragging.startVisualizationTransform.x + dx * state.zoomFactor,
-          y: state.dragging.startVisualizationTransform.y + dy * state.zoomFactor
-        };
+        state.setVisualizationTransform({
+          x: state.dragging.startVisualizationTransform.x + dx * state.getZoomFactor(),
+          y: state.dragging.startVisualizationTransform.y + dy * state.getZoomFactor()
+        });
       }
       state.dragging.position = position;
     }
