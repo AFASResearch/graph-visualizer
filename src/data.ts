@@ -5318,6 +5318,10 @@ export function createData(data: any): VisualizerAPI {
       positions = positions.filter(e => e.nodeKey !== oldEntryKey);
       savePositions();
     },
+    clearVisualizationEntries: () => {
+      positions = [];
+      savePositions();
+    },
 
     onNavigate(key: string) {
       alert(`Navigate to ${key}`);

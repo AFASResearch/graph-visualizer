@@ -37,6 +37,16 @@
   position: absolute;
   top: 6px;
   right: 6px;
+  height: 25px;
+  width: 30px;
+}
+
+.gravi-clear-button {
+  position: absolute;
+  top: 6px;
+  right: 41px;
+  height: 25px;
+  width: 30px;
 }
 
 .gravi-sidebar {
@@ -55,7 +65,7 @@
 .gravi-sidebar > input {
   flex: 0 0 auto;
   height: 24px;
-  margin: 32px 16px 16px 16px;
+  margin: 35px 16px 4px 18px;
   width: 208px;
   left: 0;
 }

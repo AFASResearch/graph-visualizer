@@ -14,10 +14,6 @@ export function createSidebarState() {
 
 export type SidebarState = ReturnType<typeof createSidebarState>;
 
-function edgeExists(node: NodeData, otherNodeKey: string, edges: ReadonlyArray<EdgeData>) {
-  return edges.some(e => (e.fromNode === otherNodeKey && e.toNode === node.key) || (e.toNode === otherNodeKey && e.fromNode === node.key));
-}
-
 export function renderSidebar(
   state: SidebarState,
   filterNodeKey: string | undefined,
@@ -29,7 +25,7 @@ export function renderSidebar(
   let nodes = api.getNodes();
   let edges = api.getEdges();
   return state.renderMemoization.result([positions, nodes, edges, state.searchText, state.draggingNodeKey, filterNodeKey], () => {
-    let results = state.resultsMemoization.result([nodes, state.searchText, filterNodeKey, filterNodeKey ? edges : undefined], () => {
+    let results = state.resultsMemoization.result([positions, nodes, state.searchText, filterNodeKey, filterNodeKey ? edges : undefined], () => {
       let filteredNodes = [...nodes.values()].filter(n =>
         // we shouldn't show nodes that are already displayed
         !positions.some(p => p.nodeKey === n.key) &&

@@ -40,6 +40,7 @@ export interface VisualizerAPI {
   getNodePositions(): ReadonlyArray<NodePosition>;
   updateVisualizationEntry(entry: NodePosition): void;
   removeVisualizationEntry(entryKey: string): void;
+  clearVisualizationEntries(): void;
   onNavigate?(nodeKey: string): void;
 
   getNodeCountPerType(): any

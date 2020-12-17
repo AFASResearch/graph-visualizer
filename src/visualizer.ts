@@ -28,6 +28,7 @@ function renderVisualizer(state: VisualizerState, api: VisualizerAPI, projector:
     state.sidebarOpen
       ? renderSidebar(state.sidebar, state.filterNodeKey, onClose, onDragStart, api)
       : h('button.gravi-open-sidebar-button', {
+        title: 'open',
         onclick() {
           state.filterNodeKey = undefined;
           state.sidebarOpen = true;
@@ -35,6 +36,14 @@ function renderVisualizer(state: VisualizerState, api: VisualizerAPI, projector:
       }, [
         '+'
       ]),
+    state.sidebarOpen ? h('button.gravi-clear-button', {
+      title: 'leegmaken',
+      onclick() {
+        api.clearVisualizationEntries();
+      }
+    }, [
+      '🗑'
+    ]) : undefined,
     renderGraphSummary(state.graph, api)
   ]);
 
@@ -44,11 +53,13 @@ function renderVisualizer(state: VisualizerState, api: VisualizerAPI, projector:
 
   function onDragStart(nodeKey: string, anchorScreenPosition: XY, mousePosition: XY) {
     state.dragStart = { nodeKey, anchorScreenPosition, mousePosition };
+    api.updateVisualizationEntry({ nodeKey: nodeKey, x: mousePosition.x, y: mousePosition.y });
   }
 
   function filterOnNode(nodeKey: string) {
     state.sidebarOpen = true;
     state.filterNodeKey = nodeKey;
+    state.sidebar.searchText = ''; // reset the searchText on filtering
   }
 }
 
