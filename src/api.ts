@@ -2,6 +2,7 @@ export interface NodeData {
   readonly key: string;
   readonly typeName?: string;
   readonly displayName: string;
+  readonly shortName?: string;
   readonly style: string;
 }
 

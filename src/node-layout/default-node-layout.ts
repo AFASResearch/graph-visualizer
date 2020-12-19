@@ -5,6 +5,7 @@ import { NodeData, NodePosition } from '../api';
 
 const DEFAULT_WIDTH = 230;
 const DEFAULT_FONT_SIZE = 18;
+const SMALLER_FONT_SIZE = 12;
 
 /**
  * Instances only live shortly during the render cycle, so edges can position themselves accordingly
@@ -34,6 +35,8 @@ export function renderDefaultNodeLayout(
     height: height,
     width: width
   };
+
+  let safeTitle = makeSafeTitle(data.shortName ?? data.displayName);
 
   return {
     dimensions,
@@ -76,22 +79,37 @@ export function renderDefaultNodeLayout(
         }, [data.typeName]
         ),
         h(
-          'text',
-          {
+          'text', {
+          'text-anchor': 'middle',
+          'font-size': fontSize.toString(),
+          lengthAdjust: 'spacingAndGlyphs',
+          textLength: safeTitle.length > 24 ? '210' : undefined, // pragmatic way to only shrink, never grow
+          x: (width / 2).toString(),
+          y: '0',
+          'stroke-width': '0',
+          dy: (height / 2 + 10).toString(),
+          'font-family': 'Arial',
+          fill: header2Color,
+          'font-weight': '400'
+        },
+          [makeSafeTitle(safeTitle)]
+        ),
+        data.shortName
+          ? h('text', {
             'text-anchor': 'middle',
-            'font-size': fontSize.toString(),
+            'font-size': SMALLER_FONT_SIZE.toString(),
             lengthAdjust: 'spacingAndGlyphs',
             textLength: data.displayName.length > 24 ? '210' : undefined, // pragmatic way to only shrink, never grow
             x: (width / 2).toString(),
-            y: '4',
+            y: '18',
             'stroke-width': '0',
             dy: (height / 2 + 10).toString(),
             'font-family': 'Arial',
-            fill: header2Color,
-            'font-weight': '400'
+            fill: header2Color
           },
-          [makeSafeTitle(data.displayName)]
-        ),
+            [makeSafeTitle(data.displayName)]
+          )
+          : undefined,
         h('title', {}, [data.displayName])
       ]
     )

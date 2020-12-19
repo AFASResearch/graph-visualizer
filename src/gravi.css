@@ -58,7 +58,7 @@
   top: 0;
   right: 0;
   height: 100%;
-  width: 240px;
+  width: 400px;
   border-left: 1px solid darkgray;
 }
 
@@ -66,8 +66,21 @@
   flex: 0 0 auto;
   height: 24px;
   margin: 35px 16px 4px 18px;
-  width: 208px;
+  width: 368px;
   left: 0;
+}
+
+.gravi-sidebar > .gravi-filter {
+  height: 24px;
+  margin: 5px 16px 4px 18px;
+  width: 366px;
+  padding: 4px;
+  border: dotted 1px gray;
+  background-color: lightgray;
+}
+
+.gravi-sidebar > .gravi-filter > button {
+  margin-right: 4px;
 }
 
 .gravi-sidebar > ul {
@@ -79,7 +92,7 @@
   flex-direction: column;
   padding: 0;
   margin: 0;
-  width: 240px;
+  width: 400px;
 }
 
 .gravi-sidebar > ul > li {

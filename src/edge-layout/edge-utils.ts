@@ -15,6 +15,10 @@ export function intersectionWithEntity(from: XY, entity: NodeDimensions): DockPo
     let length = Math.hypot(dx, dy);
     toX = -(dx / length) * entity.diameter / 2;
     toY = -(dy / length) * entity.diameter / 2;
+  } else if (entity.diameterX && entity.diameterY) {
+    let length = Math.hypot(dx, dy);
+    toX = -(dx / length) * entity.diameterX / 2;
+    toY = -(dy / length) * entity.diameterY / 2;
   } else {
     if (topOrBottom) {
       toX = -dx * (entity.height / 2) / ady;

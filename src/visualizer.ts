@@ -26,7 +26,7 @@ function renderVisualizer(state: VisualizerState, api: VisualizerAPI, projector:
   return h('div.gravi', [
     renderGraph(state.graph, dragStart, filterOnNode, api, projector),
     state.sidebarOpen
-      ? renderSidebar(state.sidebar, state.filterNodeKey, onClose, onDragStart, api)
+      ? renderSidebar(state.sidebar, state.filterNodeKey, onFilterClear, onClose, onDragStart, api)
       : h('button.gravi-open-sidebar-button', {
         title: 'open',
         onclick() {
@@ -46,6 +46,10 @@ function renderVisualizer(state: VisualizerState, api: VisualizerAPI, projector:
     ]) : undefined,
     renderGraphSummary(state.graph, api)
   ]);
+
+  function onFilterClear() {
+    state.filterNodeKey = undefined;
+  }
 
   function onClose() {
     state.sidebarOpen = false;

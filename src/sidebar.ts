@@ -17,6 +17,7 @@ export type SidebarState = ReturnType<typeof createSidebarState>;
 export function renderSidebar(
   state: SidebarState,
   filterNodeKey: string | undefined,
+  onFilterClear: (evt: MouseEvent) => void,
   onClose: (evt: MouseEvent) => void,
   onDragStart: (nodeKey: string, anchorScreenPosition: XY, mousePosition: XY) => void,
   api: VisualizerAPI
@@ -49,6 +50,21 @@ export function renderSidebar(
           state.searchText = (ev.currentTarget as HTMLInputElement).value.toLowerCase();
         }
       }),
+      filterNodeKey
+        ? h('div.gravi-filter', {
+          value: state.searchText,
+          oninput(ev) {
+            state.searchText = (ev.currentTarget as HTMLInputElement).value.toLowerCase();
+          }
+        }, [
+          h('button.gravi-filter-clear-button', {
+            onclick: onFilterClear
+          }, [
+            '×'
+          ]),
+          filterNodeKey
+        ])
+        : undefined,
       h('ul.gravi-list', [
         results.map(n => h('li', {
           key: n,
