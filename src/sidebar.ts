@@ -62,7 +62,7 @@ export function renderSidebar(
           }, [
             '×'
           ]),
-          filterNodeKey
+          h('span', [filterNodeKey])
         ])
         : undefined,
       h('ul.gravi-list', [
@@ -74,7 +74,7 @@ export function renderSidebar(
             let rect = element.getBoundingClientRect();
             onDragStart(n.key, { x: rect.left, y: (rect.top + rect.bottom) / 2 }, { x: evt.x, y: evt.y });
           }
-        }, [n.displayName]))
+        }, [h('span.shortName', [n.shortName ?? n.displayName]), h('span.name', [n.displayName])]))
       ])
     ]);
   });

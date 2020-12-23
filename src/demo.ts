@@ -12,5 +12,5 @@ require('./gravi.css');
 let domNode = document.body;
 let projector = createProjector();
 let visualizer = createVisualizer();
-let data = createData((window as any).GraphData);
+let data = createData((window as any).GraphData, (window as any).GraphHooks);
 projector.append(domNode, () => visualizer.render(data, projector));

@@ -5266,7 +5266,7 @@ let demoData: any = {
   "positions": []
 };
 
-export function createData(data: any): VisualizerAPI {
+export function createData(data: any, hooks: any): VisualizerAPI {
   data = data || demoData;
   let nodes = new Map<string, NodeData>();
   let nodeCountPerType: any = {};
@@ -5301,6 +5301,10 @@ export function createData(data: any): VisualizerAPI {
     window.localStorage['positions'] = positionsJson;
   }
 
+  function fallBackOnNavigate(key: string) {
+    alert(`Navigate to ${key}`);
+  }
+
   return {
     getNodes: () => nodes,
     getEdges: () => data.edges,
@@ -5324,7 +5328,7 @@ export function createData(data: any): VisualizerAPI {
     },
 
     onNavigate(key: string) {
-      alert(`Navigate to ${key}`);
+      (hooks?.onNavigate || fallBackOnNavigate)(key);
     }
   }
 }

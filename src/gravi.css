@@ -82,6 +82,11 @@
 .gravi-sidebar > .gravi-filter > button {
   margin-right: 4px;
 }
+.gravi-sidebar > .gravi-filter > span {
+  display: inline-block;
+  width: 338px;
+  white-space: nowrap;
+}
 
 .gravi-sidebar > ul {
   flex: 1 1 auto;
@@ -99,4 +104,11 @@
   list-style: none;
   padding: 12px 16px;
   border-bottom: 1px solid lightgray;
+}
+
+.gravi-sidebar > ul > li > span {
+  display: block;
+}
+.gravi-sidebar > ul > li > .name {
+  font-size: 10px;
 }

@@ -25,7 +25,6 @@ export interface VisibleEdgeEntry {
 }
 
 export function createGraphState() {
-
   let state: any = {};
   let stateJson = window.localStorage['state'];
   if (stateJson) {
@@ -462,6 +461,7 @@ export function renderGraph(
     api.onNavigate!(state.activeNodeKey!);
     state.activeNodeKey = undefined;
     evt.preventDefault();
+    evt.stopPropagation();
   }
 
   function selectNode(key: string) {
