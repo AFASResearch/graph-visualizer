@@ -2,7 +2,7 @@ import { EdgeData } from '../api';
 import { NodeDimensions } from '../node-layout/node-common';
 import { RenderedEdge } from './edge-common';
 import { h } from 'maquette';
-import { intersectionWithEntity } from './edge-utils';
+import { intersectionWithEntity, renderAttributes } from './edge-utils';
 
 const sizeLength = 20;
 const halfSizeWidth = 4;
@@ -31,7 +31,8 @@ export function renderObserve(data: EdgeData, from: NodeDimensions, to: NodeDime
         + ` l${ndx * sizeLength - ndy * halfSizeWidth},${ndy * sizeLength + ndx * halfSizeWidth}`
         + ` l${ndy * halfSizeWidth * 2},${-ndx * halfSizeWidth * 2}`
         + ` M${centerPos}`
-        + ` L${start.x},${start.y}`
+        + ` L${start.x},${start.y}`,
+      ...renderAttributes(data)
     }),
     decorations: undefined
   };

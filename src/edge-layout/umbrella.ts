@@ -2,6 +2,7 @@ import { EdgeData } from '../api';
 import { h } from 'maquette';
 import { RenderedEdge } from './edge-common';
 import { NodeDimensions } from '../node-layout/node-common';
+import { renderAttributes } from './edge-utils';
 
 export function renderUmbrella(data: EdgeData, from: NodeDimensions, to: NodeDimensions): RenderedEdge {
   let startPosition = { x: from.center.x, y: from.top };
@@ -11,7 +12,8 @@ export function renderUmbrella(data: EdgeData, from: NodeDimensions, to: NodeDim
       key: data,
       'stroke-width': '1',
       stroke: 'black',
-      d: renderUmbrellaLine(startPosition.x, startPosition.y, endPosition.x, endPosition.y)
+      d: renderUmbrellaLine(startPosition.x, startPosition.y, endPosition.x, endPosition.y),
+      ...renderAttributes(data)
     }, []),
     decorations: undefined
   };

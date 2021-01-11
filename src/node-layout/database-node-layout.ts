@@ -2,9 +2,10 @@ import { NodeData, NodePosition } from '../api';
 import { XY } from '../interfaces';
 import { NodeDimensions, NodeState, RenderedNode } from './node-common';
 import { h } from 'maquette';
+import { renderAttributes } from './node-utils';
 
-const ellipseDiameterWidth = 40;
-const ellipseDiameterHeight = 10;
+const dbRadiusWidth = 80;
+const dbTopRadiusHeight = 10;
 
 export function renderDatabaseNodeLayout(
   data: NodeData,
@@ -16,13 +17,15 @@ export function renderDatabaseNodeLayout(
 
   let dimensions: NodeDimensions = {
     center,
-    left: center.x - ellipseDiameterWidth,
-    right: center.x + ellipseDiameterWidth,
-    bottom: center.y + ellipseDiameterWidth,
-    top: center.y - ellipseDiameterWidth,
-    height: ellipseDiameterHeight * 6, // the rect plus twice the ellipse diameter height
-    width: ellipseDiameterWidth * 2
+    left: center.x - dbRadiusWidth,
+    right: center.x + dbRadiusWidth,
+    bottom: center.y + (dbTopRadiusHeight * 4),
+    top: center.y - (dbTopRadiusHeight * 4),
+    height: dbTopRadiusHeight * 8,
+    width: dbRadiusWidth * 2
   };
+
+  let title = data.shortName ?? data.displayName;
 
   return {
     dimensions,
@@ -32,24 +35,25 @@ export function renderDatabaseNodeLayout(
         cursor: 'move',
         transform: `translate(${dimensions.left},${dimensions.top})`,
         'data-nodetype': data.typeName,
-        onmousedown: mouseDownEventHandler
+        onmousedown: mouseDownEventHandler,
+        ...renderAttributes(data)
       },
       [
         h('title', { id: 'unique-id' }, [data.displayName]),
         h('rect', {
           width: dimensions.width,
-          height: ellipseDiameterHeight * 4,
-          y: ellipseDiameterHeight * 2,
+          height: dbTopRadiusHeight * 6,
+          y: dbTopRadiusHeight,
           fill: 'white',
           stroke: 'black',
           filter: 'none'
         }),
         h('ellipse', {
           key: data,
-          cx: ellipseDiameterWidth,
-          cy: ellipseDiameterHeight * 2,
-          rx: ellipseDiameterWidth,
-          ry: ellipseDiameterHeight,
+          cx: dbRadiusWidth,
+          cy: dbTopRadiusHeight,
+          rx: dbRadiusWidth,
+          ry: dbTopRadiusHeight,
           fill: 'white',
           stroke: 'black',
           'stroke-width': 1,
@@ -58,16 +62,29 @@ export function renderDatabaseNodeLayout(
         }),
         h('ellipse', {
           key: data,
-          cx: ellipseDiameterWidth,
-          cy: ellipseDiameterWidth + (ellipseDiameterHeight * 2),
-          rx: ellipseDiameterWidth,
-          ry: ellipseDiameterHeight,
+          cx: dbRadiusWidth,
+          cy: dbTopRadiusHeight * 7,
+          rx: dbRadiusWidth,
+          ry: dbTopRadiusHeight,
           fill: 'white',
           stroke: 'black',
           'stroke-width': 1,
           title: data.displayName,
           onmousedown: mouseDownEventHandler
-        })
+        }),
+        h('text', {
+          'font-size': '18',
+          'text-anchor': 'middle',
+          lengthAdjust: 'spacingAndGlyphs',
+          textLength: title.length > 16 ? (dimensions.width - 20).toString() : undefined, // pragmatic way to only shrink, never grow
+          x: dimensions.width / 2,
+          y: dbTopRadiusHeight * 4.5,
+          'stroke-width': '0',
+          'font-family': 'Arial',
+          fill: 'black',
+          'font-weight': '400'
+        }, [title]),
+        h('title', { id: 'unique-id' }, [data.displayName])
       ]
     )
   };

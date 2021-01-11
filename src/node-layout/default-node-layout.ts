@@ -2,6 +2,7 @@ import { XY } from '../interfaces';
 import { h } from 'maquette';
 import { NodeDimensions, NodeState, RenderedNode } from './node-common';
 import { NodeData, NodePosition } from '../api';
+import { renderAttributes } from './node-utils';
 
 const DEFAULT_WIDTH = 230;
 const DEFAULT_FONT_SIZE = 18;
@@ -44,11 +45,13 @@ export function renderDefaultNodeLayout(
       {
         key: position,
         cursor: 'move',
+        /* @ts-ignore TS2783 false positive, we prefix the attributes with data-attr */
         fill,
         stroke,
         transform: `translate(${dimensions.left},${dimensions.top})`,
         'data-nodetype': data.typeName,
-        onmousedown: mouseDownEventHandler
+        onmousedown: mouseDownEventHandler,
+        ...renderAttributes(data)
       },
       [
         h('rect', {

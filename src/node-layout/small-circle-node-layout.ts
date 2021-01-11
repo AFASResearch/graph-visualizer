@@ -2,6 +2,7 @@ import { NodeData, NodePosition } from '../api';
 import { XY } from '../interfaces';
 import { NodeDimensions, NodeState, RenderedNode } from './node-common';
 import { h } from 'maquette';
+import { renderAttributes } from './node-utils';
 
 const diameter = 80;
 
@@ -31,12 +32,14 @@ export function renderSmallCircleNodeLayout(
       cx: center.x,
       cy: center.y,
       r: diameter / 2,
+      /* @ts-ignore TS2783 false positive, we prefix the attributes with data-attr */
       fill: 'white',
       stroke: 'black',
       'stroke-width': 1,
       'data-nodetype': data.typeName,
       title: data.displayName,
-      onmousedown: mouseDownEventHandler
+      onmousedown: mouseDownEventHandler,
+      ...renderAttributes(data)
     }, [h('title', { id: 'unique-id' }, [data.displayName])])
   };
 }

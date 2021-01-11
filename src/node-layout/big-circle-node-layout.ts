@@ -2,6 +2,7 @@ import { NodeData, NodePosition } from '../api';
 import { XY } from '../interfaces';
 import { NodeDimensions, RenderedNode } from './node-common';
 import { h } from 'maquette';
+import { renderAttributes } from './node-utils';
 
 const diameter = 160;
 
@@ -31,11 +32,13 @@ export function renderBigCircleNodeLayout(
         cx: center.x,
         cy: center.y,
         r: diameter / 2,
+        /* @ts-ignore TS2783 false positive, we prefix the attributes with data-attr */
         fill: 'white',
         stroke: 'black',
         'stroke-width': 1,
         'data-nodetype': data.typeName,
-        onmousedown: mouseDownEventHandler
+        onmousedown: mouseDownEventHandler,
+        ...renderAttributes(data)
       }),
       h('text', {
         'font-size': '18',

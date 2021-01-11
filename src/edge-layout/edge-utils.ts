@@ -1,6 +1,7 @@
 import { Align, DockPosition, XY } from '../interfaces';
 import { h, VNodeChild } from 'maquette';
 import { NodeDimensions } from '../node-layout/node-common';
+import { EdgeData } from '../api';
 
 export function intersectionWithEntity(from: XY, entity: NodeDimensions): DockPosition {
   let dx = entity.center.x - from.x;
@@ -71,4 +72,14 @@ export function renderLabel(label: string | undefined, position: DockPosition, k
     'text-anchor': hAlign === 'left' ? 'end' : 'start',
     cursor: 'default'
   }, [label]);
+}
+
+export function renderAttributes(data: EdgeData) {
+  let attr: any = {};
+
+  Object.entries(data.attributes || {})
+    .forEach(([key, val]) => {
+      attr[`data-attr-${key}`] = val;
+    });
+  return attr;
 }

@@ -1,6 +1,6 @@
 import { EdgeData } from '../api';
 import { h } from 'maquette';
-import { intersectionWithEntity, renderLabel } from './edge-utils';
+import { intersectionWithEntity, renderAttributes, renderLabel } from './edge-utils';
 import { NodeDimensions } from '../node-layout/node-common';
 import { RenderedEdge } from './edge-common';
 
@@ -12,7 +12,8 @@ export function renderArrow(data: EdgeData, from: NodeDimensions, to: NodeDimens
       key: data,
       'stroke-width': '1',
       stroke: 'black',
-      d: renderArrowLine(startPosition.x, startPosition.y, endPosition.x, endPosition.y)
+      d: renderArrowLine(startPosition.x, startPosition.y, endPosition.x, endPosition.y),
+      ...renderAttributes(data)
     }, []),
     decorations: [
       renderLabel(data.fromLabel, startPosition, from),

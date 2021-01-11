@@ -4,6 +4,7 @@ export interface NodeData {
   readonly displayName: string;
   readonly shortName?: string;
   readonly style: string;
+  readonly attributes: any;
 }
 
 export interface EdgeData {
@@ -14,6 +15,7 @@ export interface EdgeData {
   readonly style: string;
   readonly fromLabel?: string;
   readonly toLabel?: string;
+  readonly attributes: any;
 }
 
 export interface NodePosition {

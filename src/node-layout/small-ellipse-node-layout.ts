@@ -2,6 +2,7 @@ import { NodeData, NodePosition } from '../api';
 import { XY } from '../interfaces';
 import { NodeDimensions, NodeState, RenderedNode } from './node-common';
 import { h } from 'maquette';
+import { renderAttributes } from './node-utils';
 
 const diameterWidth = 160;
 const diameterHeight = 50;
@@ -36,7 +37,8 @@ export function renderSmallEllipseNodeLayout(
         cursor: 'move',
         transform: `translate(${dimensions.left},${dimensions.top})`,
         'data-nodetype': data.typeName,
-        onmousedown: mouseDownEventHandler
+        onmousedown: mouseDownEventHandler,
+        ...renderAttributes(data)
       },
       [
         h('ellipse', {

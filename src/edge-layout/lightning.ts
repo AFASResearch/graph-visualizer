@@ -2,6 +2,7 @@ import { EdgeData } from '../api';
 import { NodeDimensions } from '../node-layout/node-common';
 import { RenderedEdge } from './edge-common';
 import { h } from 'maquette';
+import { renderAttributes } from './edge-utils';
 
 const diameter = 12;
 
@@ -36,7 +37,8 @@ export function renderLightning(data: EdgeData, from: NodeDimensions, to: NodeDi
       d: `M${start.x},${start.y}`
         + ` l${firstLastDx},${firstLastDy}`
         + ` l${centerDx},${centerDy}`
-        + ` l${firstLastDx},${firstLastDy}`
+        + ` l${firstLastDx},${firstLastDy}`,
+      ...renderAttributes(data)
     }),
     decorations: undefined
   };

@@ -1,5 +1,5 @@
 import { EdgeData } from '../api';
-import { intersectionWithEntity } from './edge-utils';
+import { intersectionWithEntity, renderAttributes } from './edge-utils';
 import { h } from 'maquette';
 import { RenderedEdge } from './edge-common';
 import { NodeDimensions } from '../node-layout/node-common';
@@ -15,7 +15,8 @@ export function renderAngularWithDiamond(data: EdgeData, from: NodeDimensions, t
       key: data,
       'stroke-width': '1',
       stroke: 'black',
-      d: renderAngularPathWithDiamond(startPosition.x, startPosition.y, endPosition.x, endPosition.y)
+      d: renderAngularPathWithDiamond(startPosition.x, startPosition.y, endPosition.x, endPosition.y),
+      ...renderAttributes(data)
     }, []),
     decorations: undefined
   };

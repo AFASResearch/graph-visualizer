@@ -1,6 +1,6 @@
 import { EdgeData } from '../api';
 import { h } from 'maquette';
-import { intersectionWithEntity, renderLabel } from './edge-utils';
+import { intersectionWithEntity, renderAttributes, renderLabel } from './edge-utils';
 import { RenderedEdge } from './edge-common';
 import { NodeDimensions } from '../node-layout/node-common';
 
@@ -12,7 +12,8 @@ export function renderDiamond(data: EdgeData, from: NodeDimensions, to: NodeDime
       key: data,
       'stroke-width': '1',
       stroke: 'black',
-      d: renderDiamondLine(endPosition.x, endPosition.y, startPosition.x, startPosition.y)
+      d: renderDiamondLine(endPosition.x, endPosition.y, startPosition.x, startPosition.y),
+      ...renderAttributes(data)
     }, []),
     decorations: [
       renderLabel(data.fromLabel, startPosition, from),
