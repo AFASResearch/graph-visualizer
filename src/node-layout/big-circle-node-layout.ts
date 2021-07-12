@@ -1,7 +1,8 @@
-import { NodeData, NodePosition } from '../api';
-import { XY } from '../interfaces';
-import { NodeDimensions, RenderedNode } from './node-common';
-import { h } from 'maquette';
+import { h } from "maquette";
+
+import { NodeData, NodePosition } from "../api";
+import { XY } from "../interfaces";
+import { NodeDimensions, RenderedNode } from "./node-common";
 
 const diameter = 160;
 
@@ -15,39 +16,43 @@ export function renderBigCircleNodeLayout(
 
   let dimensions: NodeDimensions = {
     center,
-    left: center.x - (diameter / 2),
-    right: center.x + (diameter / 2),
-    bottom: center.y + (diameter / 2),
-    top: center.y - (diameter / 2),
+    left: center.x - diameter / 2,
+    right: center.x + diameter / 2,
+    bottom: center.y + diameter / 2,
+    top: center.y - diameter / 2,
     height: diameter,
     width: diameter,
-    diameter
+    diameter,
   };
 
   return {
     dimensions,
-    vNode: h('g', { key: data }, [
-      h('circle', {
+    vNode: h("g", { key: data }, [
+      h("circle", {
         cx: center.x,
         cy: center.y,
         r: diameter / 2,
-        fill: 'white',
-        stroke: 'black',
-        'stroke-width': 1,
-        onmousedown: mouseDownEventHandler
+        fill: "white",
+        stroke: "black",
+        "stroke-width": 1,
+        onmousedown: mouseDownEventHandler,
       }),
-      h('text', {
-        'font-size': '18',
-        'text-anchor': 'middle',
-        lengthAdjust: 'spacingAndGlyphs',
-        textLength: data.displayName.length > 16 ? '145' : undefined, // pragmatic way to only shrink, never grow
-        x: `${center.x}`,
-        y: `${center.y}`,
-        'stroke-width': '0',
-        'font-family': 'Arial',
-        fill: 'gray',
-        'font-weight': '400'
-      }, [data.displayName])
-    ])
+      h(
+        "text",
+        {
+          "font-size": "18",
+          "text-anchor": "middle",
+          lengthAdjust: "spacingAndGlyphs",
+          textLength: data.displayName.length > 16 ? "145" : undefined, // pragmatic way to only shrink, never grow
+          x: `${center.x}`,
+          y: `${center.y}`,
+          "stroke-width": "0",
+          "font-family": "Arial",
+          fill: "gray",
+          "font-weight": "400",
+        },
+        [data.displayName]
+      ),
+    ]),
   };
 }

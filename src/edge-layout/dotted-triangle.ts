@@ -1,13 +1,18 @@
-import { EdgeData } from '../api';
-import { NodeDimensions } from '../node-layout/node-common';
-import { RenderedEdge } from './edge-common';
-import { h } from 'maquette';
-import { intersectionWithEntity } from './edge-utils';
+import { h } from "maquette";
+
+import { EdgeData } from "../api";
+import { NodeDimensions } from "../node-layout/node-common";
+import { RenderedEdge } from "./edge-common";
+import { intersectionWithEntity } from "./edge-utils";
 
 const sizeLength = 8;
 const halfSizeWidth = 4.6;
 
-export function renderDottedTriangle(data: EdgeData, from: NodeDimensions, to: NodeDimensions): RenderedEdge {
+export function renderDottedTriangle(
+  data: EdgeData,
+  from: NodeDimensions,
+  to: NodeDimensions
+): RenderedEdge {
   let start = from.center;
   let end = intersectionWithEntity(start, to);
   let dx = end.x - start.x;
@@ -20,20 +25,21 @@ export function renderDottedTriangle(data: EdgeData, from: NodeDimensions, to: N
   let centerPos = `${end.x - sizeLength * ndx},${end.y - sizeLength * ndy}`;
 
   return {
-    line: h('path', {
+    line: h("path", {
       key: data,
-      'stroke-width': '1',
-      stroke: 'black',
-      'stroke-dasharray': '2 1',
-      d: `M${centerPos}`
-        + ` l${ndy * halfSizeWidth},${-ndx * halfSizeWidth}`
-        + ` L${end.x},${end.y}`
-        + ` M${centerPos}`
-        + ` l${-ndy * halfSizeWidth},${ndx * halfSizeWidth}`
-        + ` L${end.x},${end.y}`
-        + ` M${centerPos}`
-        + ` L${start.x},${start.y}`
+      "stroke-width": "1",
+      stroke: "black",
+      "stroke-dasharray": "2 1",
+      d:
+        `M${centerPos}` +
+        ` l${ndy * halfSizeWidth},${-ndx * halfSizeWidth}` +
+        ` L${end.x},${end.y}` +
+        ` M${centerPos}` +
+        ` l${-ndy * halfSizeWidth},${ndx * halfSizeWidth}` +
+        ` L${end.x},${end.y}` +
+        ` M${centerPos}` +
+        ` L${start.x},${start.y}`,
     }),
-    decorations: undefined
+    decorations: undefined,
   };
 }

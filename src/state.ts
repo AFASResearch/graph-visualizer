@@ -1,10 +1,10 @@
 export interface State {
-  offset: { x: number, y: number };
+  offset: { x: number; y: number };
   zoom: number;
   visibleNodes: {
-    key: string,
-    x: number,
-    y: number
+    key: string;
+    x: number;
+    y: number;
   }[];
-  sidebar: 'list' | undefined;
+  sidebar: "list" | undefined;
 }

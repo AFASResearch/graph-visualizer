@@ -1,8 +1,9 @@
-import { h, MaquetteComponent, ProjectorService, VNode } from 'maquette';
-import { VisualizerAPI } from './api';
-import { createGraphState, renderGraph } from './graph';
-import { createSidebarState, renderSidebar } from './sidebar';
-import { XY } from './interfaces';
+import { MaquetteComponent, ProjectorService, VNode, h } from "maquette";
+
+import { VisualizerAPI } from "./api";
+import { createGraphState, renderGraph } from "./graph";
+import { XY } from "./interfaces";
+import { createSidebarState, renderSidebar } from "./sidebar";
 
 function createVisualizerState() {
   return {
@@ -10,11 +11,13 @@ function createVisualizerState() {
     graph: createGraphState(),
     sidebarOpen: false,
     filterNodeKey: undefined as string | undefined,
-    dragStart: undefined as undefined | {
-      nodeKey: string;
-      anchorScreenPosition: XY;
-      mousePosition: XY;
-    }
+    dragStart: undefined as
+      | undefined
+      | {
+          nodeKey: string;
+          anchorScreenPosition: XY;
+          mousePosition: XY;
+        },
   };
 }
 
@@ -23,18 +26,20 @@ type VisualizerState = ReturnType<typeof createVisualizerState>;
 function renderVisualizer(state: VisualizerState, api: VisualizerAPI, projector: ProjectorService) {
   let dragStart = state.dragStart;
   state.dragStart = undefined;
-  return h('div.gravi', [
+  return h("div.gravi", [
     renderGraph(state.graph, dragStart, filterOnNode, api, projector),
     state.sidebarOpen
       ? renderSidebar(state.sidebar, state.filterNodeKey, onClose, onDragStart, api)
-      : h('button.gravi-open-sidebar-button', {
-        onclick() {
-          state.filterNodeKey = undefined;
-          state.sidebarOpen = true;
-        }
-      }, [
-        '+'
-      ])
+      : h(
+          "button.gravi-open-sidebar-button",
+          {
+            onclick() {
+              state.filterNodeKey = undefined;
+              state.sidebarOpen = true;
+            },
+          },
+          ["+"]
+        ),
   ]);
 
   function onClose() {
@@ -60,6 +65,6 @@ export function createVisualizer(): VisualizerComponent {
   return {
     render(api: VisualizerAPI, projector: ProjectorService) {
       return renderVisualizer(state, api, projector);
-    }
-  }
+    },
+  };
 }
