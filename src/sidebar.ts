@@ -1,6 +1,6 @@
 import { VNode, h } from "maquette";
 
-import { EdgeData, NodeData, VisualizerAPI } from "./api";
+import { NodeData, VisualizerAPI } from "./api";
 import { XY } from "./interfaces";
 import { createMemoization } from "./utils";
 
@@ -14,29 +14,29 @@ export function createSidebarState() {
   };
 }
 
-export type GraphFilter = ((n: any) => boolean)[];
+export type GraphFilter = ((n: NodeData) => boolean)[];
 
 export type SidebarState = ReturnType<typeof createSidebarState>;
 
-function createNodeFilters(searchText: string): ((n: any) => boolean)[] {
+function createNodeFilters(searchText: string): ((n: NodeData) => boolean)[] {
   if (searchText) {
     let searchParts = searchText.split(" ");
-    return searchParts.map((search): ((n: any) => boolean) => {
+    return searchParts.map((search): ((n: NodeData) => boolean) => {
       let complexSearch = search.split(":");
       if (complexSearch.length === 1) {
-        return (n: any) => n.displayName.toLowerCase().includes(search);
+        return (n: NodeData) => n.displayName.toLowerCase().includes(search);
       } else if (complexSearch.length === 2) {
         let attr = complexSearch[0];
         let value = complexSearch[1];
 
         if (value.toLowerCase() === "true") {
-          return (n: any) => n.attributes[attr] ?? false;
+          return (n: NodeData) => !!n.attributes?.[attr];
         } else if (value.toLowerCase() === "false") {
-          return (n: any) => !(n.attributes[attr] ?? false);
+          return (n: NodeData) => !n.attributes?.[attr];
         }
 
-        return (n: any) =>
-          n.attributes[attr] ? (n.attributes[attr] + "").toLowerCase().includes(value) : false;
+        return (n: NodeData) =>
+          n.attributes?.[attr] ? (n.attributes[attr] + "").toLowerCase().includes(value) : false;
       } else {
         throw new Error(`Unrecognized filter: ${search}`);
       }

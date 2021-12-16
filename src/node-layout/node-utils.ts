@@ -3,8 +3,10 @@ import { NodeData } from "../api";
 export function renderAttributes(data: NodeData) {
   let attr: any = {};
 
-  Object.entries(data.attributes || {}).forEach(([key, val]) => {
-    attr[`data-attr-${key}`] = val;
-  });
+  if (data.attributes) {
+    for (let [key, val] of Object.entries(data.attributes)) {
+      attr[`data-attr-${key}`] = val;
+    }
+  }
   return attr;
 }

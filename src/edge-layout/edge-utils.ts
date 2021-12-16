@@ -84,10 +84,12 @@ export function renderLabel(
 }
 
 export function renderAttributes(data: EdgeData) {
-  let attr: any = {};
+  let attr: { [name: string]: string | number } = {};
 
-  Object.entries(data.attributes || {}).forEach(([key, val]) => {
-    attr[`data-attr-${key}`] = val;
-  });
+  if (data.attributes) {
+    for (let [key, val] of Object.entries(data.attributes)) {
+      attr[`data-attr-${key}`] = val;
+    }
+  }
   return attr;
 }

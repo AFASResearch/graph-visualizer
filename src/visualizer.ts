@@ -29,7 +29,26 @@ function renderVisualizer(state: VisualizerState, api: VisualizerAPI, projector:
   return h("div.gravi", [
     renderGraph(state.graph, dragStart, filterOnNode, api, projector),
     state.sidebarOpen
-      ? renderSidebar(state.sidebar, state.filterNodeKey, onFilterClear, onClose, onDragStart, api)
+      ? [
+          renderSidebar(
+            state.sidebar,
+            state.filterNodeKey,
+            onFilterClear,
+            onClose,
+            onDragStart,
+            api
+          ),
+          h(
+            "button.gravi-clear-button",
+            {
+              title: "leegmaken",
+              onclick() {
+                api.clearVisualizationEntries();
+              },
+            },
+            ["🗑"]
+          ),
+        ]
       : h(
           "button.gravi-open-sidebar-button",
           {
@@ -41,18 +60,6 @@ function renderVisualizer(state: VisualizerState, api: VisualizerAPI, projector:
           },
           ["+"]
         ),
-    state.sidebarOpen
-      ? h(
-          "button.gravi-clear-button",
-          {
-            title: "leegmaken",
-            onclick() {
-              api.clearVisualizationEntries();
-            },
-          },
-          ["🗑"]
-        )
-      : undefined,
     renderGraphSummary(state.graph, api),
   ]);
 
