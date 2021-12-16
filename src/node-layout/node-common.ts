@@ -1,5 +1,6 @@
-import { CalculationCache, createCache, VNode } from 'maquette';
-import { XY } from '../interfaces';
+import { CalculationCache, VNode, createCache } from "maquette";
+
+import { XY } from "../interfaces";
 
 export interface NodeDimensions {
   readonly center: XY;
@@ -21,7 +22,7 @@ export interface RenderedNode {
 
 export function createNodeState(): NodeState {
   return {
-    renderMemoization: createCache<RenderedNode>()
+    renderMemoization: createCache<RenderedNode>(),
   };
 }
 

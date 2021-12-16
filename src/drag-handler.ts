@@ -1,10 +1,14 @@
-import { h } from 'maquette';
-import { XY } from './interfaces';
+import { h } from "maquette";
 
-export function renderDragHandler(afterDragCallback: () => void, onDraggingCallback: (pos: XY) => void) {
-  return h('div.gravi-drag-handler', {
+import { XY } from "./interfaces";
+
+export function renderDragHandler(
+  afterDragCallback: () => void,
+  onDraggingCallback: (pos: XY) => void
+) {
+  return h("div.gravi-drag-handler", {
     onmousemove: mouseMoveHandler,
-    onmouseup: mouseUpEventHandler
+    onmouseup: mouseUpEventHandler,
   });
 
   function mouseMoveHandler(evt: MouseEvent) {

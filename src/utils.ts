@@ -1,17 +1,24 @@
-import { XY } from './interfaces';
+import { XY } from "./interfaces";
 
 const gridSize = 40;
 
 export let snapToGrid = (nr: number) => gridSize * Math.round(nr / gridSize);
 
-export let toSVGCoordinates = (svgElement: SVGSVGElement, x: number, y: number, transformX: number, transformY: number, scale: number): XY => {
+export let toSVGCoordinates = (
+  svgElement: SVGSVGElement,
+  x: number,
+  y: number,
+  transformX: number,
+  transformY: number,
+  scale: number
+): XY => {
   let point = svgElement.createSVGPoint();
   point.x = x;
   point.y = y;
   point = point.matrixTransform(svgElement.getScreenCTM()!.inverse());
   return {
     x: (point.x - transformX) / scale,
-    y: (point.y - transformY) / scale
+    y: (point.y - transformY) / scale,
   };
 };
 
@@ -61,6 +68,6 @@ export function createMemoization<Result>(): Memoization<Result> {
       return cachedOutcome!;
     },
 
-    previousResult: () => cachedOutcome
+    previousResult: () => cachedOutcome,
   };
 }

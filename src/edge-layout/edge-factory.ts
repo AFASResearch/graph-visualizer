@@ -1,32 +1,37 @@
-import { EdgeData } from '../api';
-import { renderArrow } from './arrow';
-import { renderAngularWithDiamond } from './angular-with-diamond';
-import { renderDiamond } from './diamond';
-import { renderUmbrella } from './umbrella';
-import { NodeDimensions } from '../node-layout/node-common';
-import { EdgeState, RenderedEdge } from './edge-common';
-import { renderLightning } from './lightning';
-import { renderDottedTriangle } from './dotted-triangle';
-import { renderObserve } from './observe';
+import { EdgeData } from "../api";
+import { NodeDimensions } from "../node-layout/node-common";
+import { renderAngularWithDiamond } from "./angular-with-diamond";
+import { renderArrow } from "./arrow";
+import { renderDiamond } from "./diamond";
+import { renderDottedTriangle } from "./dotted-triangle";
+import { EdgeState, RenderedEdge } from "./edge-common";
+import { renderLightning } from "./lightning";
+import { renderObserve } from "./observe";
+import { renderUmbrella } from "./umbrella";
 
 export let edgeFactory = {
-  renderEdge(data: EdgeData, from: NodeDimensions, to: NodeDimensions, state: EdgeState): RenderedEdge {
+  renderEdge(
+    data: EdgeData,
+    from: NodeDimensions,
+    to: NodeDimensions,
+    state: EdgeState
+  ): RenderedEdge {
     return state.renderMemoization.result([data, from, to], () => {
       switch (data.style) {
-        case 'angularWithDiamond':
+        case "angularWithDiamond":
           return renderAngularWithDiamond(data, from, to);
-        case 'diamond':
+        case "diamond":
           return renderDiamond(data, from, to);
-        case 'umbrella':
+        case "umbrella":
           return renderUmbrella(data, from, to);
-        case 'lightning':
+        case "lightning":
           return renderLightning(data, from, to);
-        case 'dotted-triangle':
+        case "dotted-triangle":
           return renderDottedTriangle(data, from, to);
-        case 'observe':
+        case "observe":
           return renderObserve(data, from, to);
       }
       return renderArrow(data, from, to);
     });
-  }
+  },
 };

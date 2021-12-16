@@ -1,5 +1,6 @@
-import { VNode, VNodeChild } from 'maquette';
-import { createMemoization, Memoization } from '../utils';
+import { VNode, VNodeChild } from "maquette";
+
+import { Memoization, createMemoization } from "../utils";
 
 export interface RenderedEdge {
   readonly line: VNode;
@@ -12,6 +13,6 @@ export interface EdgeState {
 
 export function createEdgeState(): EdgeState {
   return {
-    renderMemoization: createMemoization()
+    renderMemoization: createMemoization(),
   };
 }
