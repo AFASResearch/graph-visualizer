@@ -1,8 +1,9 @@
-import { XY } from '../interfaces';
-import { h } from 'maquette';
-import { NodeDimensions, NodeState, RenderedNode } from './node-common';
-import { NodeData, NodePosition } from '../api';
-import { renderAttributes } from './node-utils';
+import { h } from "maquette";
+
+import { NodeData, NodePosition } from "../api";
+import { XY } from "../interfaces";
+import { NodeDimensions, NodeState, RenderedNode } from "./node-common";
+import { renderAttributes } from "./node-utils";
 
 const DEFAULT_WIDTH = 230;
 const DEFAULT_FONT_SIZE = 18;
@@ -22,103 +23,110 @@ export function renderDefaultNodeLayout(
   let fontSize = DEFAULT_FONT_SIZE;
   let center: XY = dragPosition ?? position;
 
-  let stroke = 'black';
-  let fill = 'white';
-  let headerColor = 'black';
-  let header2Color = 'gray';
+  let stroke = "black";
+  let fill = "white";
+  let headerColor = "black";
+  let header2Color = "gray";
 
   let dimensions: NodeDimensions = {
     center,
-    left: center.x - (width / 2),
-    right: center.x + (width / 2),
-    bottom: center.y + (height / 2),
-    top: center.y - (height / 2),
+    left: center.x - width / 2,
+    right: center.x + width / 2,
+    bottom: center.y + height / 2,
+    top: center.y - height / 2,
     height: height,
-    width: width
+    width: width,
   };
 
   let safeTitle = makeSafeTitle(data.shortName ?? data.displayName);
 
   return {
     dimensions,
-    vNode: h('g',
+    vNode: h(
+      "g",
       {
         key: position,
-        cursor: 'move',
+        cursor: "move",
         /* @ts-ignore TS2783 false positive, we prefix the attributes with data-attr */
         fill,
         stroke,
         transform: `translate(${dimensions.left},${dimensions.top})`,
-        'data-nodetype': data.typeName,
+        "data-nodetype": data.typeName,
         onmousedown: mouseDownEventHandler,
-        ...renderAttributes(data)
+        ...renderAttributes(data),
       },
       [
-        h('rect', {
+        h("rect", {
           width: width.toString(),
           height: height.toString(),
-          filter: 'none',
-          rx: '6'
+          filter: "none",
+          rx: "6",
         }),
-        h('path', {
-          d: 'M 0 20 ' + width + ' 20',
+        h("path", {
+          d: "M 0 20 " + width + " 20",
           stroke,
-          'stroke-width': '1'
+          "stroke-width": "1",
         }),
-        h('path', {
-          d: 'M0,6 Q0,0 6,0 l' + (width - 12) + ',0 q6,0 6,6 l0,14 L0,20 0,6z',
+        h("path", {
+          d: "M0,6 Q0,0 6,0 l" + (width - 12) + ",0 q6,0 6,6 l0,14 L0,20 0,6z",
           fill,
           stroke,
-          'data-nodeelement': 'title'
+          "data-nodeelement": "title",
         }),
-        h('text', {
-          'font-size': '14',
-          x: '5',
-          y: '13',
-          'stroke-width': '0',
-          'font-family': 'Arial',
-          fill: headerColor,
-          'font-weight': '400'
-        }, [data.typeName]
+        h(
+          "text",
+          {
+            "font-size": "14",
+            x: "5",
+            y: "13",
+            "stroke-width": "0",
+            "font-family": "Arial",
+            fill: headerColor,
+            "font-weight": "400",
+          },
+          [data.typeName]
         ),
         h(
-          'text', {
-          'text-anchor': 'middle',
-          'font-size': fontSize.toString(),
-          lengthAdjust: 'spacingAndGlyphs',
-          textLength: safeTitle.length > 24 ? '210' : undefined, // pragmatic way to only shrink, never grow
-          x: (width / 2).toString(),
-          y: '0',
-          'stroke-width': '0',
-          dy: (height / 2 + 10).toString(),
-          'font-family': 'Arial',
-          fill: header2Color,
-          'font-weight': '400'
-        },
+          "text",
+          {
+            "text-anchor": "middle",
+            "font-size": fontSize.toString(),
+            lengthAdjust: "spacingAndGlyphs",
+            textLength: safeTitle.length > 24 ? "210" : undefined, // pragmatic way to only shrink, never grow
+            x: (width / 2).toString(),
+            y: "0",
+            "stroke-width": "0",
+            dy: (height / 2 + 10).toString(),
+            "font-family": "Arial",
+            fill: header2Color,
+            "font-weight": "400",
+          },
           [makeSafeTitle(safeTitle)]
         ),
         data.shortName
-          ? h('text', {
-            'text-anchor': 'middle',
-            'font-size': SMALLER_FONT_SIZE.toString(),
-            lengthAdjust: 'spacingAndGlyphs',
-            textLength: data.displayName.length > 24 ? '210' : undefined, // pragmatic way to only shrink, never grow
-            x: (width / 2).toString(),
-            y: '18',
-            'stroke-width': '0',
-            dy: (height / 2 + 10).toString(),
-            'font-family': 'Arial',
-            fill: header2Color
-          },
-            [makeSafeTitle(data.displayName)]
-          )
+          ? h(
+              "text",
+              {
+                "text-anchor": "middle",
+                "font-size": SMALLER_FONT_SIZE.toString(),
+                lengthAdjust: "spacingAndGlyphs",
+                textLength: data.displayName.length > 24 ? "210" : undefined, // pragmatic way to only shrink, never grow
+                x: (width / 2).toString(),
+                y: "18",
+                "stroke-width": "0",
+                dy: (height / 2 + 10).toString(),
+                "font-family": "Arial",
+                fill: header2Color,
+              },
+              [makeSafeTitle(data.displayName)]
+            )
           : undefined,
-        h('title', {}, [data.displayName])
+        h("title", {}, [data.displayName]),
       ]
-    )
+    ),
   };
 }
 
 function makeSafeTitle(tl: string): string {
-  return tl.replace('<', '').replace('>', '');
+  return tl.replace("<", "").replace(">", "");
 }

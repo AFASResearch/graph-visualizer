@@ -1,11 +1,12 @@
-import { createProjector } from 'maquette';
-import { createVisualizer } from './visualizer';
-import { createData } from './data';
+import { createProjector } from "maquette";
+
+import { createData } from "./data";
+import { createVisualizer } from "./visualizer";
 
 // tslint:disable-next-line:no-var-requires
-require('./demo.css');
+require("./demo.css");
 // tslint:disable-next-line:no-var-requires
-require('./gravi.css');
+require("./gravi.css");
 
 // Bootstrap demo data and show the graph-visualizer widget fullscreen
 

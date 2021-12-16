@@ -46,5 +46,5 @@ export interface VisualizerAPI {
   clearVisualizationEntries(): void;
   onNavigate?(nodeKey: string): void;
 
-  getNodeCountPerType(): any
+  getNodeCountPerType(): { [type: string]: number };
 }
