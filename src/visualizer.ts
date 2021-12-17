@@ -1,7 +1,7 @@
 import { MaquetteComponent, ProjectorService, VNode, h } from "maquette";
 
 import { VisualizerAPI } from "./api";
-import { createGraphState, renderGraph } from "./graph";
+import { createGraphState, renderGraph, renderGraphSummary } from "./graph";
 import { XY } from "./interfaces";
 import { createSidebarState, renderSidebar } from "./sidebar";
 
@@ -29,10 +29,30 @@ function renderVisualizer(state: VisualizerState, api: VisualizerAPI, projector:
   return h("div.gravi", [
     renderGraph(state.graph, dragStart, filterOnNode, api, projector),
     state.sidebarOpen
-      ? renderSidebar(state.sidebar, state.filterNodeKey, onClose, onDragStart, api)
+      ? [
+          renderSidebar(
+            state.sidebar,
+            state.filterNodeKey,
+            onFilterClear,
+            onClose,
+            onDragStart,
+            api
+          ),
+          h(
+            "button.gravi-clear-button",
+            {
+              title: "leegmaken",
+              onclick() {
+                api.clearVisualizationEntries();
+              },
+            },
+            ["🗑"]
+          ),
+        ]
       : h(
           "button.gravi-open-sidebar-button",
           {
+            title: "open",
             onclick() {
               state.filterNodeKey = undefined;
               state.sidebarOpen = true;
@@ -40,7 +60,12 @@ function renderVisualizer(state: VisualizerState, api: VisualizerAPI, projector:
           },
           ["+"]
         ),
+    renderGraphSummary(state.graph, api),
   ]);
+
+  function onFilterClear() {
+    state.filterNodeKey = undefined;
+  }
 
   function onClose() {
     state.sidebarOpen = false;
@@ -48,11 +73,13 @@ function renderVisualizer(state: VisualizerState, api: VisualizerAPI, projector:
 
   function onDragStart(nodeKey: string, anchorScreenPosition: XY, mousePosition: XY) {
     state.dragStart = { nodeKey, anchorScreenPosition, mousePosition };
+    api.updateVisualizationEntry({ nodeKey: nodeKey, x: mousePosition.x, y: mousePosition.y });
   }
 
   function filterOnNode(nodeKey: string) {
     state.sidebarOpen = true;
     state.filterNodeKey = nodeKey;
+    state.sidebar.searchText = ""; // reset the searchText on filtering
   }
 }
 

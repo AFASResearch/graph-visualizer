@@ -3,7 +3,7 @@ import { h } from "maquette";
 import { EdgeData } from "../api";
 import { NodeDimensions } from "../node-layout/node-common";
 import { RenderedEdge } from "./edge-common";
-import { intersectionWithEntity, renderLabel } from "./edge-utils";
+import { intersectionWithEntity, renderAttributes, renderLabel } from "./edge-utils";
 
 export function renderArrow(
   data: EdgeData,
@@ -20,6 +20,7 @@ export function renderArrow(
         "stroke-width": "1",
         stroke: "black",
         d: renderArrowLine(startPosition.x, startPosition.y, endPosition.x, endPosition.y),
+        ...renderAttributes(data),
       },
       []
     ),

@@ -1,9 +1,11 @@
 import { NodeData, NodePosition } from "../api";
 import { XY } from "../interfaces";
 import { renderBigCircleNodeLayout } from "./big-circle-node-layout";
+import { renderDatabaseNodeLayout } from "./database-node-layout";
 import { renderDefaultNodeLayout } from "./default-node-layout";
 import { NodeState } from "./node-common";
 import { renderSmallCircleNodeLayout } from "./small-circle-node-layout";
+import { renderSmallEllipseNodeLayout } from "./small-ellipse-node-layout";
 
 export function renderNode(
   data: NodeData,
@@ -18,6 +20,10 @@ export function renderNode(
         return renderBigCircleNodeLayout(data, position, dragPosition, mouseDownEventHandler);
       case "small-circle":
         return renderSmallCircleNodeLayout(data, position, dragPosition, mouseDownEventHandler);
+      case "small-ellipse":
+        return renderSmallEllipseNodeLayout(data, position, dragPosition, mouseDownEventHandler);
+      case "database":
+        return renderDatabaseNodeLayout(data, position, dragPosition, mouseDownEventHandler);
       default:
         return renderDefaultNodeLayout(data, position, dragPosition, mouseDownEventHandler);
     }

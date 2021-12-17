@@ -3,6 +3,7 @@ import { h } from "maquette";
 import { EdgeData } from "../api";
 import { NodeDimensions } from "../node-layout/node-common";
 import { RenderedEdge } from "./edge-common";
+import { renderAttributes } from "./edge-utils";
 
 export function renderUmbrella(
   data: EdgeData,
@@ -19,6 +20,7 @@ export function renderUmbrella(
         "stroke-width": "1",
         stroke: "black",
         d: renderUmbrellaLine(startPosition.x, startPosition.y, endPosition.x, endPosition.y),
+        ...renderAttributes(data),
       },
       []
     ),

@@ -2,7 +2,9 @@ export interface NodeData {
   readonly key: string;
   readonly typeName?: string;
   readonly displayName: string;
+  readonly shortName?: string;
   readonly style: string;
+  readonly attributes?: { [name: string]: string | number | boolean };
 }
 
 export interface EdgeData {
@@ -13,6 +15,7 @@ export interface EdgeData {
   readonly style: string;
   readonly fromLabel?: string;
   readonly toLabel?: string;
+  readonly attributes?: { [name: string]: string | number };
 }
 
 export interface NodePosition {
@@ -31,10 +34,17 @@ export interface VisualizerAPI {
    */
   getEdges(): ReadonlyArray<EdgeData>;
   /**
+   *
+   */
+  edgeExists(nodeKey: string, otherNodeKey: string): boolean;
+  /**
    * Contract: producer may not make changes to the result, but should provide a new ReadonlyArray object
    */
   getNodePositions(): ReadonlyArray<NodePosition>;
   updateVisualizationEntry(entry: NodePosition): void;
   removeVisualizationEntry(entryKey: string): void;
+  clearVisualizationEntries(): void;
   onNavigate?(nodeKey: string): void;
+
+  getNodeCountPerType(): { [type: string]: number };
 }

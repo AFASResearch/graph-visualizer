@@ -1,6 +1,6 @@
 import { createProjector } from "maquette";
 
-import { demoData } from "./demo-data";
+import { createData } from "./data";
 import { createVisualizer } from "./visualizer";
 
 // tslint:disable-next-line:no-var-requires
@@ -12,7 +12,6 @@ require("./gravi.css");
 
 let domNode = document.body;
 let projector = createProjector();
-
 let visualizer = createVisualizer();
-
-projector.append(domNode, () => visualizer.render(demoData, projector));
+let data = createData((window as any).GraphData, (window as any).GraphHooks);
+projector.append(domNode, () => visualizer.render(data, projector));

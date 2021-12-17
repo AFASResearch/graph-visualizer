@@ -3,9 +3,11 @@ import { h } from "maquette";
 import { NodeData, NodePosition } from "../api";
 import { XY } from "../interfaces";
 import { NodeDimensions, NodeState, RenderedNode } from "./node-common";
+import { renderAttributes } from "./node-utils";
 
 const DEFAULT_WIDTH = 230;
 const DEFAULT_FONT_SIZE = 18;
+const SMALLER_FONT_SIZE = 12;
 
 /**
  * Instances only live shortly during the render cycle, so edges can position themselves accordingly
@@ -23,7 +25,7 @@ export function renderDefaultNodeLayout(
 
   let stroke = "black";
   let fill = "white";
-  let headerColor = "gray";
+  let headerColor = "black";
   let header2Color = "gray";
 
   let dimensions: NodeDimensions = {
@@ -36,6 +38,8 @@ export function renderDefaultNodeLayout(
     width: width,
   };
 
+  let safeTitle = makeSafeTitle(data.shortName ?? data.displayName);
+
   return {
     dimensions,
     vNode: h(
@@ -43,10 +47,13 @@ export function renderDefaultNodeLayout(
       {
         key: position,
         cursor: "move",
+        /* @ts-ignore TS2783 false positive, we prefix the attributes with data-attr */
         fill,
         stroke,
         transform: `translate(${dimensions.left},${dimensions.top})`,
+        "data-nodetype": data.typeName,
         onmousedown: mouseDownEventHandler,
+        ...renderAttributes(data),
       },
       [
         h("rect", {
@@ -64,6 +71,7 @@ export function renderDefaultNodeLayout(
           d: "M0,6 Q0,0 6,0 l" + (width - 12) + ",0 q6,0 6,6 l0,14 L0,20 0,6z",
           fill,
           stroke,
+          "data-nodeelement": "title",
         }),
         h(
           "text",
@@ -84,17 +92,35 @@ export function renderDefaultNodeLayout(
             "text-anchor": "middle",
             "font-size": fontSize.toString(),
             lengthAdjust: "spacingAndGlyphs",
-            textLength: data.displayName.length > 24 ? "210" : undefined, // pragmatic way to only shrink, never grow
+            textLength: safeTitle.length > 24 ? "210" : undefined, // pragmatic way to only shrink, never grow
             x: (width / 2).toString(),
-            y: "4",
+            y: "0",
             "stroke-width": "0",
             dy: (height / 2 + 10).toString(),
             "font-family": "Arial",
             fill: header2Color,
             "font-weight": "400",
           },
-          [makeSafeTitle(data.displayName)]
+          [makeSafeTitle(safeTitle)]
         ),
+        data.shortName
+          ? h(
+              "text",
+              {
+                "text-anchor": "middle",
+                "font-size": SMALLER_FONT_SIZE.toString(),
+                lengthAdjust: "spacingAndGlyphs",
+                textLength: data.displayName.length > 24 ? "210" : undefined, // pragmatic way to only shrink, never grow
+                x: (width / 2).toString(),
+                y: "18",
+                "stroke-width": "0",
+                dy: (height / 2 + 10).toString(),
+                "font-family": "Arial",
+                fill: header2Color,
+              },
+              [makeSafeTitle(data.displayName)]
+            )
+          : undefined,
         h("title", {}, [data.displayName]),
       ]
     ),

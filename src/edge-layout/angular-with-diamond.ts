@@ -3,7 +3,7 @@ import { h } from "maquette";
 import { EdgeData } from "../api";
 import { NodeDimensions } from "../node-layout/node-common";
 import { RenderedEdge } from "./edge-common";
-import { intersectionWithEntity } from "./edge-utils";
+import { intersectionWithEntity, renderAttributes } from "./edge-utils";
 
 /**
  * Only works well at the bottom.
@@ -28,6 +28,7 @@ export function renderAngularWithDiamond(
           endPosition.x,
           endPosition.y
         ),
+        ...renderAttributes(data),
       },
       []
     ),

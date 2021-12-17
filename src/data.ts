@@ -1,8 +1,8 @@
 /* tslint:disable:quotemark object-literal-key-quotes max-line-length */
-import { NodeData, NodePosition, VisualizerAPI } from "./api";
+import { EdgeData, NodeData, NodePosition, VisualizerAPI } from "./api";
 
 // Can be obtained by putting a breakpoint graph.ts:80 and running `JSON.stringify(Object.fromEntries(nodes.entries()))` and `JSON.stringify(edges)`
-let data: any = {
+let demoData: any = {
   nodes: {
     "ERVisualizationNode:entityVisualization_Entity:System": {
       key: "ERVisualizationNode:entityVisualization_Entity:System",
@@ -40,7 +40,7 @@ let data: any = {
     },
     "ERVisualizationNode:entityVisualization_Entity:AndExpressionOperand": {
       key: "ERVisualizationNode:entityVisualization_Entity:AndExpressionOperand",
-      style: "default",
+      style: "database",
       displayName: "AndExpressionOperand",
       typeName: "Entity",
     },
@@ -52,7 +52,7 @@ let data: any = {
     },
     "ERVisualizationNode:entityVisualization_Entity:ConcatExpression": {
       key: "ERVisualizationNode:entityVisualization_Entity:ConcatExpression",
-      style: "default",
+      style: "database",
       displayName: "ConcatExpression",
       typeName: "Entity",
     },
@@ -6074,43 +6074,71 @@ let data: any = {
   positions: [],
 };
 
-let nodes = new Map<string, NodeData>();
-for (let [key, value] of Object.entries(data.nodes)) {
-  if (!(value as any).displayName) {
-    (value as any).displayName = "?";
+export function createData(data: any, hooks: any): VisualizerAPI {
+  data = data || demoData;
+  let nodes = new Map<string, NodeData>();
+  let nodeCountPerType: any = {};
+  for (let [key, value] of Object.entries(data.nodes)) {
+    let nodeData = value as any;
+    if (!nodeData.displayName) {
+      nodeData.displayName = "?";
+    }
+    nodes.set(key, nodeData);
+    nodeCountPerType[nodeData.typeName] = (nodeCountPerType[nodeData.typeName] || 0) + 1;
   }
-  nodes.set(key, value as any);
-}
 
-let positions = data.positions as ReadonlyArray<NodePosition>;
+  let positions = data.positions as ReadonlyArray<NodePosition>;
+  let positionsJson = window.localStorage["positions"];
+  if (positionsJson) {
+    positions = JSON.parse(positionsJson);
+  }
 
-let positionsJson = window.localStorage["positions"];
-if (positionsJson) {
-  positions = JSON.parse(positionsJson);
-}
+  let linkedNodes = new Map<string, string[]>();
+  data.edges.forEach((e: EdgeData) => {
+    linkedNodes.set(e.fromNode, (linkedNodes.get(e.fromNode) || []).concat(e.toNode));
+  });
 
-function savePositions() {
-  positionsJson = JSON.stringify(positions);
-  window.localStorage["positions"] = positionsJson;
-}
+  function edgeExists(nodeKey: string, otherNodeKey: string) {
+    return (
+      linkedNodes.get(otherNodeKey)?.some((e) => e === nodeKey) ||
+      linkedNodes.get(nodeKey)?.some((e) => e === otherNodeKey) ||
+      false
+    );
+  }
 
-export let demoData: VisualizerAPI = {
-  getNodes: () => nodes,
-  getEdges: () => data.edges,
-  getNodePositions: () => positions,
-  updateVisualizationEntry: (newEntry) => {
-    let newPositions = positions.filter((e) => e.nodeKey !== newEntry.nodeKey);
-    newPositions.push(newEntry);
-    positions = newPositions;
-    savePositions();
-  },
+  function savePositions() {
+    positionsJson = JSON.stringify(positions);
+    window.localStorage["positions"] = positionsJson;
+  }
 
-  removeVisualizationEntry: (oldEntryKey) => {
-    positions = positions.filter((e) => e.nodeKey !== oldEntryKey);
-    savePositions();
-  },
-
-  onNavigate(key: string) {
+  function fallBackOnNavigate(key: string) {
     alert(`Navigate to ${key}`);
-  },
-};
+  }
+
+  return {
+    getNodes: () => nodes,
+    getEdges: () => data.edges,
+    getNodeCountPerType: () => nodeCountPerType,
+    getNodePositions: () => positions,
+    edgeExists: edgeExists,
+
+    updateVisualizationEntry: (newEntry) => {
+      let newPositions = positions.filter((e) => e.nodeKey !== newEntry.nodeKey);
+      newPositions.push(newEntry);
+      positions = newPositions;
+      savePositions();
+    },
+    removeVisualizationEntry: (oldEntryKey) => {
+      positions = positions.filter((e) => e.nodeKey !== oldEntryKey);
+      savePositions();
+    },
+    clearVisualizationEntries: () => {
+      positions = [];
+      savePositions();
+    },
+
+    onNavigate(key: string) {
+      (hooks?.onNavigate || fallBackOnNavigate)(key);
+    },
+  };
+}

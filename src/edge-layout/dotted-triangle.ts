@@ -3,7 +3,7 @@ import { h } from "maquette";
 import { EdgeData } from "../api";
 import { NodeDimensions } from "../node-layout/node-common";
 import { RenderedEdge } from "./edge-common";
-import { intersectionWithEntity } from "./edge-utils";
+import { intersectionWithEntity, renderAttributes } from "./edge-utils";
 
 const sizeLength = 8;
 const halfSizeWidth = 4.6;
@@ -39,6 +39,7 @@ export function renderDottedTriangle(
         ` L${end.x},${end.y}` +
         ` M${centerPos}` +
         ` L${start.x},${start.y}`,
+      ...renderAttributes(data),
     }),
     decorations: undefined,
   };

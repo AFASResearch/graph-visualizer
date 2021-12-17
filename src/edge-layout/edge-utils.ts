@@ -1,5 +1,6 @@
 import { VNodeChild, h } from "maquette";
 
+import { EdgeData } from "../api";
 import { Align, DockPosition, XY } from "../interfaces";
 import { NodeDimensions } from "../node-layout/node-common";
 
@@ -16,6 +17,10 @@ export function intersectionWithEntity(from: XY, entity: NodeDimensions): DockPo
     let length = Math.hypot(dx, dy);
     toX = (-(dx / length) * entity.diameter) / 2;
     toY = (-(dy / length) * entity.diameter) / 2;
+  } else if (entity.diameterX && entity.diameterY) {
+    let length = Math.hypot(dx, dy);
+    toX = (-(dx / length) * entity.diameterX) / 2;
+    toY = (-(dy / length) * entity.diameterY) / 2;
   } else {
     if (topOrBottom) {
       toX = (-dx * (entity.height / 2)) / ady;
@@ -76,4 +81,15 @@ export function renderLabel(
     },
     [label]
   );
+}
+
+export function renderAttributes(data: EdgeData) {
+  let attr: { [name: string]: string | number } = {};
+
+  if (data.attributes) {
+    for (let [key, val] of Object.entries(data.attributes)) {
+      attr[`data-attr-${key}`] = val;
+    }
+  }
+  return attr;
 }
