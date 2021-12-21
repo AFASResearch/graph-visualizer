@@ -15,13 +15,19 @@ export interface EdgeData {
   readonly style: string;
   readonly fromLabel?: string;
   readonly toLabel?: string;
-  readonly attributes?: { [name: string]: string | number };
+  readonly attributes?: { [name: string]: string | number | boolean };
 }
 
 export interface NodePosition {
   readonly nodeKey: string;
   readonly x: number;
   readonly y: number;
+}
+
+export interface GraphData {
+  nodes: ReadonlyMap<string, NodeData>;
+  edges: readonly EdgeData[];
+  positions?: readonly NodePosition[];
 }
 
 export interface VisualizerAPI {
@@ -34,10 +40,6 @@ export interface VisualizerAPI {
    */
   getEdges(): ReadonlyArray<EdgeData>;
   /**
-   *
-   */
-  edgeExists(nodeKey: string, otherNodeKey: string): boolean;
-  /**
    * Contract: producer may not make changes to the result, but should provide a new ReadonlyArray object
    */
   getNodePositions(): ReadonlyArray<NodePosition>;
@@ -45,6 +47,4 @@ export interface VisualizerAPI {
   removeVisualizationEntry(entryKey: string): void;
   clearVisualizationEntries(): void;
   onNavigate?(nodeKey: string): void;
-
-  getNodeCountPerType(): { [type: string]: number };
 }

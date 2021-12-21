@@ -1,6 +1,6 @@
 import { VNode, h } from "maquette";
 
-import { NodeData, VisualizerAPI } from "./api";
+import { EdgeData, NodeData, VisualizerAPI } from "./api";
 import { XY } from "./interfaces";
 import { createMemoization } from "./utils";
 
@@ -70,7 +70,7 @@ export function renderSidebar(
               // we shouldn't show nodes that are already displayed
               !positions.some((p) => p.nodeKey === n.key) &&
               // if a filterNode is present, the node should be connected to it
-              (filterNodeKey ? api.edgeExists(n.key, filterNodeKey) : true) &&
+              (filterNodeKey ? edgeExists(edges, n.key, filterNodeKey) : true) &&
               // if a searchText is present, we should apply the parsed filters
               filters.every((f) => f(n))
           );
@@ -139,5 +139,13 @@ export function renderSidebar(
         ]),
       ]);
     }
+  );
+}
+
+function edgeExists(edges: readonly EdgeData[], nodeKey: string, otherNodeKey: string) {
+  return edges.some(
+    (e) =>
+      (e.fromNode === nodeKey && e.toNode === otherNodeKey) ||
+      (e.fromNode === otherNodeKey && e.toNode === nodeKey)
   );
 }

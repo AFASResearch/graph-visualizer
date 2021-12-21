@@ -1,5 +1,5 @@
 /* tslint:disable:quotemark object-literal-key-quotes max-line-length */
-import { EdgeData, NodeData, NodePosition, VisualizerAPI } from "./api";
+import { EdgeData, GraphData, NodeData } from "../api";
 
 // Can be obtained by putting a breakpoint graph.ts:80 and running `JSON.stringify(Object.fromEntries(nodes.entries()))` and `JSON.stringify(edges)`
 let demoData: any = {
@@ -1722,7 +1722,6 @@ let demoData: any = {
       displayName: "unionVisualization",
     },
   },
-
   edges: [
     {
       key: "ERVisualizationEdge:erVisualizationForMechanismToTemplate_InstanceTemplate:theSystem",
@@ -2961,6 +2960,7 @@ let demoData: any = {
       fromNode: "ERVisualizationNode:erVisualizationForMechanism_Mechanism:forAddButton",
       toNode:
         "ERVisualizationNode:erVisualizationForTemplate_InstanceTemplate:forAddButton-instanceTemplate1",
+      attributes: { special: true, importance: 5, foo: "bar" },
     },
     {
       key: "ERVisualizationEdge:erVisualizationForTemplateToEntity_InstanceTemplate:forAddButton-instanceTemplate1",
@@ -6071,74 +6071,22 @@ let demoData: any = {
       fromLabel: "＊",
     },
   ],
-  positions: [],
 };
 
-export function createData(data: any, hooks: any): VisualizerAPI {
-  data = data || demoData;
+export function createDemoData(): GraphData {
   let nodes = new Map<string, NodeData>();
-  let nodeCountPerType: any = {};
-  for (let [key, value] of Object.entries(data.nodes)) {
+  for (let [key, value] of Object.entries(demoData.nodes)) {
     let nodeData = value as any;
-    if (!nodeData.displayName) {
-      nodeData.displayName = "?";
-    }
     nodes.set(key, nodeData);
-    nodeCountPerType[nodeData.typeName] = (nodeCountPerType[nodeData.typeName] || 0) + 1;
-  }
-
-  let positions = data.positions as ReadonlyArray<NodePosition>;
-  let positionsJson = window.localStorage["positions"];
-  if (positionsJson) {
-    positions = JSON.parse(positionsJson);
   }
 
   let linkedNodes = new Map<string, string[]>();
-  data.edges.forEach((e: EdgeData) => {
+  demoData.edges.forEach((e: EdgeData) => {
     linkedNodes.set(e.fromNode, (linkedNodes.get(e.fromNode) || []).concat(e.toNode));
   });
 
-  function edgeExists(nodeKey: string, otherNodeKey: string) {
-    return (
-      linkedNodes.get(otherNodeKey)?.some((e) => e === nodeKey) ||
-      linkedNodes.get(nodeKey)?.some((e) => e === otherNodeKey) ||
-      false
-    );
-  }
-
-  function savePositions() {
-    positionsJson = JSON.stringify(positions);
-    window.localStorage["positions"] = positionsJson;
-  }
-
-  function fallBackOnNavigate(key: string) {
-    alert(`Navigate to ${key}`);
-  }
-
   return {
-    getNodes: () => nodes,
-    getEdges: () => data.edges,
-    getNodeCountPerType: () => nodeCountPerType,
-    getNodePositions: () => positions,
-    edgeExists: edgeExists,
-
-    updateVisualizationEntry: (newEntry) => {
-      let newPositions = positions.filter((e) => e.nodeKey !== newEntry.nodeKey);
-      newPositions.push(newEntry);
-      positions = newPositions;
-      savePositions();
-    },
-    removeVisualizationEntry: (oldEntryKey) => {
-      positions = positions.filter((e) => e.nodeKey !== oldEntryKey);
-      savePositions();
-    },
-    clearVisualizationEntries: () => {
-      positions = [];
-      savePositions();
-    },
-
-    onNavigate(key: string) {
-      (hooks?.onNavigate || fallBackOnNavigate)(key);
-    },
+    nodes,
+    edges: demoData.edges,
   };
 }

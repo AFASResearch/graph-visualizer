@@ -2,8 +2,7 @@
   "compilerOptions": {
     "lib": [
       "dom",
-      "es2015",
-      "es6"
+      "ES7"
     ],
     "module": "CommonJS",
     "target": "ES6",
@@ -14,7 +13,8 @@
     "rootDir": ".",
     "strict": true,
     "strictNullChecks": false,
-    "noEmit": true
+    "noEmit": true,
+    "experimentalDecorators": true
   },
   "include": [
     "./test/**/*.ts"

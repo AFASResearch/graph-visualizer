@@ -1,14 +1,16 @@
-import { MaquetteComponent, ProjectorService, VNode, h } from "maquette";
+import { ProjectorService, VNode, h } from "maquette";
 
 import { VisualizerAPI } from "./api";
-import { createGraphState, renderGraph, renderGraphSummary } from "./graph";
+import { createGraphState, renderGraph } from "./graph";
 import { XY } from "./interfaces";
 import { createSidebarState, renderSidebar } from "./sidebar";
+import { createMemoization } from "./utils";
 
 function createVisualizerState() {
   return {
     sidebar: createSidebarState(),
     graph: createGraphState(),
+    summaryMemoization: createMemoization<VNode>(),
     sidebarOpen: false,
     filterNodeKey: undefined as string | undefined,
     dragStart: undefined as
@@ -60,7 +62,7 @@ function renderVisualizer(state: VisualizerState, api: VisualizerAPI, projector:
           },
           ["+"]
         ),
-    renderGraphSummary(state.graph, api),
+    renderGraphSummary(state, api),
   ]);
 
   function onFilterClear() {
@@ -94,4 +96,22 @@ export function createVisualizer(): VisualizerComponent {
       return renderVisualizer(state, api, projector);
     },
   };
+}
+
+function renderGraphSummary(state: VisualizerState, api: VisualizerAPI) {
+  let nodes = api.getNodes();
+  let edges = api.getEdges();
+  return state.summaryMemoization.result([nodes, edges], () => {
+    let nodeCountPerType: { [type: string]: number } = {};
+    for (let node of Object.values(nodes)) {
+      nodeCountPerType[node.typeName] = (nodeCountPerType[node.typeName] || 0) + 1;
+    }
+
+    let nodeTypeSummary = Object.entries(nodeCountPerType).map(
+      (entry) => `${entry[1]} ${entry[0]}`
+    );
+    return h("div.gravi-summary", {}, [
+      `${nodes.size} nodes (${nodeTypeSummary.join(", ")}), ${edges.length} edges`,
+    ]);
+  });
 }

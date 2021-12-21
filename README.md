@@ -6,8 +6,12 @@ Meant to be integrated in other applications.
 To see a demo, execute
 `npm run start`
 
-To embed in another application, use `npm install graph-visualizer`, create a visualizer using `createVisualizer` and add its `render` function to a
- `maquette` projector.
+To embed in another application, import this module and include a <graph-visualizer> element.
+
+## Work in progress
+
+Allow highlighting edges using a changeable attribute
+expose full api through properties and attributes
 
 ## Internals
 

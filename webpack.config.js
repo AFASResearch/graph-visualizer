@@ -3,7 +3,7 @@ const HtmlWebpackPlugin = require('html-webpack-plugin');
 
 module.exports = {
   mode: 'development',
-  entry: './src/demo.ts',
+  entry: './src/demo/demo.ts',
   plugins: [
     new HtmlWebpackPlugin({
       title: 'Graph visualizer',
@@ -21,10 +21,10 @@ module.exports = {
       },
       {
         test: /\.css$/,
-        use: [
-          'style-loader',
-          'css-loader',
-        ],
+        loader: "css-loader",
+        options: {
+          exportType: 'css-style-sheet'
+        },
       }
     ],
   },

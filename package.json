@@ -74,7 +74,6 @@
     "koa-static": "^5.0.0",
     "maquette": "^3.5.1",
     "ncp": "2.0.0",
-    "style-loader": "3.3.1",
     "ts-loader": "9.2.6",
     "typescript-assistant": "0.53.1",
     "webpack": "5.60.0",

@@ -77,18 +77,6 @@ export function createGraphState() {
 
 export type GraphState = ReturnType<typeof createGraphState>;
 
-export function renderGraphSummary(state: GraphState, api: VisualizerAPI) {
-  let nodes = api.getNodes();
-  let edges = api.getEdges();
-
-  let nodeTypeSummary = Object.entries(api.getNodeCountPerType()).map(
-    (entry) => `${entry[1]} ${entry[0]}`
-  );
-  return h("div.gravi-summary", {}, [
-    `${nodes.size} nodes (${nodeTypeSummary.join(", ")}), ${edges.length} edges`,
-  ]);
-}
-
 export function renderGraph(
   state: GraphState,
   dragStart: undefined | { nodeKey: string; anchorScreenPosition: XY; mousePosition: XY },
