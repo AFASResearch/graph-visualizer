@@ -1,6 +1,6 @@
 import { VNodeChild, h } from "maquette";
 
-import { EdgeData } from "../api";
+import { EdgeData, NodeData } from "../api";
 import { Align, DockPosition, XY } from "../interfaces";
 import { NodeDimensions } from "../node-layout/node-common";
 
@@ -83,7 +83,7 @@ export function renderLabel(
   );
 }
 
-export function renderAttributes(data: EdgeData, highlighted: boolean) {
+export function renderAttributes(data: EdgeData | NodeData, highlighted: boolean) {
   if (data.attributes) {
     let parts: string[] = [];
     for (let [key, val] of Object.entries(data.attributes)) {

@@ -1,14 +1,15 @@
 import { h } from "maquette";
 
 import { NodeData, NodePosition } from "../api";
+import { renderAttributes } from "../edge-layout/edge-utils";
 import { XY } from "../interfaces";
 import { NodeDimensions, RenderedNode } from "./node-common";
-import { renderAttributes } from "./node-utils";
 
 const diameter = 160;
 
 export function renderBigCircleNodeLayout(
   data: NodeData,
+  highlighted: boolean,
   position: NodePosition,
   dragPosition: XY | undefined,
   mouseDownEventHandler: (evt: MouseEvent) => void
@@ -39,7 +40,7 @@ export function renderBigCircleNodeLayout(
         "stroke-width": 1,
         "data-nodetype": data.typeName,
         onmousedown: mouseDownEventHandler,
-        ...renderAttributes(data),
+        ...renderAttributes(data, highlighted),
       }),
       h(
         "text",

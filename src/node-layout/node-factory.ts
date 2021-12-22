@@ -9,23 +9,54 @@ import { renderSmallEllipseNodeLayout } from "./small-ellipse-node-layout";
 
 export function renderNode(
   data: NodeData,
+  highlighted: boolean,
   position: NodePosition,
   dragPosition: XY | undefined,
   state: NodeState,
   mouseDownEventHandler: (evt: MouseEvent) => void
 ) {
-  return state.renderMemoization.result([data, position, dragPosition], () => {
+  return state.renderMemoization.result([data, highlighted, position, dragPosition], () => {
     switch (data.style) {
       case "big-circle":
-        return renderBigCircleNodeLayout(data, position, dragPosition, mouseDownEventHandler);
+        return renderBigCircleNodeLayout(
+          data,
+          highlighted,
+          position,
+          dragPosition,
+          mouseDownEventHandler
+        );
       case "small-circle":
-        return renderSmallCircleNodeLayout(data, position, dragPosition, mouseDownEventHandler);
+        return renderSmallCircleNodeLayout(
+          data,
+          highlighted,
+          position,
+          dragPosition,
+          mouseDownEventHandler
+        );
       case "small-ellipse":
-        return renderSmallEllipseNodeLayout(data, position, dragPosition, mouseDownEventHandler);
+        return renderSmallEllipseNodeLayout(
+          data,
+          highlighted,
+          position,
+          dragPosition,
+          mouseDownEventHandler
+        );
       case "database":
-        return renderDatabaseNodeLayout(data, position, dragPosition, mouseDownEventHandler);
+        return renderDatabaseNodeLayout(
+          data,
+          highlighted,
+          position,
+          dragPosition,
+          mouseDownEventHandler
+        );
       default:
-        return renderDefaultNodeLayout(data, position, dragPosition, mouseDownEventHandler);
+        return renderDefaultNodeLayout(
+          data,
+          highlighted,
+          position,
+          dragPosition,
+          mouseDownEventHandler
+        );
     }
   });
 }

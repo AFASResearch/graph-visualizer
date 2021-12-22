@@ -1,15 +1,16 @@
 import { h } from "maquette";
 
 import { NodeData, NodePosition } from "../api";
+import { renderAttributes } from "../edge-layout/edge-utils";
 import { XY } from "../interfaces";
-import { NodeDimensions, NodeState, RenderedNode } from "./node-common";
-import { renderAttributes } from "./node-utils";
+import { NodeDimensions, RenderedNode } from "./node-common";
 
 const dbRadiusWidth = 80;
 const dbTopRadiusHeight = 10;
 
 export function renderDatabaseNodeLayout(
   data: NodeData,
+  highlighted: boolean,
   position: NodePosition,
   dragPosition: XY | undefined,
   mouseDownEventHandler: (evt: MouseEvent) => void
@@ -38,7 +39,7 @@ export function renderDatabaseNodeLayout(
         transform: `translate(${dimensions.left},${dimensions.top})`,
         "data-nodetype": data.typeName,
         onmousedown: mouseDownEventHandler,
-        ...renderAttributes(data),
+        ...renderAttributes(data, highlighted),
       },
       [
         h("title", { id: "unique-id" }, [data.displayName]),

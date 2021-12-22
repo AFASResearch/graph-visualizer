@@ -4,8 +4,10 @@ export interface VisualizerWebComponentAPIParameters {
   getGraphData(): GraphData;
   getLocalStorageKey(): string | undefined;
   emitPositionsChanged(): void;
+  emitSelectionChange(nodeKey: string | undefined): void;
   emitNavigate(nodeKey: string): void;
   edgesToHighlight(): string | undefined;
+  nodesToHighlight(): string | undefined;
 }
 
 export function createVisualizerWebComponentAPI(
@@ -31,6 +33,7 @@ export function createVisualizerWebComponentAPI(
       return getGraphData().edges;
     },
     getEdgesToHighlight: parameters.edgesToHighlight,
+    getNodesToHighlight: parameters.nodesToHighlight,
     getNodePositions(): ReadonlyArray<NodePosition> {
       let newPositions = getGraphData().positions;
       if (!newPositions && !positions && getLocalStorageKey()) {
@@ -61,6 +64,9 @@ export function createVisualizerWebComponentAPI(
     },
     onNavigate(nodeKey: string) {
       parameters.emitNavigate(nodeKey);
+    },
+    onSelectionChange(nodeKey: string | undefined) {
+      parameters.emitSelectionChange(nodeKey);
     },
   };
 }

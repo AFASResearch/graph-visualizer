@@ -1,14 +1,15 @@
 import { h } from "maquette";
 
 import { NodeData, NodePosition } from "../api";
+import { renderAttributes } from "../edge-layout/edge-utils";
 import { XY } from "../interfaces";
-import { NodeDimensions, NodeState, RenderedNode } from "./node-common";
-import { renderAttributes } from "./node-utils";
+import { NodeDimensions, RenderedNode } from "./node-common";
 
 const diameter = 80;
 
 export function renderSmallCircleNodeLayout(
   data: NodeData,
+  highlighted: boolean,
   position: NodePosition,
   dragPosition: XY | undefined,
   mouseDownEventHandler: (evt: MouseEvent) => void
@@ -42,7 +43,7 @@ export function renderSmallCircleNodeLayout(
         "data-nodetype": data.typeName,
         title: data.displayName,
         onmousedown: mouseDownEventHandler,
-        ...renderAttributes(data),
+        ...renderAttributes(data, highlighted),
       },
       [h("title", { id: "unique-id" }, [data.displayName])]
     ),

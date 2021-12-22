@@ -20,6 +20,7 @@ import { createMemoization, snapToGrid, toSVGCoordinates } from "./utils";
 export interface VisibleNodeEntry {
   readonly position: NodePosition;
   readonly state: NodeState;
+  highlighted: boolean;
   data?: NodeData;
   renderedNode?: RenderedNode;
 }
@@ -86,7 +87,7 @@ export function renderGraph(
   projector: ProjectorService
 ) {
   if (dragStart) {
-    state.activeNodeKey = undefined;
+    selectNode(undefined);
     // a one-time instruction passed as an argument
     let anchorPosition = transformXYCoordinates(
       dragStart.anchorScreenPosition.x,
@@ -109,11 +110,13 @@ export function renderGraph(
   let nodePositions = api.getNodePositions();
   let edges = api.getEdges();
   let edgesToHighlight = api.getEdgesToHighlight();
+  let nodesToHighlight = api.getNodesToHighlight();
 
   return state.renderCache.result(
     [
       nodes,
       edges,
+      nodesToHighlight,
       edgesToHighlight,
       nodePositions,
       state.activeNodeKey,
@@ -123,22 +126,32 @@ export function renderGraph(
     ],
     () => {
       let visibleNodes = state.visibleNodesMemoization.result(
-        [nodePositions, state.dragging?.newNode],
+        [nodePositions, nodesToHighlight, state.dragging?.newNode],
         () => {
           state.previousNodes = undefined;
+          let highlightNodeKeys = new Set<string>(nodesToHighlight?.split(" ") ?? []);
           let oldVisibleNodes = state.visibleNodesMemoization.previousResult();
           let result = new Map(
             nodePositions.map((np) => {
               let oldEntry = oldVisibleNodes?.get(np.nodeKey);
               if (oldEntry && oldEntry.position === np) {
+                oldEntry.highlighted = highlightNodeKeys.has(np.nodeKey);
                 return [np.nodeKey, oldEntry];
               }
-              return [np.nodeKey, { position: np, state: createNodeState() }];
+              return [
+                np.nodeKey,
+                {
+                  position: np,
+                  state: createNodeState(),
+                  highlighted: highlightNodeKeys.has(np.nodeKey),
+                },
+              ];
             })
           );
           if (state.dragging?.newNode) {
             result.set(state.dragging.newNode.nodeKey, {
               position: state.dragging.newNode,
+              highlighted: false,
               state: createNodeState(),
             });
           }
@@ -165,6 +178,7 @@ export function renderGraph(
         if (entry.data) {
           entry.renderedNode = renderNode(
             entry.data,
+            entry.highlighted,
             entry.position,
             state.dragging &&
               (nodeKey === state.activeNodeKey || state.dragging.newNode === entry.position)
@@ -523,7 +537,7 @@ export function renderGraph(
       startVisualizationTransform: state.getVisualizationTransform(),
     };
     if (!evt.defaultPrevented) {
-      state.activeNodeKey = undefined;
+      selectNode(undefined);
       evt.preventDefault();
     }
   }
@@ -534,19 +548,22 @@ export function renderGraph(
 
   function hideActiveNode(evt: MouseEvent) {
     api.removeVisualizationEntry(state.activeNodeKey!);
-    state.activeNodeKey = undefined;
+    selectNode(undefined);
     evt.preventDefault();
   }
 
   function navigateToActiveNode(evt: MouseEvent) {
     api.onNavigate!(state.activeNodeKey!);
-    state.activeNodeKey = undefined;
+    selectNode(undefined);
     evt.preventDefault();
     evt.stopPropagation();
   }
 
-  function selectNode(key: string) {
+  function selectNode(key: string | undefined) {
     state.activeNodeKey = key;
+    if (api.onSelectionChange) {
+      api.onSelectionChange(key);
+    }
   }
 
   function filterRelatedNodes() {

@@ -47,8 +47,13 @@ export interface VisualizerAPI {
    * Returns a space-separated string containing keys from edges to highlight
    */
   getEdgesToHighlight(): string | undefined;
+  /**
+   * Returns a space-separated string containing keys from nodes to highlight
+   */
+  getNodesToHighlight(): string | undefined;
   updateVisualizationEntry(entry: NodePosition): void;
   removeVisualizationEntry(entryKey: string): void;
   clearVisualizationEntries(): void;
   onNavigate?(nodeKey: string): void;
+  onSelectionChange?(nodeKey: string | undefined): void;
 }

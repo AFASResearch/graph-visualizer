@@ -1,15 +1,16 @@
 import { h } from "maquette";
 
 import { NodeData, NodePosition } from "../api";
+import { renderAttributes } from "../edge-layout/edge-utils";
 import { XY } from "../interfaces";
-import { NodeDimensions, NodeState, RenderedNode } from "./node-common";
-import { renderAttributes } from "./node-utils";
+import { NodeDimensions, RenderedNode } from "./node-common";
 
 const diameterWidth = 160;
 const diameterHeight = 50;
 
 export function renderSmallEllipseNodeLayout(
   data: NodeData,
+  highlighted: boolean,
   position: NodePosition,
   dragPosition: XY | undefined,
   mouseDownEventHandler: (evt: MouseEvent) => void
@@ -40,7 +41,7 @@ export function renderSmallEllipseNodeLayout(
         transform: `translate(${dimensions.left},${dimensions.top})`,
         "data-nodetype": data.typeName,
         onmousedown: mouseDownEventHandler,
-        ...renderAttributes(data),
+        ...renderAttributes(data, highlighted),
       },
       [
         h("ellipse", {

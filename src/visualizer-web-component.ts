@@ -17,6 +17,8 @@ const ATTRIBUTES = {
   dataVariable: "data-variable",
   localStorageKey: "local-storage-key",
   edgesToHighlight: "edges-to-highlight",
+  nodesToHighlight: "nodes-to-highlight",
+  dataUrl: "data-url",
 };
 
 @customElement("graph-visualizer")
@@ -33,6 +35,11 @@ export class VisualizerWebComponent extends MaquetteWebComponent {
       emitNavigate: (nodeKey: string) => {
         this.dispatchEvent(new CustomEvent<string>("navigate", { detail: nodeKey, bubbles: true }));
       },
+      emitSelectionChange: (nodeKey: string | undefined) => {
+        this.dispatchEvent(
+          new CustomEvent<string | undefined>("selectionchange", { detail: nodeKey, bubbles: true })
+        );
+      },
       emitPositionsChanged: () => {
         this.dispatchEvent(new CustomEvent("positionChanged"));
       },
@@ -41,6 +48,9 @@ export class VisualizerWebComponent extends MaquetteWebComponent {
       },
       edgesToHighlight: (): string | undefined => {
         return this.edgesToHighlight;
+      },
+      nodesToHighlight: (): string | undefined => {
+        return this.nodesToHighlight;
       },
     });
   }
@@ -95,6 +105,32 @@ export class VisualizerWebComponent extends MaquetteWebComponent {
     }
   }
 
+  // nodes-to-highlight
+  get nodesToHighlight() {
+    return this.getAttribute(ATTRIBUTES.nodesToHighlight) ?? undefined;
+  }
+
+  set nodesToHighlight(value: string | undefined) {
+    if (value) {
+      this.setAttribute(ATTRIBUTES.nodesToHighlight, value);
+    } else {
+      this.removeAttribute(ATTRIBUTES.nodesToHighlight);
+    }
+  }
+
+  // data-url
+  get dataUrl() {
+    return this.getAttribute(ATTRIBUTES.dataUrl) ?? undefined;
+  }
+
+  set dataUrl(value: string | undefined) {
+    if (value) {
+      this.setAttribute(ATTRIBUTES.dataUrl, value);
+    } else {
+      this.removeAttribute(ATTRIBUTES.dataUrl);
+    }
+  }
+
   // Properties: getter and setter where setter calls render
   get api() {
     return this._api;
@@ -125,10 +161,34 @@ export class VisualizerWebComponent extends MaquetteWebComponent {
     if (name === ATTRIBUTES.dataVariable && newValue) {
       // custom logic after changing dataVariable
       this._data = (window as any)[newValue];
+    } else if (name === ATTRIBUTES.dataUrl) {
+      this._data = emptyGraphData;
+      if (newValue) {
+        fetch(newValue)
+          .then((res) => res.json())
+          .then((parsed) => {
+            if (!parsed.nodes || !parsed.edges) {
+              throw new Error("nodes and edges not found in the returned json");
+            }
+            this._data = {
+              nodes: new Map(Object.entries(parsed.nodes)),
+              edges: parsed.edges,
+              positions: parsed.positions ?? this._data.positions,
+            };
+          })
+          .catch((err) => {
+            throw new Error("Could not load graph data" + err);
+          });
+      }
     }
   }
 
   static get observedAttributes() {
-    return [ATTRIBUTES.dataVariable, ATTRIBUTES.localStorageKey, ATTRIBUTES.edgesToHighlight];
+    return [
+      ATTRIBUTES.dataVariable,
+      ATTRIBUTES.localStorageKey,
+      ATTRIBUTES.edgesToHighlight,
+      ATTRIBUTES.nodesToHighlight,
+    ];
   }
 }

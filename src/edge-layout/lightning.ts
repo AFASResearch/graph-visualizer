@@ -30,8 +30,8 @@ export function renderLightning(
     dx = end.x - start.x;
     dy = end.y - start.y;
   }
-  let centerDx = -ndy * diameter;
-  let centerDy = ndx * diameter;
+  let centerDx = -ndy * diameter - 2 * ndx * diameter;
+  let centerDy = ndx * diameter - 2 * ndy * diameter;
   let firstLastDx = (dx - centerDx) / 2;
   let firstLastDy = (dy - centerDy) / 2;
 

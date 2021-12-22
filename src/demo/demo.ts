@@ -14,9 +14,13 @@ let domNode = document.body;
 let projector = createProjector();
 let data = createDemoData();
 (window as any).VisualizerData = data;
-let nav = ((window as any).NavigateCallback = (evt: CustomEvent<string>) => {
+function nav(evt: CustomEvent<string>) {
   window.alert("Navigate to " + evt.detail);
-});
+}
+
+function selectionChanged(evt: CustomEvent<string | undefined>) {
+  window.document.title = evt.detail ?? "no selection";
+}
 
 let highlighting = true;
 
@@ -29,6 +33,7 @@ projector.append(domNode, () =>
       "edges-to-highlight":
         "ERVisualizationEdge:erVisualizationForTemplateToEntity_InstanceTemplate:forAddButton-instanceTemplate1",
       onnavigate: nav,
+      onselectionchange: selectionChanged,
       afterCreate(el) {
         // needed until https://github.com/AFASSoftware/maquette/issues/170 is resolved
         el.addEventListener("navigate", (el as any).onnavigate);
@@ -39,8 +44,13 @@ projector.append(domNode, () =>
               "edges-to-highlight",
               "ERVisualizationEdge:erVisualizationForTemplateToEntity_InstanceTemplate:forAddButton-instanceTemplate1"
             );
+            el.setAttribute(
+              "nodes-to-highlight",
+              "ERVisualizationNode:entityVisualization_Entity:AddButton"
+            );
           } else {
             el.removeAttribute("edges-to-highlight");
+            el.removeAttribute("nodes-to-highlight");
           }
         }, 500);
       },
