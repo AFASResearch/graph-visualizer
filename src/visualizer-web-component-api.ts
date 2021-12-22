@@ -5,6 +5,7 @@ export interface VisualizerWebComponentAPIParameters {
   getLocalStorageKey(): string | undefined;
   emitPositionsChanged(): void;
   emitNavigate(nodeKey: string): void;
+  edgesToHighlight(): string | undefined;
 }
 
 export function createVisualizerWebComponentAPI(
@@ -12,7 +13,7 @@ export function createVisualizerWebComponentAPI(
 ): VisualizerAPI {
   let { getGraphData, getLocalStorageKey } = parameters;
   let lastDataPositions: readonly NodePosition[] | undefined;
-  let positions: NodePosition[] = [];
+  let positions: NodePosition[] | undefined;
 
   function savePositions() {
     let localStorageKey = getLocalStorageKey();
@@ -29,33 +30,31 @@ export function createVisualizerWebComponentAPI(
     getEdges(): ReadonlyArray<EdgeData> {
       return getGraphData().edges;
     },
+    getEdgesToHighlight: parameters.edgesToHighlight,
     getNodePositions(): ReadonlyArray<NodePosition> {
       let newPositions = getGraphData().positions;
-      if (!newPositions) {
-        let localStorageKey = getLocalStorageKey();
-        if (localStorageKey) {
-          try {
-            positions = JSON.parse(window.localStorage[localStorageKey]);
-          } catch (e) {
-            positions = [];
-          }
+      if (!newPositions && !positions && getLocalStorageKey()) {
+        try {
+          positions = JSON.parse(window.localStorage[getLocalStorageKey()!]) ?? [];
+        } catch (e) {
+          positions = [];
         }
       } else if (newPositions !== lastDataPositions) {
         lastDataPositions = newPositions;
         positions = newPositions ? [...newPositions] : [];
       }
-      return positions;
+      return positions!;
     },
     clearVisualizationEntries() {
       positions = [];
       savePositions();
     },
     removeVisualizationEntry(oldEntryKey: string) {
-      positions = positions.filter((e) => e.nodeKey !== oldEntryKey);
+      positions = positions!.filter((e) => e.nodeKey !== oldEntryKey);
       savePositions();
     },
     updateVisualizationEntry(newEntry: NodePosition) {
-      let newPositions = positions.filter((e) => e.nodeKey !== newEntry.nodeKey);
+      let newPositions = positions!.filter((e) => e.nodeKey !== newEntry.nodeKey);
       newPositions.push(newEntry);
       positions = newPositions;
       savePositions();

@@ -12,26 +12,27 @@ import { renderUmbrella } from "./umbrella";
 export let edgeFactory = {
   renderEdge(
     data: EdgeData,
+    highlighted: boolean,
     from: NodeDimensions,
     to: NodeDimensions,
     state: EdgeState
   ): RenderedEdge {
-    return state.renderMemoization.result([data, from, to], () => {
+    return state.renderMemoization.result([data, highlighted, from, to], () => {
       switch (data.style) {
         case "angularWithDiamond":
-          return renderAngularWithDiamond(data, from, to);
+          return renderAngularWithDiamond(data, highlighted, from, to);
         case "diamond":
-          return renderDiamond(data, from, to);
+          return renderDiamond(data, highlighted, from, to);
         case "umbrella":
-          return renderUmbrella(data, from, to);
+          return renderUmbrella(data, highlighted, from, to);
         case "lightning":
-          return renderLightning(data, from, to);
+          return renderLightning(data, highlighted, from, to);
         case "dotted-triangle":
-          return renderDottedTriangle(data, from, to);
+          return renderDottedTriangle(data, highlighted, from, to);
         case "observe":
-          return renderObserve(data, from, to);
+          return renderObserve(data, highlighted, from, to);
       }
-      return renderArrow(data, from, to);
+      return renderArrow(data, highlighted, from, to);
     });
   },
 };

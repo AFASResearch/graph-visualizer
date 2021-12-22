@@ -11,6 +11,7 @@ const offset = 12;
 
 export function renderObserve(
   data: EdgeData,
+  highlighted: boolean,
   from: NodeDimensions,
   to: NodeDimensions
 ): RenderedEdge {
@@ -38,7 +39,7 @@ export function renderObserve(
         ` l${ndy * halfSizeWidth * 2},${-ndx * halfSizeWidth * 2}` +
         ` M${centerPos}` +
         ` L${start.x},${start.y}`,
-      ...renderAttributes(data),
+      ...renderAttributes(data, highlighted),
     }),
     decorations: undefined,
   };

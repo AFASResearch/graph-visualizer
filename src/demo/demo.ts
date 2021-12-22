@@ -18,16 +18,31 @@ let nav = ((window as any).NavigateCallback = (evt: CustomEvent<string>) => {
   window.alert("Navigate to " + evt.detail);
 });
 
+let highlighting = true;
+
 projector.append(domNode, () =>
   h("div", [
     h("graph-visualizer", {
       id: "1",
       "data-variable": "VisualizerData",
       "local-storage-key": "graph-positions",
+      "edges-to-highlight":
+        "ERVisualizationEdge:erVisualizationForTemplateToEntity_InstanceTemplate:forAddButton-instanceTemplate1",
       onnavigate: nav,
       afterCreate(el) {
         // needed until https://github.com/AFASSoftware/maquette/issues/170 is resolved
         el.addEventListener("navigate", (el as any).onnavigate);
+        setInterval(() => {
+          highlighting = !highlighting;
+          if (highlighting) {
+            el.setAttribute(
+              "edges-to-highlight",
+              "ERVisualizationEdge:erVisualizationForTemplateToEntity_InstanceTemplate:forAddButton-instanceTemplate1"
+            );
+          } else {
+            el.removeAttribute("edges-to-highlight");
+          }
+        }, 500);
       },
     }),
   ])

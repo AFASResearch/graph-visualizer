@@ -26,6 +26,7 @@ export interface VisibleNodeEntry {
 
 export interface VisibleEdgeEntry {
   data: EdgeData;
+  highlighted: boolean;
   readonly state: EdgeState;
 }
 
@@ -107,11 +108,13 @@ export function renderGraph(
   let nodes = api.getNodes();
   let nodePositions = api.getNodePositions();
   let edges = api.getEdges();
+  let edgesToHighlight = api.getEdgesToHighlight();
 
   return state.renderCache.result(
     [
       nodes,
       edges,
+      edgesToHighlight,
       nodePositions,
       state.activeNodeKey,
       state.dragging?.position,
@@ -176,35 +179,42 @@ export function renderGraph(
       }
 
       // update edges
-      let visibleEdges = state.visibleEdgesMemoization.result([visibleNodes, nodes, edges], () => {
-        let edgeEntries = edges
-          .map((edgeData) => {
-            let from = visibleNodes.get(edgeData.fromNode);
-            if (!from || !from.renderedNode) {
-              return undefined;
-            }
-            let to = visibleNodes.get(edgeData.toNode);
-            if (!to || !to.renderedNode) {
-              return undefined;
-            }
-            let previous = state.visibleEdgesMemoization.previousResult()?.get(edgeData.key);
-            if (previous) {
-              previous.data = edgeData;
-              return previous;
-            } else {
-              return {
-                data: edgeData,
-                state: createEdgeState(),
-              };
-            }
-          })
-          .filter((edge) => !!edge) as VisibleEdgeEntry[];
-        return new Map(edgeEntries.map((e) => [e.data.key, e]));
-      });
+      let visibleEdges = state.visibleEdgesMemoization.result(
+        [visibleNodes, nodes, edges, edgesToHighlight],
+        () => {
+          let highlightEdgeKeys = new Set<string>(edgesToHighlight?.split(" ") ?? []);
+          let edgeEntries = edges
+            .map((edgeData) => {
+              let from = visibleNodes.get(edgeData.fromNode);
+              if (!from || !from.renderedNode) {
+                return undefined;
+              }
+              let to = visibleNodes.get(edgeData.toNode);
+              if (!to || !to.renderedNode) {
+                return undefined;
+              }
+              let previous = state.visibleEdgesMemoization.previousResult()?.get(edgeData.key);
+              if (previous) {
+                previous.highlighted = highlightEdgeKeys.has(edgeData.key);
+                previous.data = edgeData;
+                return previous;
+              } else {
+                return {
+                  data: edgeData,
+                  highlighted: highlightEdgeKeys.has(edgeData.key),
+                  state: createEdgeState(),
+                };
+              }
+            })
+            .filter((edge) => !!edge) as VisibleEdgeEntry[];
+          return new Map(edgeEntries.map((e) => [e.data.key, e]));
+        }
+      );
 
       let renderedEdges = [...visibleEdges.values()].map((entry) =>
         edgeFactory.renderEdge(
           entry.data,
+          entry.highlighted,
           visibleNodes.get(entry.data.fromNode)!.renderedNode!.dimensions,
           visibleNodes.get(entry.data.toNode)!.renderedNode!.dimensions,
           entry.state

@@ -15,6 +15,7 @@ export abstract class MaquetteWebComponent extends HTMLElement {
     this.#projector = createProjector({});
     this.#nextMicroTaskPromise = Promise.resolve().then(() => {
       this.#projector.merge(this.shadowRoot as unknown as HTMLElement, () => this.render());
+      this.#nextMicroTaskPromise = undefined;
     });
   }
 

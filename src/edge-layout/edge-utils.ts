@@ -83,7 +83,7 @@ export function renderLabel(
   );
 }
 
-export function renderAttributes(data: EdgeData) {
+export function renderAttributes(data: EdgeData, highlighted: boolean) {
   if (data.attributes) {
     let parts: string[] = [];
     for (let [key, val] of Object.entries(data.attributes)) {
@@ -95,8 +95,8 @@ export function renderAttributes(data: EdgeData) {
         }
       }
     }
-    return { part: parts.join(" ") };
+    return { part: parts.join(" "), "data-highlighted": highlighted.toString() };
   } else {
-    return {};
+    return { "data-highlighted": highlighted.toString() };
   }
 }

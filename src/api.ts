@@ -43,6 +43,10 @@ export interface VisualizerAPI {
    * Contract: producer may not make changes to the result, but should provide a new ReadonlyArray object
    */
   getNodePositions(): ReadonlyArray<NodePosition>;
+  /**
+   * Returns a space-separated string containing keys from edges to highlight
+   */
+  getEdgesToHighlight(): string | undefined;
   updateVisualizationEntry(entry: NodePosition): void;
   removeVisualizationEntry(entryKey: string): void;
   clearVisualizationEntries(): void;

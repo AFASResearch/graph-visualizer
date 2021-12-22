@@ -10,6 +10,7 @@ const halfSizeWidth = 4.6;
 
 export function renderDottedTriangle(
   data: EdgeData,
+  highlighted: boolean,
   from: NodeDimensions,
   to: NodeDimensions
 ): RenderedEdge {
@@ -39,7 +40,7 @@ export function renderDottedTriangle(
         ` L${end.x},${end.y}` +
         ` M${centerPos}` +
         ` L${start.x},${start.y}`,
-      ...renderAttributes(data),
+      ...renderAttributes(data, highlighted),
     }),
     decorations: undefined,
   };

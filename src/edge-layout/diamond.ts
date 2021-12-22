@@ -7,6 +7,7 @@ import { intersectionWithEntity, renderAttributes, renderLabel } from "./edge-ut
 
 export function renderDiamond(
   data: EdgeData,
+  highlighted: boolean,
   from: NodeDimensions,
   to: NodeDimensions
 ): RenderedEdge {
@@ -20,7 +21,7 @@ export function renderDiamond(
         "stroke-width": "1",
         stroke: "black",
         d: renderDiamondLine(endPosition.x, endPosition.y, startPosition.x, startPosition.y),
-        ...renderAttributes(data),
+        ...renderAttributes(data, highlighted),
       },
       []
     ),

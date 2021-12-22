@@ -7,6 +7,7 @@ import { renderAttributes } from "./edge-utils";
 
 export function renderUmbrella(
   data: EdgeData,
+  highlighted: boolean,
   from: NodeDimensions,
   to: NodeDimensions
 ): RenderedEdge {
@@ -20,7 +21,7 @@ export function renderUmbrella(
         "stroke-width": "1",
         stroke: "black",
         d: renderUmbrellaLine(startPosition.x, startPosition.y, endPosition.x, endPosition.y),
-        ...renderAttributes(data),
+        ...renderAttributes(data, highlighted),
       },
       []
     ),

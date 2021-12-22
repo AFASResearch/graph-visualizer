@@ -16,18 +16,19 @@ const emptyGraphData: GraphData = {
 const ATTRIBUTES = {
   dataVariable: "data-variable",
   localStorageKey: "local-storage-key",
+  edgesToHighlight: "edges-to-highlight",
 };
 
 @customElement("graph-visualizer")
 export class VisualizerWebComponent extends MaquetteWebComponent {
   private _data: GraphData = emptyGraphData;
+  private _api: VisualizerAPI;
   private readonly visualizer: VisualizerComponent;
-  private readonly api: VisualizerAPI;
 
   constructor() {
     super();
     this.visualizer = createVisualizer();
-    this.api = createVisualizerWebComponentAPI({
+    this._api = createVisualizerWebComponentAPI({
       getGraphData: () => this._data,
       emitNavigate: (nodeKey: string) => {
         this.dispatchEvent(new CustomEvent<string>("navigate", { detail: nodeKey, bubbles: true }));
@@ -37,6 +38,9 @@ export class VisualizerWebComponent extends MaquetteWebComponent {
       },
       getLocalStorageKey: (): string | undefined => {
         return this.localStorageKey;
+      },
+      edgesToHighlight: (): string | undefined => {
+        return this.edgesToHighlight;
       },
     });
   }
@@ -50,6 +54,9 @@ export class VisualizerWebComponent extends MaquetteWebComponent {
     return this.visualizer.render(this.api, this.projector); // Cannot read private member from an object whose class did not declare it
   }
 
+  // Properties with mirroring Attributes, getter returns attribute, setter sets/removes attribute
+
+  // data-variable
   get dataVariable() {
     return this.getAttribute(ATTRIBUTES.dataVariable);
   }
@@ -62,6 +69,7 @@ export class VisualizerWebComponent extends MaquetteWebComponent {
     }
   }
 
+  // local-storage-key
   get localStorageKey() {
     return this.getAttribute(ATTRIBUTES.localStorageKey) ?? undefined;
   }
@@ -74,14 +82,39 @@ export class VisualizerWebComponent extends MaquetteWebComponent {
     }
   }
 
+  // edges-to-highlight
+  get edgesToHighlight() {
+    return this.getAttribute(ATTRIBUTES.edgesToHighlight) ?? undefined;
+  }
+
+  set edgesToHighlight(value: string | undefined) {
+    if (value) {
+      this.setAttribute(ATTRIBUTES.edgesToHighlight, value);
+    } else {
+      this.removeAttribute(ATTRIBUTES.edgesToHighlight);
+    }
+  }
+
+  // Properties: getter and setter where setter calls render
+  get api() {
+    return this._api;
+  }
+
+  set api(newApi: VisualizerAPI) {
+    this._api = newApi;
+    this.renderNextMicroTask();
+  }
+
   get data() {
     return this._data;
   }
 
   set data(data: GraphData | undefined) {
     this._data = data ?? emptyGraphData;
-    this.renderNextMicroTask(); // no attribute, so we need to trigger this ourselves
+    this.renderNextMicroTask();
   }
+
+  // Custom element api
 
   override attributeChangedCallback(
     name: string,
@@ -90,11 +123,12 @@ export class VisualizerWebComponent extends MaquetteWebComponent {
   ) {
     super.attributeChangedCallback(name, oldValue, newValue);
     if (name === ATTRIBUTES.dataVariable && newValue) {
+      // custom logic after changing dataVariable
       this._data = (window as any)[newValue];
     }
   }
 
   static get observedAttributes() {
-    return [ATTRIBUTES.dataVariable, ATTRIBUTES.localStorageKey];
+    return [ATTRIBUTES.dataVariable, ATTRIBUTES.localStorageKey, ATTRIBUTES.edgesToHighlight];
   }
 }

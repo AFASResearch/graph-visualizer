@@ -7,6 +7,7 @@ import { intersectionWithEntity, renderAttributes, renderLabel } from "./edge-ut
 
 export function renderArrow(
   data: EdgeData,
+  highlighted: boolean,
   from: NodeDimensions,
   to: NodeDimensions
 ): RenderedEdge {
@@ -20,7 +21,7 @@ export function renderArrow(
         "stroke-width": "1",
         stroke: "black",
         d: renderArrowLine(startPosition.x, startPosition.y, endPosition.x, endPosition.y),
-        ...renderAttributes(data),
+        ...renderAttributes(data, highlighted),
       },
       []
     ),

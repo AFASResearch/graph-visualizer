@@ -10,6 +10,7 @@ import { intersectionWithEntity, renderAttributes } from "./edge-utils";
  */
 export function renderAngularWithDiamond(
   data: EdgeData,
+  highlighted: boolean,
   from: NodeDimensions,
   to: NodeDimensions
 ): RenderedEdge {
@@ -28,7 +29,7 @@ export function renderAngularWithDiamond(
           endPosition.x,
           endPosition.y
         ),
-        ...renderAttributes(data),
+        ...renderAttributes(data, highlighted),
       },
       []
     ),

@@ -9,6 +9,7 @@ const diameter = 12;
 
 export function renderLightning(
   data: EdgeData,
+  highlighted: boolean,
   from: NodeDimensions,
   to: NodeDimensions
 ): RenderedEdge {
@@ -44,7 +45,7 @@ export function renderLightning(
         ` l${firstLastDx},${firstLastDy}` +
         ` l${centerDx},${centerDy}` +
         ` l${firstLastDx},${firstLastDy}`,
-      ...renderAttributes(data),
+      ...renderAttributes(data, highlighted),
     }),
     decorations: undefined,
   };
