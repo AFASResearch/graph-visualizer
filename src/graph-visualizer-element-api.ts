@@ -1,19 +1,25 @@
-import { EdgeData, GraphData, NodeData, NodePosition, VisualizerAPI } from "./api";
+import { EdgeData, GraphData, NodeData, NodePosition, PositionsChange } from "./api";
+import { VisualizerAPI } from "./internal-api";
 
 export interface VisualizerWebComponentAPIParameters {
   getGraphData(): GraphData;
   getLocalStorageKey(): string | undefined;
-  emitPositionsChanged(): void;
+  emitPositionsChanged(change: PositionsChange): void;
   emitSelectionChange(nodeKey: string | undefined): void;
   emitNavigate(nodeKey: string): void;
   edgesToHighlight(): string | undefined;
   nodesToHighlight(): string | undefined;
 }
 
-export function createVisualizerWebComponentAPI(
+/**
+ * The VisualizerAPI that gets used by GraphVisualizerElement that uses its attributes.
+ * Can be circumvented by setting its api explicitly.
+ * @param parameters access to the element and its attributes
+ */
+export function createGraphVisualizerElementAPI(
   parameters: VisualizerWebComponentAPIParameters
 ): VisualizerAPI {
-  let { getGraphData, getLocalStorageKey } = parameters;
+  let { getGraphData, getLocalStorageKey, emitPositionsChanged } = parameters;
   let lastDataPositions: readonly NodePosition[] | undefined;
   let positions: NodePosition[] | undefined;
 
@@ -51,16 +57,19 @@ export function createVisualizerWebComponentAPI(
     clearVisualizationEntries() {
       positions = [];
       savePositions();
+      emitPositionsChanged({ type: "clear" });
     },
     removeVisualizationEntry(oldEntryKey: string) {
       positions = positions!.filter((e) => e.nodeKey !== oldEntryKey);
       savePositions();
+      emitPositionsChanged({ type: "remove", nodeKey: oldEntryKey });
     },
     updateVisualizationEntry(newEntry: NodePosition) {
       let newPositions = positions!.filter((e) => e.nodeKey !== newEntry.nodeKey);
       newPositions.push(newEntry);
       positions = newPositions;
       savePositions();
+      emitPositionsChanged({ type: "upsert", position: newEntry });
     },
     onNavigate(nodeKey: string) {
       parameters.emitNavigate(nodeKey);

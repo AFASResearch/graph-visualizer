@@ -1,10 +1,11 @@
 import { ProjectorService, VNode, createCache, h } from "maquette";
 
-import { EdgeData, NodeData, NodePosition, VisualizerAPI } from "./api";
+import { EdgeData, NodeData, NodePosition } from "./api";
 import { renderDragHandler } from "./drag-handler";
 import { EdgeState, createEdgeState } from "./edge-layout/edge-common";
 import { edgeFactory } from "./edge-layout/edge-factory";
 import { XY } from "./interfaces";
+import { VisualizerAPI } from "./internal-api";
 import {
   NodeDimensions,
   NodeState,
@@ -109,8 +110,8 @@ export function renderGraph(
   let nodes = api.getNodes();
   let nodePositions = api.getNodePositions();
   let edges = api.getEdges();
-  let edgesToHighlight = api.getEdgesToHighlight();
-  let nodesToHighlight = api.getNodesToHighlight();
+  let edgesToHighlight = api.getEdgesToHighlight?.();
+  let nodesToHighlight = api.getNodesToHighlight?.();
 
   return state.renderCache.result(
     [

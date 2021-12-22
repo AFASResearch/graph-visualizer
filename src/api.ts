@@ -1,3 +1,12 @@
+declare global {
+  // Used for describing new event listeners that can be added to
+  interface HTMLElementEventMap {
+    navigate: CustomEvent<string>;
+    selectionchange: CustomEvent<string | undefined>;
+    positionschange: CustomEvent<PositionsChange>;
+  }
+}
+
 export interface NodeData {
   readonly key: string;
   readonly typeName?: string;
@@ -24,36 +33,23 @@ export interface NodePosition {
   readonly y: number;
 }
 
+export interface PositionsCleared {
+  type: "clear";
+}
+
+export interface PositionRemoved {
+  type: "remove";
+  nodeKey: string;
+}
+
+export interface PositionUpserted {
+  type: "upsert";
+  position: NodePosition;
+}
+export type PositionsChange = PositionsCleared | PositionRemoved | PositionUpserted;
+
 export interface GraphData {
   nodes: ReadonlyMap<string, NodeData>;
   edges: readonly EdgeData[];
   positions?: readonly NodePosition[];
-}
-
-export interface VisualizerAPI {
-  /**
-   * Contract: producer may not make changes to the result, but should provide a new ReadonlyMap object
-   */
-  getNodes(): ReadonlyMap<string, NodeData>;
-  /**
-   * Contract: producer may not make changes to the result, but should provide a new ReadonlyArray object
-   */
-  getEdges(): ReadonlyArray<EdgeData>;
-  /**
-   * Contract: producer may not make changes to the result, but should provide a new ReadonlyArray object
-   */
-  getNodePositions(): ReadonlyArray<NodePosition>;
-  /**
-   * Returns a space-separated string containing keys from edges to highlight
-   */
-  getEdgesToHighlight(): string | undefined;
-  /**
-   * Returns a space-separated string containing keys from nodes to highlight
-   */
-  getNodesToHighlight(): string | undefined;
-  updateVisualizationEntry(entry: NodePosition): void;
-  removeVisualizationEntry(entryKey: string): void;
-  clearVisualizationEntries(): void;
-  onNavigate?(nodeKey: string): void;
-  onSelectionChange?(nodeKey: string | undefined): void;
 }

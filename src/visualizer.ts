@@ -1,8 +1,8 @@
 import { ProjectorService, VNode, h } from "maquette";
 
-import { VisualizerAPI } from "./api";
 import { createGraphState, renderGraph } from "./graph";
 import { XY } from "./interfaces";
+import { VisualizerAPI } from "./internal-api";
 import { createSidebarState, renderSidebar } from "./sidebar";
 import { createMemoization } from "./utils";
 

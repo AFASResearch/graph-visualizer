@@ -1,3 +1,7 @@
+// /* Crazy construct allows using css-editor on this file instead of ts-editor
+export const css = new CSSStyleSheet();
+(css as any).replaceSync(
+  `*/
 :host {
   position: relative;
   display: block;
@@ -34,8 +38,7 @@
   width: 100%;
   background-color: #ccc;
   position: absolute;
-  bottom: 0px;
-  padding: auto;
+  bottom: 0;
   line-height: 30px;
   padding-left: 10px;
 }
@@ -123,3 +126,6 @@
 *[data-highlighted="true"] {
   filter: drop-shadow(0px 0px 4px red) drop-shadow(0px 0px 4px red);
 }
+
+/*`.slice(2, -2)
+); // */

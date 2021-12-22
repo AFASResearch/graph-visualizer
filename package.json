@@ -16,7 +16,7 @@
     "fix": "tsa fix",
     "fixall": "tsa fixall",
     "clean": "tsa clean",
-    "dist": "tsc -p ./src/tsconfig.json && tsc -p src -m commonjs --outDir dist/cjs && ncp ./src/gravi.css ./dist/gravi.css",
+    "dist": "tsc -p ./src/tsconfig.json && tsc -p src -m commonjs --outDir dist/cjs",
     "ci": "tsa ci",
     "coverage-show": "open-cli build/coverage/index.html"
   },
@@ -73,7 +73,6 @@
     "koa": "^2.13.4",
     "koa-static": "^5.0.0",
     "maquette": "^3.5.1",
-    "ncp": "2.0.0",
     "ts-loader": "9.2.6",
     "typescript-assistant": "0.53.1",
     "webpack": "5.60.0",

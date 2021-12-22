@@ -1,7 +1,8 @@
 import { VNode, h } from "maquette";
 
-import { EdgeData, NodeData, VisualizerAPI } from "./api";
+import { EdgeData, NodeData } from "./api";
 import { XY } from "./interfaces";
+import { VisualizerAPI } from "./internal-api";
 import { createMemoization } from "./utils";
 
 export function createSidebarState() {

@@ -1,3 +1,3 @@
 export * from "./api";
 export { createMemoization, Memoization } from "./utils";
-export { VisualizerWebComponent } from "./visualizer-web-component";
+export { GraphVisualizerElement } from "./graph-visualizer-element";

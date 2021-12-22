@@ -1,11 +1,10 @@
-import { GraphData, VisualizerAPI } from "./api";
+import { GraphData, PositionsChange } from "./api";
+import { createGraphVisualizerElementAPI } from "./graph-visualizer-element-api";
+import { css } from "./gravi-css";
+import { VisualizerAPI } from "./internal-api";
 import { MaquetteWebComponent } from "./util/maquette-web-component";
 import { customElement } from "./util/web-component-decorators";
 import { VisualizerComponent, createVisualizer } from "./visualizer";
-import { createVisualizerWebComponentAPI } from "./visualizer-web-component-api";
-
-// eslint-disable-next-line @typescript-eslint/no-var-requires
-let css: CSSStyleSheet = require("./gravi.css").default;
 
 const emptyGraphData: GraphData = {
   nodes: new Map(),
@@ -21,16 +20,31 @@ const ATTRIBUTES = {
   dataUrl: "data-url",
 };
 
+export interface IGraphVisualizerElement {
+  addEventListener(type: "navigate", listener: (evt: CustomEvent<string>) => void): void;
+  addEventListener(
+    type: "selectionchange",
+    listener: (evt: CustomEvent<string | undefined>) => void
+  ): void;
+  addEventListener(
+    type: "positionschange",
+    listener: (evt: CustomEvent<PositionsChange>) => void
+  ): void;
+}
+
 @customElement("graph-visualizer")
-export class VisualizerWebComponent extends MaquetteWebComponent {
+export class GraphVisualizerElement
+  extends MaquetteWebComponent
+  implements IGraphVisualizerElement
+{
   private _data: GraphData = emptyGraphData;
-  private _api: VisualizerAPI;
+  private readonly _api: VisualizerAPI;
   private readonly visualizer: VisualizerComponent;
 
   constructor() {
     super();
     this.visualizer = createVisualizer();
-    this._api = createVisualizerWebComponentAPI({
+    this._api = createGraphVisualizerElementAPI({
       getGraphData: () => this._data,
       emitNavigate: (nodeKey: string) => {
         this.dispatchEvent(new CustomEvent<string>("navigate", { detail: nodeKey, bubbles: true }));
@@ -40,8 +54,8 @@ export class VisualizerWebComponent extends MaquetteWebComponent {
           new CustomEvent<string | undefined>("selectionchange", { detail: nodeKey, bubbles: true })
         );
       },
-      emitPositionsChanged: () => {
-        this.dispatchEvent(new CustomEvent("positionChanged"));
+      emitPositionsChanged: (change: PositionsChange) => {
+        this.dispatchEvent(new CustomEvent("positionschange", { detail: change, bubbles: true }));
       },
       getLocalStorageKey: (): string | undefined => {
         return this.localStorageKey;
@@ -61,7 +75,7 @@ export class VisualizerWebComponent extends MaquetteWebComponent {
   }
 
   override render() {
-    return this.visualizer.render(this.api, this.projector); // Cannot read private member from an object whose class did not declare it
+    return this.visualizer.render(this._api, this.projector); // Cannot read private member from an object whose class did not declare it
   }
 
   // Properties with mirroring Attributes, getter returns attribute, setter sets/removes attribute
@@ -131,16 +145,6 @@ export class VisualizerWebComponent extends MaquetteWebComponent {
     }
   }
 
-  // Properties: getter and setter where setter calls render
-  get api() {
-    return this._api;
-  }
-
-  set api(newApi: VisualizerAPI) {
-    this._api = newApi;
-    this.renderNextMicroTask();
-  }
-
   get data() {
     return this._data;
   }
@@ -186,6 +190,7 @@ export class VisualizerWebComponent extends MaquetteWebComponent {
   static get observedAttributes() {
     return [
       ATTRIBUTES.dataVariable,
+      ATTRIBUTES.dataUrl,
       ATTRIBUTES.localStorageKey,
       ATTRIBUTES.edgesToHighlight,
       ATTRIBUTES.nodesToHighlight,
