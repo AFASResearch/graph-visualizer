@@ -10,6 +10,7 @@
     "watch": "webpack --watch",
     "build": "webpack",
     "test": "tsa ci",
+    "prepare": "husky install",
     "prepublishOnly": "tsa clean && npm -s run dist",
     "assist": "tsa assist",
     "release": "tsa release",
