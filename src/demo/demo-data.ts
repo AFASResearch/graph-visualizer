@@ -1,1727 +1,1607 @@
 /* tslint:disable:quotemark object-literal-key-quotes max-line-length */
-import { EdgeData, GraphData, NodeData } from "../api";
+import { GraphData } from "../api";
 
-// Can be obtained by putting a breakpoint graph.ts:80 and running `JSON.stringify(Object.fromEntries(nodes.entries()))` and `JSON.stringify(edges)`
-let demoData: any = {
-  nodes: {
-    "ERVisualizationNode:entityVisualization_Entity:System": {
+// Can be obtained by putting a breakpoint graph.ts:114 and running `JSON.stringify([...nodes.values()])` and `JSON.stringify(edges)`
+let demoData: GraphData = {
+  nodes: [
+    {
       key: "ERVisualizationNode:entityVisualization_Entity:System",
       style: "default",
       displayName: "System",
       typeName: "Entity",
     },
-    "ERVisualizationNode:entityVisualization_Entity:SystemMessage": {
+    {
       key: "ERVisualizationNode:entityVisualization_Entity:SystemMessage",
       style: "default",
       displayName: "SystemMessage",
       typeName: "Entity",
     },
-    "ERVisualizationNode:erVisualizationForTemplate_InstanceTemplate:theSystem": {
+    {
       key: "ERVisualizationNode:erVisualizationForTemplate_InstanceTemplate:theSystem",
       style: "small-circle",
       displayName: "theSystem",
     },
-    "ERVisualizationNode:erVisualizationForMechanism_Mechanism:systemMechanism": {
+    {
       key: "ERVisualizationNode:erVisualizationForMechanism_Mechanism:systemMechanism",
       style: "big-circle",
       displayName: "theSystem",
     },
-    "ERVisualizationNode:entityVisualization_Entity:AddButton": {
+    {
       key: "ERVisualizationNode:entityVisualization_Entity:AddButton",
       style: "default",
       displayName: "AddButton",
       typeName: "Entity",
     },
-    "ERVisualizationNode:entityVisualization_Entity:AndExpression": {
+    {
       key: "ERVisualizationNode:entityVisualization_Entity:AndExpression",
       style: "default",
       displayName: "AndExpression",
       typeName: "Entity",
     },
-    "ERVisualizationNode:entityVisualization_Entity:AndExpressionOperand": {
+    {
       key: "ERVisualizationNode:entityVisualization_Entity:AndExpressionOperand",
       style: "database",
       displayName: "AndExpressionOperand",
       typeName: "Entity",
     },
-    "ERVisualizationNode:entityVisualization_Entity:Attribute": {
+    {
       key: "ERVisualizationNode:entityVisualization_Entity:Attribute",
       style: "default",
       displayName: "Attribute",
       typeName: "Entity",
     },
-    "ERVisualizationNode:entityVisualization_Entity:ConcatExpression": {
+    {
       key: "ERVisualizationNode:entityVisualization_Entity:ConcatExpression",
       style: "database",
       displayName: "ConcatExpression",
       typeName: "Entity",
     },
-    "ERVisualizationNode:entityVisualization_Entity:ConcatExpressionOperand": {
+    {
       key: "ERVisualizationNode:entityVisualization_Entity:ConcatExpressionOperand",
       style: "default",
       displayName: "ConcatExpressionOperand",
       typeName: "Entity",
     },
-    "ERVisualizationNode:entityVisualization_Entity:ConstantFalseExpression": {
+    {
       key: "ERVisualizationNode:entityVisualization_Entity:ConstantFalseExpression",
       style: "default",
       displayName: "ConstantFalseExpression",
       typeName: "Entity",
     },
-    "ERVisualizationNode:entityVisualization_Entity:ConstantNumberExpression": {
+    {
       key: "ERVisualizationNode:entityVisualization_Entity:ConstantNumberExpression",
       style: "default",
       displayName: "ConstantNumberExpression",
       typeName: "Entity",
     },
-    "ERVisualizationNode:entityVisualization_Entity:ConstantStringExpression": {
+    {
       key: "ERVisualizationNode:entityVisualization_Entity:ConstantStringExpression",
       style: "default",
       displayName: "ConstantStringExpression",
       typeName: "Entity",
     },
-    "ERVisualizationNode:entityVisualization_Entity:ConstantTrueExpression": {
+    {
       key: "ERVisualizationNode:entityVisualization_Entity:ConstantTrueExpression",
       style: "default",
       displayName: "ConstantTrueExpression",
       typeName: "Entity",
     },
-    "ERVisualizationNode:entityVisualization_Entity:Constraint": {
+    {
       key: "ERVisualizationNode:entityVisualization_Entity:Constraint",
       style: "default",
       displayName: "Constraint",
       typeName: "Entity",
     },
-    "ERVisualizationNode:entityVisualization_Entity:ConstraintField": {
+    {
       key: "ERVisualizationNode:entityVisualization_Entity:ConstraintField",
       style: "default",
       displayName: "ConstraintField",
       typeName: "Entity",
     },
-    "ERVisualizationNode:entityVisualization_Entity:ConstraintMechanismIngredient": {
+    {
       key: "ERVisualizationNode:entityVisualization_Entity:ConstraintMechanismIngredient",
       style: "default",
       displayName: "ConstraintMechanismIngredient",
       typeName: "Entity",
     },
-    "ERVisualizationNode:entityVisualization_Entity:ConstraintType": {
+    {
       key: "ERVisualizationNode:entityVisualization_Entity:ConstraintType",
       style: "default",
       displayName: "ConstraintType",
       typeName: "Entity",
     },
-    "ERVisualizationNode:entityVisualization_Entity:DefaultDisplayNameExpression": {
+    {
       key: "ERVisualizationNode:entityVisualization_Entity:DefaultDisplayNameExpression",
       style: "default",
       displayName: "DefaultDisplayNameExpression",
       typeName: "Entity",
     },
-    "ERVisualizationNode:entityVisualization_Entity:DeriveKeyExpression": {
+    {
       key: "ERVisualizationNode:entityVisualization_Entity:DeriveKeyExpression",
       style: "default",
       displayName: "DeriveKeyExpression",
       typeName: "Entity",
     },
-    "ERVisualizationNode:entityVisualization_Entity:Entity": {
+    {
       key: "ERVisualizationNode:entityVisualization_Entity:Entity",
       style: "default",
       displayName: "Entity",
       typeName: "Entity",
     },
-    "ERVisualizationNode:entityVisualization_Entity:EntityUnion": {
+    {
       key: "ERVisualizationNode:entityVisualization_Entity:EntityUnion",
       style: "default",
       displayName: "EntityUnion",
       typeName: "Entity",
     },
-    "ERVisualizationNode:entityVisualization_Entity:EntityUnionMember": {
+    {
       key: "ERVisualizationNode:entityVisualization_Entity:EntityUnionMember",
       style: "default",
       displayName: "EntityUnionMember",
       typeName: "Entity",
     },
-    "ERVisualizationNode:entityVisualization_Entity:EqualsExpression": {
+    {
       key: "ERVisualizationNode:entityVisualization_Entity:EqualsExpression",
       style: "default",
       displayName: "EqualsExpression",
       typeName: "Entity",
     },
-    "ERVisualizationNode:entityVisualization_Entity:FieldExpression": {
+    {
       key: "ERVisualizationNode:entityVisualization_Entity:FieldExpression",
       style: "default",
       displayName: "FieldExpression",
       typeName: "Entity",
     },
-    "ERVisualizationNode:entityVisualization_Entity:HasValueExpression": {
+    {
       key: "ERVisualizationNode:entityVisualization_Entity:HasValueExpression",
       style: "default",
       displayName: "HasValueExpression",
       typeName: "Entity",
     },
-    "ERVisualizationNode:entityVisualization_Entity:InstanceTemplate": {
+    {
       key: "ERVisualizationNode:entityVisualization_Entity:InstanceTemplate",
       style: "default",
       displayName: "InstanceTemplate",
       typeName: "Entity",
     },
-    "ERVisualizationNode:entityVisualization_Entity:InstanceTemplateExpression": {
+    {
       key: "ERVisualizationNode:entityVisualization_Entity:InstanceTemplateExpression",
       style: "default",
       displayName: "InstanceTemplateExpression",
       typeName: "Entity",
     },
-    "ERVisualizationNode:entityVisualization_Entity:InstanceTemplateExpressionIngredient": {
+    {
       key: "ERVisualizationNode:entityVisualization_Entity:InstanceTemplateExpressionIngredient",
       style: "default",
       displayName: "InstanceTemplateExpressionIngredient",
       typeName: "Entity",
     },
-    "ERVisualizationNode:entityVisualization_Entity:InstanceTemplateFieldValue": {
+    {
       key: "ERVisualizationNode:entityVisualization_Entity:InstanceTemplateFieldValue",
       style: "default",
       displayName: "InstanceTemplateFieldValue",
       typeName: "Entity",
     },
-    "ERVisualizationNode:entityVisualization_Entity:InterpolateExpression": {
+    {
       key: "ERVisualizationNode:entityVisualization_Entity:InterpolateExpression",
       style: "default",
       displayName: "InterpolateExpression",
       typeName: "Entity",
     },
-    "ERVisualizationNode:entityVisualization_Entity:InterpolateExpressionPlaceholder": {
+    {
       key: "ERVisualizationNode:entityVisualization_Entity:InterpolateExpressionPlaceholder",
       style: "default",
       displayName: "InterpolateExpressionPlaceholder",
       typeName: "Entity",
     },
-    "ERVisualizationNode:entityVisualization_Entity:Mechanism": {
+    {
       key: "ERVisualizationNode:entityVisualization_Entity:Mechanism",
       style: "default",
       displayName: "Mechanism",
       typeName: "Entity",
     },
-    "ERVisualizationNode:entityVisualization_Entity:MechanismIngredient": {
+    {
       key: "ERVisualizationNode:entityVisualization_Entity:MechanismIngredient",
       style: "default",
       displayName: "MechanismIngredient",
       typeName: "Entity",
     },
-    "ERVisualizationNode:entityVisualization_Entity:MechanismIngredientExpression": {
+    {
       key: "ERVisualizationNode:entityVisualization_Entity:MechanismIngredientExpression",
       style: "default",
       displayName: "MechanismIngredientExpression",
       typeName: "Entity",
     },
-    "ERVisualizationNode:entityVisualization_Entity:Page": {
+    {
       key: "ERVisualizationNode:entityVisualization_Entity:Page",
       style: "default",
       displayName: "Page",
       typeName: "Entity",
     },
-    "ERVisualizationNode:entityVisualization_Entity:PagePart": {
+    {
       key: "ERVisualizationNode:entityVisualization_Entity:PagePart",
       style: "default",
       displayName: "PagePart",
       typeName: "Entity",
     },
-    "ERVisualizationNode:entityVisualization_Entity:PlaceholderIngredientExpression": {
+    {
       key: "ERVisualizationNode:entityVisualization_Entity:PlaceholderIngredientExpression",
       style: "default",
       displayName: "PlaceholderIngredientExpression",
       typeName: "Entity",
     },
-    "ERVisualizationNode:entityVisualization_Entity:Reference": {
+    {
       key: "ERVisualizationNode:entityVisualization_Entity:Reference",
       style: "default",
       displayName: "Reference",
       typeName: "Entity",
     },
-    "ERVisualizationNode:entityVisualization_Entity:Relation": {
+    {
       key: "ERVisualizationNode:entityVisualization_Entity:Relation",
       style: "default",
       displayName: "Relation",
       typeName: "Entity",
     },
-    "ERVisualizationNode:entityVisualization_Entity:RelationType": {
+    {
       key: "ERVisualizationNode:entityVisualization_Entity:RelationType",
       style: "default",
       displayName: "RelationType",
       typeName: "Entity",
     },
-    "ERVisualizationNode:entityVisualization_Entity:ThisExpression": {
+    {
       key: "ERVisualizationNode:entityVisualization_Entity:ThisExpression",
       style: "default",
       displayName: "ThisExpression",
       typeName: "Entity",
     },
-    "ERVisualizationNode:entityVisualization_Entity:ValueDefault": {
+    {
       key: "ERVisualizationNode:entityVisualization_Entity:ValueDefault",
       style: "default",
       displayName: "ValueDefault",
       typeName: "Entity",
     },
-    "ERVisualizationNode:entityVisualization_Entity:ValueRule": {
+    {
       key: "ERVisualizationNode:entityVisualization_Entity:ValueRule",
       style: "default",
       displayName: "ValueRule",
       typeName: "Entity",
     },
-    "ERVisualizationNode:entityVisualization_Entity:AssignElement": {
+    {
       key: "ERVisualizationNode:entityVisualization_Entity:AssignElement",
       style: "default",
       displayName: "AssignElement",
       typeName: "Entity",
     },
-    "ERVisualizationNode:entityVisualization_Entity:AssignPageAction": {
+    {
       key: "ERVisualizationNode:entityVisualization_Entity:AssignPageAction",
       style: "default",
       displayName: "AssignPageAction",
       typeName: "Entity",
     },
-    "ERVisualizationNode:entityVisualization_Entity:BackPageAction": {
+    {
       key: "ERVisualizationNode:entityVisualization_Entity:BackPageAction",
       style: "default",
       displayName: "BackPageAction",
       typeName: "Entity",
     },
-    "ERVisualizationNode:entityVisualization_Entity:ConditionalCssClass": {
+    {
       key: "ERVisualizationNode:entityVisualization_Entity:ConditionalCssClass",
       style: "default",
       displayName: "ConditionalCssClass",
       typeName: "Entity",
     },
-    "ERVisualizationNode:entityVisualization_Entity:ElseClause": {
+    {
       key: "ERVisualizationNode:entityVisualization_Entity:ElseClause",
       style: "default",
       displayName: "ElseClause",
       typeName: "Entity",
     },
-    "ERVisualizationNode:entityVisualization_Entity:ElseIfClause": {
+    {
       key: "ERVisualizationNode:entityVisualization_Entity:ElseIfClause",
       style: "default",
       displayName: "ElseIfClause",
       typeName: "Entity",
     },
-    "ERVisualizationNode:entityVisualization_Entity:GroupElement": {
+    {
       key: "ERVisualizationNode:entityVisualization_Entity:GroupElement",
       style: "default",
       displayName: "GroupElement",
       typeName: "Entity",
     },
-    "ERVisualizationNode:entityVisualization_Entity:HtmlElement": {
+    {
       key: "ERVisualizationNode:entityVisualization_Entity:HtmlElement",
       style: "default",
       displayName: "HtmlElement",
       typeName: "Entity",
     },
-    "ERVisualizationNode:entityVisualization_Entity:IfElement": {
+    {
       key: "ERVisualizationNode:entityVisualization_Entity:IfElement",
       style: "default",
       displayName: "IfElement",
       typeName: "Entity",
     },
-    "ERVisualizationNode:entityVisualization_Entity:IncludePageElement": {
+    {
       key: "ERVisualizationNode:entityVisualization_Entity:IncludePageElement",
       style: "default",
       displayName: "IncludePageElement",
       typeName: "Entity",
     },
-    "ERVisualizationNode:entityVisualization_Entity:LoadFilter": {
+    {
       key: "ERVisualizationNode:entityVisualization_Entity:LoadFilter",
       style: "default",
       displayName: "LoadFilter",
       typeName: "Entity",
     },
-    "ERVisualizationNode:entityVisualization_Entity:LoadInstanceElement": {
+    {
       key: "ERVisualizationNode:entityVisualization_Entity:LoadInstanceElement",
       style: "default",
       displayName: "LoadInstanceElement",
       typeName: "Entity",
     },
-    "ERVisualizationNode:entityVisualization_Entity:LoadInstancesElement": {
+    {
       key: "ERVisualizationNode:entityVisualization_Entity:LoadInstancesElement",
       style: "default",
       displayName: "LoadInstancesElement",
       typeName: "Entity",
     },
-    "ERVisualizationNode:entityVisualization_Entity:LoadOrderBy": {
+    {
       key: "ERVisualizationNode:entityVisualization_Entity:LoadOrderBy",
       style: "default",
       displayName: "LoadOrderBy",
       typeName: "Entity",
     },
-    "ERVisualizationNode:entityVisualization_Entity:NavigatePageAction": {
+    {
       key: "ERVisualizationNode:entityVisualization_Entity:NavigatePageAction",
       style: "default",
       displayName: "NavigatePageAction",
       typeName: "Entity",
     },
-    "ERVisualizationNode:entityVisualization_Entity:RedirectElement": {
+    {
       key: "ERVisualizationNode:entityVisualization_Entity:RedirectElement",
       style: "default",
       displayName: "RedirectElement",
       typeName: "Entity",
     },
-    "ERVisualizationNode:entityVisualization_Entity:StorePageAction": {
+    {
       key: "ERVisualizationNode:entityVisualization_Entity:StorePageAction",
       style: "default",
       displayName: "StorePageAction",
       typeName: "Entity",
     },
-    "ERVisualizationNode:entityVisualization_Entity:VisualizerElement": {
+    {
       key: "ERVisualizationNode:entityVisualization_Entity:VisualizerElement",
       style: "default",
       displayName: "VisualizerElement",
       typeName: "Entity",
     },
-    "ERVisualizationNode:entityVisualization_Entity:MdcButton": {
+    {
       key: "ERVisualizationNode:entityVisualization_Entity:MdcButton",
       style: "default",
       displayName: "MdcButton",
       typeName: "Entity",
     },
-    "ERVisualizationNode:entityVisualization_Entity:MdcList": {
+    {
       key: "ERVisualizationNode:entityVisualization_Entity:MdcList",
       style: "default",
       displayName: "MdcList",
       typeName: "Entity",
     },
-    "ERVisualizationNode:entityVisualization_Entity:MdcRadioList": {
+    {
       key: "ERVisualizationNode:entityVisualization_Entity:MdcRadioList",
       style: "default",
       displayName: "MdcRadioList",
       typeName: "Entity",
     },
-    "ERVisualizationNode:entityVisualization_Entity:MdcTextField": {
+    {
       key: "ERVisualizationNode:entityVisualization_Entity:MdcTextField",
       style: "default",
       displayName: "MdcTextField",
       typeName: "Entity",
     },
-    "ERVisualizationNode:entityVisualization_Entity:StmExpandCard": {
+    {
       key: "ERVisualizationNode:entityVisualization_Entity:StmExpandCard",
       style: "default",
       displayName: "StmExpandCard",
       typeName: "Entity",
     },
-    "ERVisualizationNode:entityVisualization_Entity:StmExpandCardCreateAction": {
+    {
       key: "ERVisualizationNode:entityVisualization_Entity:StmExpandCardCreateAction",
       style: "default",
       displayName: "StmExpandCardCreateAction",
       typeName: "Entity",
     },
-    "ERVisualizationNode:entityVisualization_Entity:StmLinkField": {
+    {
       key: "ERVisualizationNode:entityVisualization_Entity:StmLinkField",
       style: "default",
       displayName: "StmLinkField",
       typeName: "Entity",
     },
-    "ERVisualizationNode:entityVisualization_Entity:DraftActions": {
+    {
       key: "ERVisualizationNode:entityVisualization_Entity:DraftActions",
       style: "default",
       displayName: "DraftActions",
       typeName: "Entity",
     },
-    "ERVisualizationNode:entityVisualization_Entity:FieldRow": {
+    {
       key: "ERVisualizationNode:entityVisualization_Entity:FieldRow",
       style: "default",
       displayName: "FieldRow",
       typeName: "Entity",
     },
-    "ERVisualizationNode:entityVisualization_Entity:InlineInstance": {
+    {
       key: "ERVisualizationNode:entityVisualization_Entity:InlineInstance",
       style: "default",
       displayName: "InlineInstance",
       typeName: "Entity",
     },
-    "ERVisualizationNode:entityVisualization_Entity:InstanceMaintenance": {
+    {
       key: "ERVisualizationNode:entityVisualization_Entity:InstanceMaintenance",
       style: "default",
       displayName: "InstanceMaintenance",
       typeName: "Entity",
     },
-    "ERVisualizationNode:entityVisualization_Entity:ItemSelector": {
+    {
       key: "ERVisualizationNode:entityVisualization_Entity:ItemSelector",
       style: "default",
       displayName: "ItemSelector",
       typeName: "Entity",
     },
-    "ERVisualizationNode:entityVisualization_Entity:List": {
+    {
       key: "ERVisualizationNode:entityVisualization_Entity:List",
       style: "default",
       displayName: "List",
       typeName: "Entity",
     },
-    "ERVisualizationNode:entityVisualization_Entity:MainMenuItem": {
+    {
       key: "ERVisualizationNode:entityVisualization_Entity:MainMenuItem",
       style: "default",
       displayName: "MainMenuItem",
       typeName: "Entity",
     },
-    "ERVisualizationNode:entityVisualization_Entity:Maintenance": {
+    {
       key: "ERVisualizationNode:entityVisualization_Entity:Maintenance",
       style: "default",
       displayName: "Maintenance",
       typeName: "Entity",
     },
-    "ERVisualizationNode:entityVisualization_Entity:MaintenanceConfig": {
+    {
       key: "ERVisualizationNode:entityVisualization_Entity:MaintenanceConfig",
       style: "default",
       displayName: "MaintenanceConfig",
       typeName: "Entity",
     },
-    "ERVisualizationNode:entityVisualization_Entity:MaintenanceList": {
+    {
       key: "ERVisualizationNode:entityVisualization_Entity:MaintenanceList",
       style: "default",
       displayName: "MaintenanceList",
       typeName: "Entity",
     },
-    "ERVisualizationNode:entityVisualization_Entity:Picker": {
+    {
       key: "ERVisualizationNode:entityVisualization_Entity:Picker",
       style: "default",
       displayName: "Picker",
       typeName: "Entity",
     },
-    "ERVisualizationNode:entityVisualization_Entity:RelatedInstances": {
+    {
       key: "ERVisualizationNode:entityVisualization_Entity:RelatedInstances",
       style: "default",
       displayName: "RelatedInstances",
       typeName: "Entity",
     },
-    "ERVisualizationNode:entityVisualization_Entity:Section": {
+    {
       key: "ERVisualizationNode:entityVisualization_Entity:Section",
       style: "default",
       displayName: "Section",
       typeName: "Entity",
     },
-    "ERVisualizationNode:entityVisualization_Entity:MdcLabeledAction": {
+    {
       key: "ERVisualizationNode:entityVisualization_Entity:MdcLabeledAction",
       style: "default",
       displayName: "MdcLabeledAction",
       typeName: "Entity",
     },
-    "ERVisualizationNode:entityVisualization_Entity:MdcMenuButton": {
+    {
       key: "ERVisualizationNode:entityVisualization_Entity:MdcMenuButton",
       style: "default",
       displayName: "MdcMenuButton",
       typeName: "Entity",
     },
-    "ERVisualizationNode:entityVisualization_Entity:MdcTopAppBar": {
+    {
       key: "ERVisualizationNode:entityVisualization_Entity:MdcTopAppBar",
       style: "default",
       displayName: "MdcTopAppBar",
       typeName: "Entity",
     },
-    "ERVisualizationNode:entityVisualization_Entity:ERVisualization": {
+    {
       key: "ERVisualizationNode:entityVisualization_Entity:ERVisualization",
       style: "default",
       displayName: "ERVisualization",
       typeName: "Entity",
     },
-    "ERVisualizationNode:entityVisualization_Entity:ERVisualizationEdge": {
+    {
       key: "ERVisualizationNode:entityVisualization_Entity:ERVisualizationEdge",
       style: "default",
       displayName: "ERVisualizationEdge",
       typeName: "Entity",
     },
-    "ERVisualizationNode:entityVisualization_Entity:ERVisualizationNode": {
+    {
       key: "ERVisualizationNode:entityVisualization_Entity:ERVisualizationNode",
       style: "default",
       displayName: "ERVisualizationNode",
       typeName: "Entity",
     },
-    "ERVisualizationNode:entityVisualization_Entity:ERVisualizationPosition": {
+    {
       key: "ERVisualizationNode:entityVisualization_Entity:ERVisualizationPosition",
       style: "default",
       displayName: "ERVisualizationPosition",
       typeName: "Entity",
     },
-    "ERVisualizationNode:unionVisualization_EntityUnion:ConstraintPath": {
+    {
       key: "ERVisualizationNode:unionVisualization_EntityUnion:ConstraintPath",
       style: "default",
       displayName: "ConstraintPath",
       typeName: "Union",
     },
-    "ERVisualizationNode:unionVisualization_EntityUnion:EntityOrUnion": {
+    {
       key: "ERVisualizationNode:unionVisualization_EntityUnion:EntityOrUnion",
       style: "default",
       displayName: "EntityOrUnion",
       typeName: "Union",
     },
-    "ERVisualizationNode:unionVisualization_EntityUnion:Expression": {
+    {
       key: "ERVisualizationNode:unionVisualization_EntityUnion:Expression",
       style: "default",
       displayName: "Expression",
       typeName: "Union",
     },
-    "ERVisualizationNode:unionVisualization_EntityUnion:Field": {
+    {
       key: "ERVisualizationNode:unionVisualization_EntityUnion:Field",
       style: "default",
       displayName: "Field",
       typeName: "Union",
     },
-    "ERVisualizationNode:unionVisualization_EntityUnion:ElementContainer": {
+    {
       key: "ERVisualizationNode:unionVisualization_EntityUnion:ElementContainer",
       style: "default",
       displayName: "ElementContainer",
       typeName: "Union",
     },
-    "ERVisualizationNode:unionVisualization_EntityUnion:PageAction": {
+    {
       key: "ERVisualizationNode:unionVisualization_EntityUnion:PageAction",
       style: "default",
       displayName: "PageAction",
       typeName: "Union",
     },
-    "ERVisualizationNode:unionVisualization_EntityUnion:PageActionContainer": {
+    {
       key: "ERVisualizationNode:unionVisualization_EntityUnion:PageActionContainer",
       style: "default",
       displayName: "PageActionContainer",
       typeName: "Union",
     },
-    "ERVisualizationNode:unionVisualization_EntityUnion:PageElement": {
+    {
       key: "ERVisualizationNode:unionVisualization_EntityUnion:PageElement",
       style: "default",
       displayName: "PageElement",
       typeName: "Union",
     },
-    "ERVisualizationNode:unionVisualization_EntityUnion:StructureContainer": {
+    {
       key: "ERVisualizationNode:unionVisualization_EntityUnion:StructureContainer",
       style: "default",
       displayName: "StructureContainer",
       typeName: "Union",
     },
-    "ERVisualizationNode:unionVisualization_EntityUnion:StructureElement": {
+    {
       key: "ERVisualizationNode:unionVisualization_EntityUnion:StructureElement",
       style: "default",
       displayName: "StructureElement",
       typeName: "Union",
     },
-    "ERVisualizationNode:erVisualizationForTemplate_InstanceTemplate:attributeOnUnion-instanceTemplate1":
-      {
-        key: "ERVisualizationNode:erVisualizationForTemplate_InstanceTemplate:attributeOnUnion-instanceTemplate1",
-        style: "small-circle",
-        displayName: "attributeOnUnion",
-      },
-    "ERVisualizationNode:erVisualizationForTemplate_InstanceTemplate:constraintTypes-instanceTemplate1":
-      {
-        key: "ERVisualizationNode:erVisualizationForTemplate_InstanceTemplate:constraintTypes-instanceTemplate1",
-        style: "small-circle",
-        displayName: "hasValue",
-      },
-    "ERVisualizationNode:erVisualizationForTemplate_InstanceTemplate:constraintTypes-instanceTemplate2":
-      {
-        key: "ERVisualizationNode:erVisualizationForTemplate_InstanceTemplate:constraintTypes-instanceTemplate2",
-        style: "small-circle",
-        displayName: "hasNoValue",
-      },
-    "ERVisualizationNode:erVisualizationForTemplate_InstanceTemplate:constraintTypes-instanceTemplate3":
-      {
-        key: "ERVisualizationNode:erVisualizationForTemplate_InstanceTemplate:constraintTypes-instanceTemplate3",
-        style: "small-circle",
-        displayName: "equalsStringConstant",
-      },
-    "ERVisualizationNode:erVisualizationForTemplate_InstanceTemplate:constraintTypes-instanceTemplate4":
-      {
-        key: "ERVisualizationNode:erVisualizationForTemplate_InstanceTemplate:constraintTypes-instanceTemplate4",
-        style: "small-circle",
-        displayName: "equalsNumberConstant",
-      },
-    "ERVisualizationNode:erVisualizationForTemplate_InstanceTemplate:constraintTypes-instanceTemplate5":
-      {
-        key: "ERVisualizationNode:erVisualizationForTemplate_InstanceTemplate:constraintTypes-instanceTemplate5",
-        style: "small-circle",
-        displayName: "equalsTrue",
-      },
-    "ERVisualizationNode:erVisualizationForTemplate_InstanceTemplate:constraintTypes-instanceTemplate6":
-      {
-        key: "ERVisualizationNode:erVisualizationForTemplate_InstanceTemplate:constraintTypes-instanceTemplate6",
-        style: "small-circle",
-        displayName: "equalsFalse",
-      },
-    "ERVisualizationNode:erVisualizationForTemplate_InstanceTemplate:constraintTypes-instanceTemplate7":
-      {
-        key: "ERVisualizationNode:erVisualizationForTemplate_InstanceTemplate:constraintTypes-instanceTemplate7",
-        style: "small-circle",
-        displayName: "equalsPathValue",
-      },
-    "ERVisualizationNode:erVisualizationForTemplate_InstanceTemplate:constraintTypes-instanceTemplate8":
-      {
-        key: "ERVisualizationNode:erVisualizationForTemplate_InstanceTemplate:constraintTypes-instanceTemplate8",
-        style: "small-circle",
-        displayName: "notEqualsStringConstant",
-      },
-    "ERVisualizationNode:erVisualizationForTemplate_InstanceTemplate:displayNameForEntity-instanceTemplate1":
-      {
-        key: "ERVisualizationNode:erVisualizationForTemplate_InstanceTemplate:displayNameForEntity-instanceTemplate1",
-        style: "small-circle",
-        displayName: "displayNameForEntity",
-      },
-    "ERVisualizationNode:erVisualizationForTemplate_InstanceTemplate:displayNameForEntity-instanceTemplate2":
-      {
-        key: "ERVisualizationNode:erVisualizationForTemplate_InstanceTemplate:displayNameForEntity-instanceTemplate2",
-        style: "small-circle",
-        displayName: "displayNameForEntity",
-      },
-    "ERVisualizationNode:erVisualizationForTemplate_InstanceTemplate:displayNameForEntityAndUnion-instanceTemplate1":
-      {
-        key: "ERVisualizationNode:erVisualizationForTemplate_InstanceTemplate:displayNameForEntityAndUnion-instanceTemplate1",
-        style: "small-circle",
-        displayName: "displayNameForEntityAndUnion",
-      },
-    "ERVisualizationNode:erVisualizationForTemplate_InstanceTemplate:forExpression-instanceTemplate1":
-      {
-        key: "ERVisualizationNode:erVisualizationForTemplate_InstanceTemplate:forExpression-instanceTemplate1",
-        style: "small-circle",
-        displayName: "forExpression",
-      },
-    "ERVisualizationNode:erVisualizationForTemplate_InstanceTemplate:referenceOnUnion-instanceTemplate1":
-      {
-        key: "ERVisualizationNode:erVisualizationForTemplate_InstanceTemplate:referenceOnUnion-instanceTemplate1",
-        style: "small-circle",
-        displayName: "referenceOnUnion",
-      },
-    "ERVisualizationNode:erVisualizationForTemplate_InstanceTemplate:relationManyToOne-instanceTemplate1":
-      {
-        key: "ERVisualizationNode:erVisualizationForTemplate_InstanceTemplate:relationManyToOne-instanceTemplate1",
-        style: "small-circle",
-        displayName: "relationManyToOne",
-      },
-    "ERVisualizationNode:erVisualizationForTemplate_InstanceTemplate:relationOneOwnsMany-instanceTemplate1":
-      {
-        key: "ERVisualizationNode:erVisualizationForTemplate_InstanceTemplate:relationOneOwnsMany-instanceTemplate1",
-        style: "small-circle",
-        displayName: "relationOneOwnsMany",
-      },
-    "ERVisualizationNode:erVisualizationForTemplate_InstanceTemplate:relationOneOwnsOne-instanceTemplate1":
-      {
-        key: "ERVisualizationNode:erVisualizationForTemplate_InstanceTemplate:relationOneOwnsOne-instanceTemplate1",
-        style: "small-circle",
-        displayName: "relationOneOwnsOne",
-      },
-    "ERVisualizationNode:erVisualizationForTemplate_InstanceTemplate:relationTypes-instanceTemplate1":
-      {
-        key: "ERVisualizationNode:erVisualizationForTemplate_InstanceTemplate:relationTypes-instanceTemplate1",
-        style: "small-circle",
-        displayName: "manyToOne",
-      },
-    "ERVisualizationNode:erVisualizationForTemplate_InstanceTemplate:relationTypes-instanceTemplate2":
-      {
-        key: "ERVisualizationNode:erVisualizationForTemplate_InstanceTemplate:relationTypes-instanceTemplate2",
-        style: "small-circle",
-        displayName: "manyToMany",
-      },
-    "ERVisualizationNode:erVisualizationForTemplate_InstanceTemplate:relationTypes-instanceTemplate3":
-      {
-        key: "ERVisualizationNode:erVisualizationForTemplate_InstanceTemplate:relationTypes-instanceTemplate3",
-        style: "small-circle",
-        displayName: "oneOwnsMany",
-      },
-    "ERVisualizationNode:erVisualizationForTemplate_InstanceTemplate:relationTypes-instanceTemplate4":
-      {
-        key: "ERVisualizationNode:erVisualizationForTemplate_InstanceTemplate:relationTypes-instanceTemplate4",
-        style: "small-circle",
-        displayName: "oneOwnsOne",
-      },
-    "ERVisualizationNode:erVisualizationForTemplate_InstanceTemplate:system-instanceTemplate1": {
+    {
+      key: "ERVisualizationNode:erVisualizationForTemplate_InstanceTemplate:attributeOnUnion-instanceTemplate1",
+      style: "small-circle",
+      displayName: "attributeOnUnion",
+    },
+    {
+      key: "ERVisualizationNode:erVisualizationForTemplate_InstanceTemplate:constraintTypes-instanceTemplate1",
+      style: "small-circle",
+      displayName: "hasValue",
+    },
+    {
+      key: "ERVisualizationNode:erVisualizationForTemplate_InstanceTemplate:constraintTypes-instanceTemplate2",
+      style: "small-circle",
+      displayName: "hasNoValue",
+    },
+    {
+      key: "ERVisualizationNode:erVisualizationForTemplate_InstanceTemplate:constraintTypes-instanceTemplate3",
+      style: "small-circle",
+      displayName: "equalsStringConstant",
+    },
+    {
+      key: "ERVisualizationNode:erVisualizationForTemplate_InstanceTemplate:constraintTypes-instanceTemplate4",
+      style: "small-circle",
+      displayName: "equalsNumberConstant",
+    },
+    {
+      key: "ERVisualizationNode:erVisualizationForTemplate_InstanceTemplate:constraintTypes-instanceTemplate5",
+      style: "small-circle",
+      displayName: "equalsTrue",
+    },
+    {
+      key: "ERVisualizationNode:erVisualizationForTemplate_InstanceTemplate:constraintTypes-instanceTemplate6",
+      style: "small-circle",
+      displayName: "equalsFalse",
+    },
+    {
+      key: "ERVisualizationNode:erVisualizationForTemplate_InstanceTemplate:constraintTypes-instanceTemplate7",
+      style: "small-circle",
+      displayName: "equalsPathValue",
+    },
+    {
+      key: "ERVisualizationNode:erVisualizationForTemplate_InstanceTemplate:constraintTypes-instanceTemplate8",
+      style: "small-circle",
+      displayName: "notEqualsStringConstant",
+    },
+    {
+      key: "ERVisualizationNode:erVisualizationForTemplate_InstanceTemplate:displayNameForEntity-instanceTemplate1",
+      style: "small-circle",
+      displayName: "displayNameForEntity",
+    },
+    {
+      key: "ERVisualizationNode:erVisualizationForTemplate_InstanceTemplate:displayNameForEntity-instanceTemplate2",
+      style: "small-circle",
+      displayName: "displayNameForEntity",
+    },
+    {
+      key: "ERVisualizationNode:erVisualizationForTemplate_InstanceTemplate:displayNameForEntityAndUnion-instanceTemplate1",
+      style: "small-circle",
+      displayName: "displayNameForEntityAndUnion",
+    },
+    {
+      key: "ERVisualizationNode:erVisualizationForTemplate_InstanceTemplate:forExpression-instanceTemplate1",
+      style: "small-circle",
+      displayName: "forExpression",
+    },
+    {
+      key: "ERVisualizationNode:erVisualizationForTemplate_InstanceTemplate:referenceOnUnion-instanceTemplate1",
+      style: "small-circle",
+      displayName: "referenceOnUnion",
+    },
+    {
+      key: "ERVisualizationNode:erVisualizationForTemplate_InstanceTemplate:relationManyToOne-instanceTemplate1",
+      style: "small-circle",
+      displayName: "relationManyToOne",
+    },
+    {
+      key: "ERVisualizationNode:erVisualizationForTemplate_InstanceTemplate:relationOneOwnsMany-instanceTemplate1",
+      style: "small-circle",
+      displayName: "relationOneOwnsMany",
+    },
+    {
+      key: "ERVisualizationNode:erVisualizationForTemplate_InstanceTemplate:relationOneOwnsOne-instanceTemplate1",
+      style: "small-circle",
+      displayName: "relationOneOwnsOne",
+    },
+    {
+      key: "ERVisualizationNode:erVisualizationForTemplate_InstanceTemplate:relationTypes-instanceTemplate1",
+      style: "small-circle",
+      displayName: "manyToOne",
+    },
+    {
+      key: "ERVisualizationNode:erVisualizationForTemplate_InstanceTemplate:relationTypes-instanceTemplate2",
+      style: "small-circle",
+      displayName: "manyToMany",
+    },
+    {
+      key: "ERVisualizationNode:erVisualizationForTemplate_InstanceTemplate:relationTypes-instanceTemplate3",
+      style: "small-circle",
+      displayName: "oneOwnsMany",
+    },
+    {
+      key: "ERVisualizationNode:erVisualizationForTemplate_InstanceTemplate:relationTypes-instanceTemplate4",
+      style: "small-circle",
+      displayName: "oneOwnsOne",
+    },
+    {
       key: "ERVisualizationNode:erVisualizationForTemplate_InstanceTemplate:system-instanceTemplate1",
       style: "small-circle",
       displayName: "System",
     },
-    "ERVisualizationNode:erVisualizationForTemplate_InstanceTemplate:system-instanceTemplate2": {
+    {
       key: "ERVisualizationNode:erVisualizationForTemplate_InstanceTemplate:system-instanceTemplate2",
       style: "small-circle",
       displayName: "SystemMessage",
     },
-    "ERVisualizationNode:erVisualizationForTemplate_InstanceTemplate:system-instanceTemplate3": {
+    {
       key: "ERVisualizationNode:erVisualizationForTemplate_InstanceTemplate:system-instanceTemplate3",
       style: "small-circle",
       displayName: "systemMessageDetails",
     },
-    "ERVisualizationNode:erVisualizationForTemplate_InstanceTemplate:system-instanceTemplate4": {
+    {
       key: "ERVisualizationNode:erVisualizationForTemplate_InstanceTemplate:system-instanceTemplate4",
       style: "small-circle",
       displayName: "systemHasUpdates",
     },
-    "ERVisualizationNode:erVisualizationForTemplate_InstanceTemplate:system-instanceTemplate5": {
+    {
       key: "ERVisualizationNode:erVisualizationForTemplate_InstanceTemplate:system-instanceTemplate5",
       style: "small-circle",
       displayName: "systemHasErrors",
     },
-    "ERVisualizationNode:erVisualizationForTemplate_InstanceTemplate:system-instanceTemplate6": {
+    {
       key: "ERVisualizationNode:erVisualizationForTemplate_InstanceTemplate:system-instanceTemplate6",
       style: "small-circle",
       displayName: "systemMechanism",
     },
-    "ERVisualizationNode:erVisualizationForTemplate_InstanceTemplate:system-instanceTemplate7": {
+    {
       key: "ERVisualizationNode:erVisualizationForTemplate_InstanceTemplate:system-instanceTemplate7",
       style: "small-circle",
       displayName: "theSystem",
     },
-    "ERVisualizationNode:erVisualizationForTemplate_InstanceTemplate:forPage-instanceTemplate1": {
+    {
       key: "ERVisualizationNode:erVisualizationForTemplate_InstanceTemplate:forPage-instanceTemplate1",
       style: "small-circle",
       displayName: "titlePartForPage",
     },
-    "ERVisualizationNode:erVisualizationForTemplate_InstanceTemplate:forPage-instanceTemplate2": {
+    {
       key: "ERVisualizationNode:erVisualizationForTemplate_InstanceTemplate:forPage-instanceTemplate2",
       style: "small-circle",
       displayName: "menuPartForPage",
     },
-    "ERVisualizationNode:erVisualizationForTemplate_InstanceTemplate:forPage-instanceTemplate3": {
+    {
       key: "ERVisualizationNode:erVisualizationForTemplate_InstanceTemplate:forPage-instanceTemplate3",
       style: "small-circle",
       displayName: "contentPartForPage",
     },
-    "ERVisualizationNode:erVisualizationForTemplate_InstanceTemplate:fieldsForInstanceMaintenance-instanceTemplate1":
-      {
-        key: "ERVisualizationNode:erVisualizationForTemplate_InstanceTemplate:fieldsForInstanceMaintenance-instanceTemplate1",
-        style: "small-circle",
-        displayName: "main",
-      },
-    "ERVisualizationNode:erVisualizationForTemplate_InstanceTemplate:fieldsForInstanceMaintenance-instanceTemplate2":
-      {
-        key: "ERVisualizationNode:erVisualizationForTemplate_InstanceTemplate:fieldsForInstanceMaintenance-instanceTemplate2",
-        style: "small-circle",
-        displayName: "fields",
-      },
-    "ERVisualizationNode:erVisualizationForTemplate_InstanceTemplate:fieldsForInstanceMaintenance-instanceTemplate3":
-      {
-        key: "ERVisualizationNode:erVisualizationForTemplate_InstanceTemplate:fieldsForInstanceMaintenance-instanceTemplate3",
-        style: "small-circle",
-        displayName: "fieldsForInstanceMaintenance",
-      },
-    "ERVisualizationNode:erVisualizationForTemplate_InstanceTemplate:forEntityAndMaintenanceConfig-instanceTemplate1":
-      {
-        key: "ERVisualizationNode:erVisualizationForTemplate_InstanceTemplate:forEntityAndMaintenanceConfig-instanceTemplate1",
-        style: "small-circle",
-        displayName: "forEntityAndMaintenanceConfig",
-      },
-    "ERVisualizationNode:erVisualizationForTemplate_InstanceTemplate:forFieldRowWithOneToMany-instanceTemplate1":
-      {
-        key: "ERVisualizationNode:erVisualizationForTemplate_InstanceTemplate:forFieldRowWithOneToMany-instanceTemplate1",
-        style: "small-circle",
-        displayName: "forFieldRowWithOneToMany",
-      },
-    "ERVisualizationNode:erVisualizationForTemplate_InstanceTemplate:forInstanceMaintenanceAndAttribute-instanceTemplate1":
-      {
-        key: "ERVisualizationNode:erVisualizationForTemplate_InstanceTemplate:forInstanceMaintenanceAndAttribute-instanceTemplate1",
-        style: "small-circle",
-        displayName: "forInstanceMaintenanceAndAttribute",
-      },
-    "ERVisualizationNode:erVisualizationForTemplate_InstanceTemplate:forInstanceMaintenanceAndManyToOneRelation-instanceTemplate1":
-      {
-        key: "ERVisualizationNode:erVisualizationForTemplate_InstanceTemplate:forInstanceMaintenanceAndManyToOneRelation-instanceTemplate1",
-        style: "small-circle",
-        displayName: "forInstanceMaintenanceAndManyToOneRelation",
-      },
-    "ERVisualizationNode:erVisualizationForTemplate_InstanceTemplate:forMaintenance-instanceTemplate1":
-      {
-        key: "ERVisualizationNode:erVisualizationForTemplate_InstanceTemplate:forMaintenance-instanceTemplate1",
-        style: "small-circle",
-        displayName: "forMaintenance",
-      },
-    "ERVisualizationNode:erVisualizationForTemplate_InstanceTemplate:forMaintenanceConfig-instanceTemplate1":
-      {
-        key: "ERVisualizationNode:erVisualizationForTemplate_InstanceTemplate:forMaintenanceConfig-instanceTemplate1",
-        style: "small-circle",
-        displayName: "forMaintenanceConfig",
-      },
-    "ERVisualizationNode:erVisualizationForTemplate_InstanceTemplate:instanceMaintenanceOneOwnsManyRelation-instanceTemplate1":
-      {
-        key: "ERVisualizationNode:erVisualizationForTemplate_InstanceTemplate:instanceMaintenanceOneOwnsManyRelation-instanceTemplate1",
-        style: "small-circle",
-        displayName: "instanceMaintenanceOneOwnsManyRelation",
-      },
-    "ERVisualizationNode:erVisualizationForTemplate_InstanceTemplate:instanceMaintenanceOneOwnsOneRelation-instanceTemplate1":
-      {
-        key: "ERVisualizationNode:erVisualizationForTemplate_InstanceTemplate:instanceMaintenanceOneOwnsOneRelation-instanceTemplate1",
-        style: "small-circle",
-        displayName: "instanceMaintenanceOneOwnsOneRelation",
-      },
-    "ERVisualizationNode:erVisualizationForTemplate_InstanceTemplate:instanceMaintenanceUnionMemberOneOwnsManyRelation-instanceTemplate1":
-      {
-        key: "ERVisualizationNode:erVisualizationForTemplate_InstanceTemplate:instanceMaintenanceUnionMemberOneOwnsManyRelation-instanceTemplate1",
-        style: "small-circle",
-        displayName: "instanceMaintenanceUnionMemberOneOwnsManyRelation",
-      },
-    "ERVisualizationNode:erVisualizationForTemplate_InstanceTemplate:structureForEntityRelatedInstances-instanceTemplate1":
-      {
-        key: "ERVisualizationNode:erVisualizationForTemplate_InstanceTemplate:structureForEntityRelatedInstances-instanceTemplate1",
-        style: "small-circle",
-        displayName: "structureForEntityRelatedInstances",
-      },
-    "ERVisualizationNode:erVisualizationForTemplate_InstanceTemplate:structureForEntityUnionMemberRelatedInstances-instanceTemplate1":
-      {
-        key: "ERVisualizationNode:erVisualizationForTemplate_InstanceTemplate:structureForEntityUnionMemberRelatedInstances-instanceTemplate1",
-        style: "small-circle",
-        displayName: "structureForEntityUnionMemberRelatedInstances",
-      },
-    "ERVisualizationNode:erVisualizationForTemplate_InstanceTemplate:structureForMaintenanceList-instanceTemplate1":
-      {
-        key: "ERVisualizationNode:erVisualizationForTemplate_InstanceTemplate:structureForMaintenanceList-instanceTemplate1",
-        style: "small-circle",
-        displayName: "structureForMaintenanceList",
-      },
-    "ERVisualizationNode:erVisualizationForTemplate_InstanceTemplate:structureForMaintenanceList-instanceTemplate2":
-      {
-        key: "ERVisualizationNode:erVisualizationForTemplate_InstanceTemplate:structureForMaintenanceList-instanceTemplate2",
-        style: "small-circle",
-        displayName: "structureForMaintenanceList",
-      },
-    "ERVisualizationNode:erVisualizationForTemplate_InstanceTemplate:structureForMaintenanceList-instanceTemplate3":
-      {
-        key: "ERVisualizationNode:erVisualizationForTemplate_InstanceTemplate:structureForMaintenanceList-instanceTemplate3",
-        style: "small-circle",
-        displayName: "structureForMaintenanceList",
-      },
-    "ERVisualizationNode:erVisualizationForTemplate_InstanceTemplate:structureForMaintenanceList-instanceTemplate4":
-      {
-        key: "ERVisualizationNode:erVisualizationForTemplate_InstanceTemplate:structureForMaintenanceList-instanceTemplate4",
-        style: "small-circle",
-        displayName: "structureForMaintenanceList",
-      },
-    "ERVisualizationNode:erVisualizationForTemplate_InstanceTemplate:structureForMaintenanceListWithMenu-instanceTemplate1":
-      {
-        key: "ERVisualizationNode:erVisualizationForTemplate_InstanceTemplate:structureForMaintenanceListWithMenu-instanceTemplate1",
-        style: "small-circle",
-        displayName: "structureForMaintenanceListWithMenu",
-      },
-    "ERVisualizationNode:erVisualizationForTemplate_InstanceTemplate:structureForPicker-instanceTemplate1":
-      {
-        key: "ERVisualizationNode:erVisualizationForTemplate_InstanceTemplate:structureForPicker-instanceTemplate1",
-        style: "small-circle",
-        displayName: "structureForPicker",
-      },
-    "ERVisualizationNode:erVisualizationForTemplate_InstanceTemplate:structureForPicker-instanceTemplate2":
-      {
-        key: "ERVisualizationNode:erVisualizationForTemplate_InstanceTemplate:structureForPicker-instanceTemplate2",
-        style: "small-circle",
-        displayName: "structureForPicker",
-      },
-    "ERVisualizationNode:erVisualizationForTemplate_InstanceTemplate:structureForPicker-instanceTemplate3":
-      {
-        key: "ERVisualizationNode:erVisualizationForTemplate_InstanceTemplate:structureForPicker-instanceTemplate3",
-        style: "small-circle",
-        displayName: "structureForPicker",
-      },
-    "ERVisualizationNode:erVisualizationForTemplate_InstanceTemplate:structureForRelatedInstances-instanceTemplate1":
-      {
-        key: "ERVisualizationNode:erVisualizationForTemplate_InstanceTemplate:structureForRelatedInstances-instanceTemplate1",
-        style: "small-circle",
-        displayName: "structureForRelatedInstances",
-      },
-    "ERVisualizationNode:erVisualizationForTemplate_InstanceTemplate:structureForRelatedInstances-instanceTemplate2":
-      {
-        key: "ERVisualizationNode:erVisualizationForTemplate_InstanceTemplate:structureForRelatedInstances-instanceTemplate2",
-        style: "small-circle",
-        displayName: "structureForRelatedInstances",
-      },
-    "ERVisualizationNode:erVisualizationForTemplate_InstanceTemplate:structureForRelatedInstances-instanceTemplate3":
-      {
-        key: "ERVisualizationNode:erVisualizationForTemplate_InstanceTemplate:structureForRelatedInstances-instanceTemplate3",
-        style: "small-circle",
-        displayName: "structureForRelatedInstances",
-      },
-    "ERVisualizationNode:erVisualizationForTemplate_InstanceTemplate:forAddButton-instanceTemplate1":
-      {
-        key: "ERVisualizationNode:erVisualizationForTemplate_InstanceTemplate:forAddButton-instanceTemplate1",
-        style: "small-circle",
-        displayName: "forAddButton",
-      },
-    "ERVisualizationNode:erVisualizationForTemplate_InstanceTemplate:forAddButton-instanceTemplate2":
-      {
-        key: "ERVisualizationNode:erVisualizationForTemplate_InstanceTemplate:forAddButton-instanceTemplate2",
-        style: "small-circle",
-        displayName: "forAddButton",
-      },
-    "ERVisualizationNode:erVisualizationForTemplate_InstanceTemplate:forAddButton-instanceTemplate3":
-      {
-        key: "ERVisualizationNode:erVisualizationForTemplate_InstanceTemplate:forAddButton-instanceTemplate3",
-        style: "small-circle",
-        displayName: "forAddButton",
-      },
-    "ERVisualizationNode:erVisualizationForTemplate_InstanceTemplate:forAddButton-instanceTemplate4":
-      {
-        key: "ERVisualizationNode:erVisualizationForTemplate_InstanceTemplate:forAddButton-instanceTemplate4",
-        style: "small-circle",
-        displayName: "forAddButton",
-      },
-    "ERVisualizationNode:erVisualizationForTemplate_InstanceTemplate:forDraftActions-instanceTemplate1":
-      {
-        key: "ERVisualizationNode:erVisualizationForTemplate_InstanceTemplate:forDraftActions-instanceTemplate1",
-        style: "small-circle",
-        displayName: "forDraftActions",
-      },
-    "ERVisualizationNode:erVisualizationForTemplate_InstanceTemplate:forDraftActions-instanceTemplate2":
-      {
-        key: "ERVisualizationNode:erVisualizationForTemplate_InstanceTemplate:forDraftActions-instanceTemplate2",
-        style: "small-circle",
-        displayName: "forDraftActions",
-      },
-    "ERVisualizationNode:erVisualizationForTemplate_InstanceTemplate:forDraftActions-instanceTemplate3":
-      {
-        key: "ERVisualizationNode:erVisualizationForTemplate_InstanceTemplate:forDraftActions-instanceTemplate3",
-        style: "small-circle",
-        displayName: "draftActionsActivate",
-      },
-    "ERVisualizationNode:erVisualizationForTemplate_InstanceTemplate:forDraftActions-instanceTemplate4":
-      {
-        key: "ERVisualizationNode:erVisualizationForTemplate_InstanceTemplate:forDraftActions-instanceTemplate4",
-        style: "small-circle",
-        displayName: "storeActivate",
-      },
-    "ERVisualizationNode:erVisualizationForTemplate_InstanceTemplate:forDraftActions-instanceTemplate5":
-      {
-        key: "ERVisualizationNode:erVisualizationForTemplate_InstanceTemplate:forDraftActions-instanceTemplate5",
-        style: "small-circle",
-        displayName: "storeBack",
-      },
-    "ERVisualizationNode:erVisualizationForTemplate_InstanceTemplate:forDraftActions-instanceTemplate6":
-      {
-        key: "ERVisualizationNode:erVisualizationForTemplate_InstanceTemplate:forDraftActions-instanceTemplate6",
-        style: "small-circle",
-        displayName: "draftActionsDiscard",
-      },
-    "ERVisualizationNode:erVisualizationForTemplate_InstanceTemplate:forDraftActions-instanceTemplate7":
-      {
-        key: "ERVisualizationNode:erVisualizationForTemplate_InstanceTemplate:forDraftActions-instanceTemplate7",
-        style: "small-circle",
-        displayName: "storeTrash",
-      },
-    "ERVisualizationNode:erVisualizationForTemplate_InstanceTemplate:forDraftActions-instanceTemplate8":
-      {
-        key: "ERVisualizationNode:erVisualizationForTemplate_InstanceTemplate:forDraftActions-instanceTemplate8",
-        style: "small-circle",
-        displayName: "trashBack",
-      },
-    "ERVisualizationNode:erVisualizationForTemplate_InstanceTemplate:forFieldRow-instanceTemplate1":
-      {
-        key: "ERVisualizationNode:erVisualizationForTemplate_InstanceTemplate:forFieldRow-instanceTemplate1",
-        style: "small-circle",
-        displayName: "forFieldRow",
-      },
-    "ERVisualizationNode:erVisualizationForTemplate_InstanceTemplate:forFieldRow-instanceTemplate2":
-      {
-        key: "ERVisualizationNode:erVisualizationForTemplate_InstanceTemplate:forFieldRow-instanceTemplate2",
-        style: "small-circle",
-        displayName: "forFieldRow",
-      },
-    "ERVisualizationNode:erVisualizationForTemplate_InstanceTemplate:forFieldRow-instanceTemplate3":
-      {
-        key: "ERVisualizationNode:erVisualizationForTemplate_InstanceTemplate:forFieldRow-instanceTemplate3",
-        style: "small-circle",
-        displayName: "forFieldRow",
-      },
-    "ERVisualizationNode:erVisualizationForTemplate_InstanceTemplate:forFieldRowManyToOne-instanceTemplate1":
-      {
-        key: "ERVisualizationNode:erVisualizationForTemplate_InstanceTemplate:forFieldRowManyToOne-instanceTemplate1",
-        style: "small-circle",
-        displayName: "forFieldRowManyToOne",
-      },
-    "ERVisualizationNode:erVisualizationForTemplate_InstanceTemplate:forFieldRowString-instanceTemplate1":
-      {
-        key: "ERVisualizationNode:erVisualizationForTemplate_InstanceTemplate:forFieldRowString-instanceTemplate1",
-        style: "small-circle",
-        displayName: "forFieldRowString",
-      },
-    "ERVisualizationNode:erVisualizationForTemplate_InstanceTemplate:forInlineInstance-instanceTemplate1":
-      {
-        key: "ERVisualizationNode:erVisualizationForTemplate_InstanceTemplate:forInlineInstance-instanceTemplate1",
-        style: "small-circle",
-        displayName: "forInlineInstance",
-      },
-    "ERVisualizationNode:erVisualizationForTemplate_InstanceTemplate:forInlineInstanceAndEntityUnionMember-instanceTemplate1":
-      {
-        key: "ERVisualizationNode:erVisualizationForTemplate_InstanceTemplate:forInlineInstanceAndEntityUnionMember-instanceTemplate1",
-        style: "small-circle",
-        displayName: "forInlineInstanceAndEntityUnionMember",
-      },
-    "ERVisualizationNode:erVisualizationForTemplate_InstanceTemplate:forInstanceMaintenance-instanceTemplate1":
-      {
-        key: "ERVisualizationNode:erVisualizationForTemplate_InstanceTemplate:forInstanceMaintenance-instanceTemplate1",
-        style: "small-circle",
-        displayName: "forInstanceMaintenance",
-      },
-    "ERVisualizationNode:erVisualizationForTemplate_InstanceTemplate:forInstanceMaintenance-instanceTemplate10":
-      {
-        key: "ERVisualizationNode:erVisualizationForTemplate_InstanceTemplate:forInstanceMaintenance-instanceTemplate10",
-        style: "small-circle",
-        displayName: "forInstanceMaintenanceMenu",
-      },
-    "ERVisualizationNode:erVisualizationForTemplate_InstanceTemplate:forInstanceMaintenance-instanceTemplate11":
-      {
-        key: "ERVisualizationNode:erVisualizationForTemplate_InstanceTemplate:forInstanceMaintenance-instanceTemplate11",
-        style: "small-circle",
-        displayName: "forInstanceMaintenance",
-      },
-    "ERVisualizationNode:erVisualizationForTemplate_InstanceTemplate:forInstanceMaintenance-instanceTemplate12":
-      {
-        key: "ERVisualizationNode:erVisualizationForTemplate_InstanceTemplate:forInstanceMaintenance-instanceTemplate12",
-        style: "small-circle",
-        displayName: "trashAction",
-      },
-    "ERVisualizationNode:erVisualizationForTemplate_InstanceTemplate:forInstanceMaintenance-instanceTemplate13":
-      {
-        key: "ERVisualizationNode:erVisualizationForTemplate_InstanceTemplate:forInstanceMaintenance-instanceTemplate13",
-        style: "small-circle",
-        displayName: "trash",
-      },
-    "ERVisualizationNode:erVisualizationForTemplate_InstanceTemplate:forInstanceMaintenance-instanceTemplate14":
-      {
-        key: "ERVisualizationNode:erVisualizationForTemplate_InstanceTemplate:forInstanceMaintenance-instanceTemplate14",
-        style: "small-circle",
-        displayName: "untrashAction",
-      },
-    "ERVisualizationNode:erVisualizationForTemplate_InstanceTemplate:forInstanceMaintenance-instanceTemplate15":
-      {
-        key: "ERVisualizationNode:erVisualizationForTemplate_InstanceTemplate:forInstanceMaintenance-instanceTemplate15",
-        style: "small-circle",
-        displayName: "untrash",
-      },
-    "ERVisualizationNode:erVisualizationForTemplate_InstanceTemplate:forInstanceMaintenance-instanceTemplate16":
-      {
-        key: "ERVisualizationNode:erVisualizationForTemplate_InstanceTemplate:forInstanceMaintenance-instanceTemplate16",
-        style: "small-circle",
-        displayName: "forInstanceMaintenance",
-      },
-    "ERVisualizationNode:erVisualizationForTemplate_InstanceTemplate:forInstanceMaintenance-instanceTemplate2":
-      {
-        key: "ERVisualizationNode:erVisualizationForTemplate_InstanceTemplate:forInstanceMaintenance-instanceTemplate2",
-        style: "small-circle",
-        displayName: "forInstanceMaintenanceTitle",
-      },
-    "ERVisualizationNode:erVisualizationForTemplate_InstanceTemplate:forInstanceMaintenance-instanceTemplate3":
-      {
-        key: "ERVisualizationNode:erVisualizationForTemplate_InstanceTemplate:forInstanceMaintenance-instanceTemplate3",
-        style: "small-circle",
-        displayName: "assignInstanceDisplayName",
-      },
-    "ERVisualizationNode:erVisualizationForTemplate_InstanceTemplate:forInstanceMaintenance-instanceTemplate4":
-      {
-        key: "ERVisualizationNode:erVisualizationForTemplate_InstanceTemplate:forInstanceMaintenance-instanceTemplate4",
-        style: "small-circle",
-        displayName: "forInstanceMaintenance",
-      },
-    "ERVisualizationNode:erVisualizationForTemplate_InstanceTemplate:forInstanceMaintenance-instanceTemplate5":
-      {
-        key: "ERVisualizationNode:erVisualizationForTemplate_InstanceTemplate:forInstanceMaintenance-instanceTemplate5",
-        style: "small-circle",
-        displayName: "forInstanceMaintenance",
-      },
-    "ERVisualizationNode:erVisualizationForTemplate_InstanceTemplate:forInstanceMaintenance-instanceTemplate6":
-      {
-        key: "ERVisualizationNode:erVisualizationForTemplate_InstanceTemplate:forInstanceMaintenance-instanceTemplate6",
-        style: "small-circle",
-        displayName: "activeTitleSpan",
-      },
-    "ERVisualizationNode:erVisualizationForTemplate_InstanceTemplate:forInstanceMaintenance-instanceTemplate7":
-      {
-        key: "ERVisualizationNode:erVisualizationForTemplate_InstanceTemplate:forInstanceMaintenance-instanceTemplate7",
-        style: "small-circle",
-        displayName: "forInstanceMaintenance",
-      },
-    "ERVisualizationNode:erVisualizationForTemplate_InstanceTemplate:forInstanceMaintenance-instanceTemplate8":
-      {
-        key: "ERVisualizationNode:erVisualizationForTemplate_InstanceTemplate:forInstanceMaintenance-instanceTemplate8",
-        style: "small-circle",
-        displayName: "draftTitleSpan",
-      },
-    "ERVisualizationNode:erVisualizationForTemplate_InstanceTemplate:forInstanceMaintenance-instanceTemplate9":
-      {
-        key: "ERVisualizationNode:erVisualizationForTemplate_InstanceTemplate:forInstanceMaintenance-instanceTemplate9",
-        style: "small-circle",
-        displayName: "trashedTitleDel",
-      },
-    "ERVisualizationNode:erVisualizationForTemplate_InstanceTemplate:forItemSelector-instanceTemplate1":
-      {
-        key: "ERVisualizationNode:erVisualizationForTemplate_InstanceTemplate:forItemSelector-instanceTemplate1",
-        style: "small-circle",
-        displayName: "forItemSelector",
-      },
-    "ERVisualizationNode:erVisualizationForTemplate_InstanceTemplate:forItemSelector-instanceTemplate2":
-      {
-        key: "ERVisualizationNode:erVisualizationForTemplate_InstanceTemplate:forItemSelector-instanceTemplate2",
-        style: "small-circle",
-        displayName: "forItemSelector",
-      },
-    "ERVisualizationNode:erVisualizationForTemplate_InstanceTemplate:forItemSelector-instanceTemplate3":
-      {
-        key: "ERVisualizationNode:erVisualizationForTemplate_InstanceTemplate:forItemSelector-instanceTemplate3",
-        style: "small-circle",
-        displayName: "forItemSelector",
-      },
-    "ERVisualizationNode:erVisualizationForTemplate_InstanceTemplate:forItemSelector-instanceTemplate4":
-      {
-        key: "ERVisualizationNode:erVisualizationForTemplate_InstanceTemplate:forItemSelector-instanceTemplate4",
-        style: "small-circle",
-        displayName: "forItemSelector",
-      },
-    "ERVisualizationNode:erVisualizationForTemplate_InstanceTemplate:forItemSelector-instanceTemplate5":
-      {
-        key: "ERVisualizationNode:erVisualizationForTemplate_InstanceTemplate:forItemSelector-instanceTemplate5",
-        style: "small-circle",
-        displayName: "forItemSelector",
-      },
-    "ERVisualizationNode:erVisualizationForTemplate_InstanceTemplate:forList-instanceTemplate1": {
+    {
+      key: "ERVisualizationNode:erVisualizationForTemplate_InstanceTemplate:fieldsForInstanceMaintenance-instanceTemplate1",
+      style: "small-circle",
+      displayName: "main",
+    },
+    {
+      key: "ERVisualizationNode:erVisualizationForTemplate_InstanceTemplate:fieldsForInstanceMaintenance-instanceTemplate2",
+      style: "small-circle",
+      displayName: "fields",
+    },
+    {
+      key: "ERVisualizationNode:erVisualizationForTemplate_InstanceTemplate:fieldsForInstanceMaintenance-instanceTemplate3",
+      style: "small-circle",
+      displayName: "fieldsForInstanceMaintenance",
+    },
+    {
+      key: "ERVisualizationNode:erVisualizationForTemplate_InstanceTemplate:forEntityAndMaintenanceConfig-instanceTemplate1",
+      style: "small-circle",
+      displayName: "forEntityAndMaintenanceConfig",
+    },
+    {
+      key: "ERVisualizationNode:erVisualizationForTemplate_InstanceTemplate:forFieldRowWithOneToMany-instanceTemplate1",
+      style: "small-circle",
+      displayName: "forFieldRowWithOneToMany",
+    },
+    {
+      key: "ERVisualizationNode:erVisualizationForTemplate_InstanceTemplate:forInstanceMaintenanceAndAttribute-instanceTemplate1",
+      style: "small-circle",
+      displayName: "forInstanceMaintenanceAndAttribute",
+    },
+    {
+      key: "ERVisualizationNode:erVisualizationForTemplate_InstanceTemplate:forInstanceMaintenanceAndManyToOneRelation-instanceTemplate1",
+      style: "small-circle",
+      displayName: "forInstanceMaintenanceAndManyToOneRelation",
+    },
+    {
+      key: "ERVisualizationNode:erVisualizationForTemplate_InstanceTemplate:forMaintenance-instanceTemplate1",
+      style: "small-circle",
+      displayName: "forMaintenance",
+    },
+    {
+      key: "ERVisualizationNode:erVisualizationForTemplate_InstanceTemplate:forMaintenanceConfig-instanceTemplate1",
+      style: "small-circle",
+      displayName: "forMaintenanceConfig",
+    },
+    {
+      key: "ERVisualizationNode:erVisualizationForTemplate_InstanceTemplate:instanceMaintenanceOneOwnsManyRelation-instanceTemplate1",
+      style: "small-circle",
+      displayName: "instanceMaintenanceOneOwnsManyRelation",
+    },
+    {
+      key: "ERVisualizationNode:erVisualizationForTemplate_InstanceTemplate:instanceMaintenanceOneOwnsOneRelation-instanceTemplate1",
+      style: "small-circle",
+      displayName: "instanceMaintenanceOneOwnsOneRelation",
+    },
+    {
+      key: "ERVisualizationNode:erVisualizationForTemplate_InstanceTemplate:instanceMaintenanceUnionMemberOneOwnsManyRelation-instanceTemplate1",
+      style: "small-circle",
+      displayName: "instanceMaintenanceUnionMemberOneOwnsManyRelation",
+    },
+    {
+      key: "ERVisualizationNode:erVisualizationForTemplate_InstanceTemplate:structureForEntityRelatedInstances-instanceTemplate1",
+      style: "small-circle",
+      displayName: "structureForEntityRelatedInstances",
+    },
+    {
+      key: "ERVisualizationNode:erVisualizationForTemplate_InstanceTemplate:structureForEntityUnionMemberRelatedInstances-instanceTemplate1",
+      style: "small-circle",
+      displayName: "structureForEntityUnionMemberRelatedInstances",
+    },
+    {
+      key: "ERVisualizationNode:erVisualizationForTemplate_InstanceTemplate:structureForMaintenanceList-instanceTemplate1",
+      style: "small-circle",
+      displayName: "structureForMaintenanceList",
+    },
+    {
+      key: "ERVisualizationNode:erVisualizationForTemplate_InstanceTemplate:structureForMaintenanceList-instanceTemplate2",
+      style: "small-circle",
+      displayName: "structureForMaintenanceList",
+    },
+    {
+      key: "ERVisualizationNode:erVisualizationForTemplate_InstanceTemplate:structureForMaintenanceList-instanceTemplate3",
+      style: "small-circle",
+      displayName: "structureForMaintenanceList",
+    },
+    {
+      key: "ERVisualizationNode:erVisualizationForTemplate_InstanceTemplate:structureForMaintenanceList-instanceTemplate4",
+      style: "small-circle",
+      displayName: "structureForMaintenanceList",
+    },
+    {
+      key: "ERVisualizationNode:erVisualizationForTemplate_InstanceTemplate:structureForMaintenanceListWithMenu-instanceTemplate1",
+      style: "small-circle",
+      displayName: "structureForMaintenanceListWithMenu",
+    },
+    {
+      key: "ERVisualizationNode:erVisualizationForTemplate_InstanceTemplate:structureForPicker-instanceTemplate1",
+      style: "small-circle",
+      displayName: "structureForPicker",
+    },
+    {
+      key: "ERVisualizationNode:erVisualizationForTemplate_InstanceTemplate:structureForPicker-instanceTemplate2",
+      style: "small-circle",
+      displayName: "structureForPicker",
+    },
+    {
+      key: "ERVisualizationNode:erVisualizationForTemplate_InstanceTemplate:structureForPicker-instanceTemplate3",
+      style: "small-circle",
+      displayName: "structureForPicker",
+    },
+    {
+      key: "ERVisualizationNode:erVisualizationForTemplate_InstanceTemplate:structureForRelatedInstances-instanceTemplate1",
+      style: "small-circle",
+      displayName: "structureForRelatedInstances",
+    },
+    {
+      key: "ERVisualizationNode:erVisualizationForTemplate_InstanceTemplate:structureForRelatedInstances-instanceTemplate2",
+      style: "small-circle",
+      displayName: "structureForRelatedInstances",
+    },
+    {
+      key: "ERVisualizationNode:erVisualizationForTemplate_InstanceTemplate:structureForRelatedInstances-instanceTemplate3",
+      style: "small-circle",
+      displayName: "structureForRelatedInstances",
+    },
+    {
+      key: "ERVisualizationNode:erVisualizationForTemplate_InstanceTemplate:forAddButton-instanceTemplate1",
+      style: "small-circle",
+      displayName: "forAddButton",
+    },
+    {
+      key: "ERVisualizationNode:erVisualizationForTemplate_InstanceTemplate:forAddButton-instanceTemplate2",
+      style: "small-circle",
+      displayName: "forAddButton",
+    },
+    {
+      key: "ERVisualizationNode:erVisualizationForTemplate_InstanceTemplate:forAddButton-instanceTemplate3",
+      style: "small-circle",
+      displayName: "forAddButton",
+    },
+    {
+      key: "ERVisualizationNode:erVisualizationForTemplate_InstanceTemplate:forAddButton-instanceTemplate4",
+      style: "small-circle",
+      displayName: "forAddButton",
+    },
+    {
+      key: "ERVisualizationNode:erVisualizationForTemplate_InstanceTemplate:forDraftActions-instanceTemplate1",
+      style: "small-circle",
+      displayName: "forDraftActions",
+    },
+    {
+      key: "ERVisualizationNode:erVisualizationForTemplate_InstanceTemplate:forDraftActions-instanceTemplate2",
+      style: "small-circle",
+      displayName: "forDraftActions",
+    },
+    {
+      key: "ERVisualizationNode:erVisualizationForTemplate_InstanceTemplate:forDraftActions-instanceTemplate3",
+      style: "small-circle",
+      displayName: "draftActionsActivate",
+    },
+    {
+      key: "ERVisualizationNode:erVisualizationForTemplate_InstanceTemplate:forDraftActions-instanceTemplate4",
+      style: "small-circle",
+      displayName: "storeActivate",
+    },
+    {
+      key: "ERVisualizationNode:erVisualizationForTemplate_InstanceTemplate:forDraftActions-instanceTemplate5",
+      style: "small-circle",
+      displayName: "storeBack",
+    },
+    {
+      key: "ERVisualizationNode:erVisualizationForTemplate_InstanceTemplate:forDraftActions-instanceTemplate6",
+      style: "small-circle",
+      displayName: "draftActionsDiscard",
+    },
+    {
+      key: "ERVisualizationNode:erVisualizationForTemplate_InstanceTemplate:forDraftActions-instanceTemplate7",
+      style: "small-circle",
+      displayName: "storeTrash",
+    },
+    {
+      key: "ERVisualizationNode:erVisualizationForTemplate_InstanceTemplate:forDraftActions-instanceTemplate8",
+      style: "small-circle",
+      displayName: "trashBack",
+    },
+    {
+      key: "ERVisualizationNode:erVisualizationForTemplate_InstanceTemplate:forFieldRow-instanceTemplate1",
+      style: "small-circle",
+      displayName: "forFieldRow",
+    },
+    {
+      key: "ERVisualizationNode:erVisualizationForTemplate_InstanceTemplate:forFieldRow-instanceTemplate2",
+      style: "small-circle",
+      displayName: "forFieldRow",
+    },
+    {
+      key: "ERVisualizationNode:erVisualizationForTemplate_InstanceTemplate:forFieldRow-instanceTemplate3",
+      style: "small-circle",
+      displayName: "forFieldRow",
+    },
+    {
+      key: "ERVisualizationNode:erVisualizationForTemplate_InstanceTemplate:forFieldRowManyToOne-instanceTemplate1",
+      style: "small-circle",
+      displayName: "forFieldRowManyToOne",
+    },
+    {
+      key: "ERVisualizationNode:erVisualizationForTemplate_InstanceTemplate:forFieldRowString-instanceTemplate1",
+      style: "small-circle",
+      displayName: "forFieldRowString",
+    },
+    {
+      key: "ERVisualizationNode:erVisualizationForTemplate_InstanceTemplate:forInlineInstance-instanceTemplate1",
+      style: "small-circle",
+      displayName: "forInlineInstance",
+    },
+    {
+      key: "ERVisualizationNode:erVisualizationForTemplate_InstanceTemplate:forInlineInstanceAndEntityUnionMember-instanceTemplate1",
+      style: "small-circle",
+      displayName: "forInlineInstanceAndEntityUnionMember",
+    },
+    {
+      key: "ERVisualizationNode:erVisualizationForTemplate_InstanceTemplate:forInstanceMaintenance-instanceTemplate1",
+      style: "small-circle",
+      displayName: "forInstanceMaintenance",
+    },
+    {
+      key: "ERVisualizationNode:erVisualizationForTemplate_InstanceTemplate:forInstanceMaintenance-instanceTemplate10",
+      style: "small-circle",
+      displayName: "forInstanceMaintenanceMenu",
+    },
+    {
+      key: "ERVisualizationNode:erVisualizationForTemplate_InstanceTemplate:forInstanceMaintenance-instanceTemplate11",
+      style: "small-circle",
+      displayName: "forInstanceMaintenance",
+    },
+    {
+      key: "ERVisualizationNode:erVisualizationForTemplate_InstanceTemplate:forInstanceMaintenance-instanceTemplate12",
+      style: "small-circle",
+      displayName: "trashAction",
+    },
+    {
+      key: "ERVisualizationNode:erVisualizationForTemplate_InstanceTemplate:forInstanceMaintenance-instanceTemplate13",
+      style: "small-circle",
+      displayName: "trash",
+    },
+    {
+      key: "ERVisualizationNode:erVisualizationForTemplate_InstanceTemplate:forInstanceMaintenance-instanceTemplate14",
+      style: "small-circle",
+      displayName: "untrashAction",
+    },
+    {
+      key: "ERVisualizationNode:erVisualizationForTemplate_InstanceTemplate:forInstanceMaintenance-instanceTemplate15",
+      style: "small-circle",
+      displayName: "untrash",
+    },
+    {
+      key: "ERVisualizationNode:erVisualizationForTemplate_InstanceTemplate:forInstanceMaintenance-instanceTemplate16",
+      style: "small-circle",
+      displayName: "forInstanceMaintenance",
+    },
+    {
+      key: "ERVisualizationNode:erVisualizationForTemplate_InstanceTemplate:forInstanceMaintenance-instanceTemplate2",
+      style: "small-circle",
+      displayName: "forInstanceMaintenanceTitle",
+    },
+    {
+      key: "ERVisualizationNode:erVisualizationForTemplate_InstanceTemplate:forInstanceMaintenance-instanceTemplate3",
+      style: "small-circle",
+      displayName: "assignInstanceDisplayName",
+    },
+    {
+      key: "ERVisualizationNode:erVisualizationForTemplate_InstanceTemplate:forInstanceMaintenance-instanceTemplate4",
+      style: "small-circle",
+      displayName: "forInstanceMaintenance",
+    },
+    {
+      key: "ERVisualizationNode:erVisualizationForTemplate_InstanceTemplate:forInstanceMaintenance-instanceTemplate5",
+      style: "small-circle",
+      displayName: "forInstanceMaintenance",
+    },
+    {
+      key: "ERVisualizationNode:erVisualizationForTemplate_InstanceTemplate:forInstanceMaintenance-instanceTemplate6",
+      style: "small-circle",
+      displayName: "activeTitleSpan",
+    },
+    {
+      key: "ERVisualizationNode:erVisualizationForTemplate_InstanceTemplate:forInstanceMaintenance-instanceTemplate7",
+      style: "small-circle",
+      displayName: "forInstanceMaintenance",
+    },
+    {
+      key: "ERVisualizationNode:erVisualizationForTemplate_InstanceTemplate:forInstanceMaintenance-instanceTemplate8",
+      style: "small-circle",
+      displayName: "draftTitleSpan",
+    },
+    {
+      key: "ERVisualizationNode:erVisualizationForTemplate_InstanceTemplate:forInstanceMaintenance-instanceTemplate9",
+      style: "small-circle",
+      displayName: "trashedTitleDel",
+    },
+    {
+      key: "ERVisualizationNode:erVisualizationForTemplate_InstanceTemplate:forItemSelector-instanceTemplate1",
+      style: "small-circle",
+      displayName: "forItemSelector",
+    },
+    {
+      key: "ERVisualizationNode:erVisualizationForTemplate_InstanceTemplate:forItemSelector-instanceTemplate2",
+      style: "small-circle",
+      displayName: "forItemSelector",
+    },
+    {
+      key: "ERVisualizationNode:erVisualizationForTemplate_InstanceTemplate:forItemSelector-instanceTemplate3",
+      style: "small-circle",
+      displayName: "forItemSelector",
+    },
+    {
+      key: "ERVisualizationNode:erVisualizationForTemplate_InstanceTemplate:forItemSelector-instanceTemplate4",
+      style: "small-circle",
+      displayName: "forItemSelector",
+    },
+    {
+      key: "ERVisualizationNode:erVisualizationForTemplate_InstanceTemplate:forItemSelector-instanceTemplate5",
+      style: "small-circle",
+      displayName: "forItemSelector",
+    },
+    {
       key: "ERVisualizationNode:erVisualizationForTemplate_InstanceTemplate:forList-instanceTemplate1",
       style: "small-circle",
       displayName: "forList",
     },
-    "ERVisualizationNode:erVisualizationForTemplate_InstanceTemplate:forList-instanceTemplate2": {
+    {
       key: "ERVisualizationNode:erVisualizationForTemplate_InstanceTemplate:forList-instanceTemplate2",
       style: "small-circle",
       displayName: "forList",
     },
-    "ERVisualizationNode:erVisualizationForTemplate_InstanceTemplate:forList-instanceTemplate3": {
+    {
       key: "ERVisualizationNode:erVisualizationForTemplate_InstanceTemplate:forList-instanceTemplate3",
       style: "small-circle",
       displayName: "forList",
     },
-    "ERVisualizationNode:erVisualizationForTemplate_InstanceTemplate:forMainMenuItem-instanceTemplate1":
-      {
-        key: "ERVisualizationNode:erVisualizationForTemplate_InstanceTemplate:forMainMenuItem-instanceTemplate1",
-        style: "small-circle",
-        displayName: "appFrameDrawerListItem",
-      },
-    "ERVisualizationNode:erVisualizationForTemplate_InstanceTemplate:forMainMenuItem-instanceTemplate2":
-      {
-        key: "ERVisualizationNode:erVisualizationForTemplate_InstanceTemplate:forMainMenuItem-instanceTemplate2",
-        style: "small-circle",
-        displayName: "appFrameDrawerListItemText",
-      },
-    "ERVisualizationNode:erVisualizationForTemplate_InstanceTemplate:forMaintenanceList-instanceTemplate1":
-      {
-        key: "ERVisualizationNode:erVisualizationForTemplate_InstanceTemplate:forMaintenanceList-instanceTemplate1",
-        style: "small-circle",
-        displayName: "forMaintenanceList",
-      },
-    "ERVisualizationNode:erVisualizationForTemplate_InstanceTemplate:forMaintenanceList-instanceTemplate2":
-      {
-        key: "ERVisualizationNode:erVisualizationForTemplate_InstanceTemplate:forMaintenanceList-instanceTemplate2",
-        style: "small-circle",
-        displayName: "maintenanceListPageTitle",
-      },
-    "ERVisualizationNode:erVisualizationForTemplate_InstanceTemplate:forPicker-instanceTemplate1": {
+    {
+      key: "ERVisualizationNode:erVisualizationForTemplate_InstanceTemplate:forMainMenuItem-instanceTemplate1",
+      style: "small-circle",
+      displayName: "appFrameDrawerListItem",
+    },
+    {
+      key: "ERVisualizationNode:erVisualizationForTemplate_InstanceTemplate:forMainMenuItem-instanceTemplate2",
+      style: "small-circle",
+      displayName: "appFrameDrawerListItemText",
+    },
+    {
+      key: "ERVisualizationNode:erVisualizationForTemplate_InstanceTemplate:forMaintenanceList-instanceTemplate1",
+      style: "small-circle",
+      displayName: "forMaintenanceList",
+    },
+    {
+      key: "ERVisualizationNode:erVisualizationForTemplate_InstanceTemplate:forMaintenanceList-instanceTemplate2",
+      style: "small-circle",
+      displayName: "maintenanceListPageTitle",
+    },
+    {
       key: "ERVisualizationNode:erVisualizationForTemplate_InstanceTemplate:forPicker-instanceTemplate1",
       style: "small-circle",
       displayName: "forPicker",
     },
-    "ERVisualizationNode:erVisualizationForTemplate_InstanceTemplate:forPicker-instanceTemplate2": {
+    {
       key: "ERVisualizationNode:erVisualizationForTemplate_InstanceTemplate:forPicker-instanceTemplate2",
       style: "small-circle",
       displayName: "forPicker",
     },
-    "ERVisualizationNode:erVisualizationForTemplate_InstanceTemplate:forRelatedInstances-instanceTemplate1":
-      {
-        key: "ERVisualizationNode:erVisualizationForTemplate_InstanceTemplate:forRelatedInstances-instanceTemplate1",
-        style: "small-circle",
-        displayName: "forRelatedInstances",
-      },
-    "ERVisualizationNode:erVisualizationForTemplate_InstanceTemplate:forSection-instanceTemplate1":
-      {
-        key: "ERVisualizationNode:erVisualizationForTemplate_InstanceTemplate:forSection-instanceTemplate1",
-        style: "small-circle",
-        displayName: "forSection",
-      },
-    "ERVisualizationNode:erVisualizationForTemplate_InstanceTemplate:forSectionWithHeader-instanceTemplate1":
-      {
-        key: "ERVisualizationNode:erVisualizationForTemplate_InstanceTemplate:forSectionWithHeader-instanceTemplate1",
-        style: "small-circle",
-        displayName: "forSectionWithHeader",
-      },
-    "ERVisualizationNode:erVisualizationForTemplate_InstanceTemplate:forSectionWithSubheader-instanceTemplate1":
-      {
-        key: "ERVisualizationNode:erVisualizationForTemplate_InstanceTemplate:forSectionWithSubheader-instanceTemplate1",
-        style: "small-circle",
-        displayName: "forSectionWithSubheader",
-      },
-    "ERVisualizationNode:erVisualizationForTemplate_InstanceTemplate:global-instanceTemplate1": {
+    {
+      key: "ERVisualizationNode:erVisualizationForTemplate_InstanceTemplate:forRelatedInstances-instanceTemplate1",
+      style: "small-circle",
+      displayName: "forRelatedInstances",
+    },
+    {
+      key: "ERVisualizationNode:erVisualizationForTemplate_InstanceTemplate:forSection-instanceTemplate1",
+      style: "small-circle",
+      displayName: "forSection",
+    },
+    {
+      key: "ERVisualizationNode:erVisualizationForTemplate_InstanceTemplate:forSectionWithHeader-instanceTemplate1",
+      style: "small-circle",
+      displayName: "forSectionWithHeader",
+    },
+    {
+      key: "ERVisualizationNode:erVisualizationForTemplate_InstanceTemplate:forSectionWithSubheader-instanceTemplate1",
+      style: "small-circle",
+      displayName: "forSectionWithSubheader",
+    },
+    {
       key: "ERVisualizationNode:erVisualizationForTemplate_InstanceTemplate:global-instanceTemplate1",
       style: "small-circle",
       displayName: "global",
     },
-    "ERVisualizationNode:erVisualizationForTemplate_InstanceTemplate:global-instanceTemplate10": {
+    {
       key: "ERVisualizationNode:erVisualizationForTemplate_InstanceTemplate:global-instanceTemplate10",
       style: "small-circle",
       displayName: "appFrameTopAppBarSection",
     },
-    "ERVisualizationNode:erVisualizationForTemplate_InstanceTemplate:global-instanceTemplate11": {
+    {
       key: "ERVisualizationNode:erVisualizationForTemplate_InstanceTemplate:global-instanceTemplate11",
       style: "small-circle",
       displayName: "appFrameTopAppBarNavigationIcon",
     },
-    "ERVisualizationNode:erVisualizationForTemplate_InstanceTemplate:global-instanceTemplate12": {
+    {
       key: "ERVisualizationNode:erVisualizationForTemplate_InstanceTemplate:global-instanceTemplate12",
       style: "small-circle",
       displayName: "appFrameTopAppBarNavigationTitle",
     },
-    "ERVisualizationNode:erVisualizationForTemplate_InstanceTemplate:global-instanceTemplate13": {
+    {
       key: "ERVisualizationNode:erVisualizationForTemplate_InstanceTemplate:global-instanceTemplate13",
       style: "small-circle",
       displayName: "title",
     },
-    "ERVisualizationNode:erVisualizationForTemplate_InstanceTemplate:global-instanceTemplate14": {
+    {
       key: "ERVisualizationNode:erVisualizationForTemplate_InstanceTemplate:global-instanceTemplate14",
       style: "small-circle",
       displayName: "appFrameTopAppBarSectionEnd",
     },
-    "ERVisualizationNode:erVisualizationForTemplate_InstanceTemplate:global-instanceTemplate15": {
+    {
       key: "ERVisualizationNode:erVisualizationForTemplate_InstanceTemplate:global-instanceTemplate15",
       style: "small-circle",
       displayName: "loadSystemForUpdateApplication",
     },
-    "ERVisualizationNode:erVisualizationForTemplate_InstanceTemplate:global-instanceTemplate16": {
+    {
       key: "ERVisualizationNode:erVisualizationForTemplate_InstanceTemplate:global-instanceTemplate16",
       style: "small-circle",
       displayName: "ifSystemHasErrorsForUpdateApplication",
     },
-    "ERVisualizationNode:erVisualizationForTemplate_InstanceTemplate:global-instanceTemplate17": {
+    {
       key: "ERVisualizationNode:erVisualizationForTemplate_InstanceTemplate:global-instanceTemplate17",
       style: "small-circle",
       displayName: "hasErrors",
     },
-    "ERVisualizationNode:erVisualizationForTemplate_InstanceTemplate:global-instanceTemplate18": {
+    {
       key: "ERVisualizationNode:erVisualizationForTemplate_InstanceTemplate:global-instanceTemplate18",
       style: "small-circle",
       displayName: "ifSystemHasUpdatesForUpdateApplication",
     },
-    "ERVisualizationNode:erVisualizationForTemplate_InstanceTemplate:global-instanceTemplate19": {
+    {
       key: "ERVisualizationNode:erVisualizationForTemplate_InstanceTemplate:global-instanceTemplate19",
       style: "small-circle",
       displayName: "updateApplication",
     },
-    "ERVisualizationNode:erVisualizationForTemplate_InstanceTemplate:global-instanceTemplate2": {
+    {
       key: "ERVisualizationNode:erVisualizationForTemplate_InstanceTemplate:global-instanceTemplate2",
       style: "small-circle",
       displayName: "global",
     },
-    "ERVisualizationNode:erVisualizationForTemplate_InstanceTemplate:global-instanceTemplate20": {
+    {
       key: "ERVisualizationNode:erVisualizationForTemplate_InstanceTemplate:global-instanceTemplate20",
       style: "small-circle",
       displayName: "menu",
     },
-    "ERVisualizationNode:erVisualizationForTemplate_InstanceTemplate:global-instanceTemplate21": {
+    {
       key: "ERVisualizationNode:erVisualizationForTemplate_InstanceTemplate:global-instanceTemplate21",
       style: "small-circle",
       displayName: "appFrameAdjustedContent",
     },
-    "ERVisualizationNode:erVisualizationForTemplate_InstanceTemplate:global-instanceTemplate22": {
+    {
       key: "ERVisualizationNode:erVisualizationForTemplate_InstanceTemplate:global-instanceTemplate22",
       style: "small-circle",
       displayName: "appFrame",
     },
-    "ERVisualizationNode:erVisualizationForTemplate_InstanceTemplate:global-instanceTemplate3": {
+    {
       key: "ERVisualizationNode:erVisualizationForTemplate_InstanceTemplate:global-instanceTemplate3",
       style: "small-circle",
       displayName: "appFrameRoot",
     },
-    "ERVisualizationNode:erVisualizationForTemplate_InstanceTemplate:global-instanceTemplate4": {
+    {
       key: "ERVisualizationNode:erVisualizationForTemplate_InstanceTemplate:global-instanceTemplate4",
       style: "small-circle",
       displayName: "appFrameDrawer",
     },
-    "ERVisualizationNode:erVisualizationForTemplate_InstanceTemplate:global-instanceTemplate5": {
+    {
       key: "ERVisualizationNode:erVisualizationForTemplate_InstanceTemplate:global-instanceTemplate5",
       style: "small-circle",
       displayName: "appFrameDrawerContent",
     },
-    "ERVisualizationNode:erVisualizationForTemplate_InstanceTemplate:global-instanceTemplate6": {
+    {
       key: "ERVisualizationNode:erVisualizationForTemplate_InstanceTemplate:global-instanceTemplate6",
       style: "small-circle",
       displayName: "appFrameDrawerList",
     },
-    "ERVisualizationNode:erVisualizationForTemplate_InstanceTemplate:global-instanceTemplate7": {
+    {
       key: "ERVisualizationNode:erVisualizationForTemplate_InstanceTemplate:global-instanceTemplate7",
       style: "small-circle",
       displayName: "appFrameDrawerScrim",
     },
-    "ERVisualizationNode:erVisualizationForTemplate_InstanceTemplate:global-instanceTemplate8": {
+    {
       key: "ERVisualizationNode:erVisualizationForTemplate_InstanceTemplate:global-instanceTemplate8",
       style: "small-circle",
       displayName: "appFrameTopAppBar",
     },
-    "ERVisualizationNode:erVisualizationForTemplate_InstanceTemplate:global-instanceTemplate9": {
+    {
       key: "ERVisualizationNode:erVisualizationForTemplate_InstanceTemplate:global-instanceTemplate9",
       style: "small-circle",
       displayName: "appFrameTopAppBarRow",
     },
-    "ERVisualizationNode:erVisualizationForTemplate_InstanceTemplate:entityVisualization-instanceTemplate1":
-      {
-        key: "ERVisualizationNode:erVisualizationForTemplate_InstanceTemplate:entityVisualization-instanceTemplate1",
-        style: "small-circle",
-        displayName: "entityVisualization",
-      },
-    "ERVisualizationNode:erVisualizationForTemplate_InstanceTemplate:erVisualizationForInstanceTemplateExpression-instanceTemplate1":
-      {
-        key: "ERVisualizationNode:erVisualizationForTemplate_InstanceTemplate:erVisualizationForInstanceTemplateExpression-instanceTemplate1",
-        style: "small-circle",
-        displayName: "erVisualizationForInstanceTemplateExpression",
-      },
-    "ERVisualizationNode:erVisualizationForTemplate_InstanceTemplate:erVisualizationForMechanism-instanceTemplate1":
-      {
-        key: "ERVisualizationNode:erVisualizationForTemplate_InstanceTemplate:erVisualizationForMechanism-instanceTemplate1",
-        style: "small-circle",
-        displayName: "erVisualizationForMechanism",
-      },
-    "ERVisualizationNode:erVisualizationForTemplate_InstanceTemplate:erVisualizationForMechanismIngredient-instanceTemplate1":
-      {
-        key: "ERVisualizationNode:erVisualizationForTemplate_InstanceTemplate:erVisualizationForMechanismIngredient-instanceTemplate1",
-        style: "small-circle",
-        displayName: "erVisualizationForMechanismIngredient",
-      },
-    "ERVisualizationNode:erVisualizationForTemplate_InstanceTemplate:erVisualizationForMechanismToTemplate-instanceTemplate1":
-      {
-        key: "ERVisualizationNode:erVisualizationForTemplate_InstanceTemplate:erVisualizationForMechanismToTemplate-instanceTemplate1",
-        style: "small-circle",
-        displayName: "erVisualizationForMechanismToTemplate",
-      },
-    "ERVisualizationNode:erVisualizationForTemplate_InstanceTemplate:erVisualizationForTemplate-instanceTemplate1":
-      {
-        key: "ERVisualizationNode:erVisualizationForTemplate_InstanceTemplate:erVisualizationForTemplate-instanceTemplate1",
-        style: "small-circle",
-        displayName: "erVisualizationForTemplate",
-      },
-    "ERVisualizationNode:erVisualizationForTemplate_InstanceTemplate:erVisualizationForTemplateToEntity-instanceTemplate1":
-      {
-        key: "ERVisualizationNode:erVisualizationForTemplate_InstanceTemplate:erVisualizationForTemplateToEntity-instanceTemplate1",
-        style: "small-circle",
-        displayName: "erVisualizationForTemplateToEntity",
-      },
-    "ERVisualizationNode:erVisualizationForTemplate_InstanceTemplate:relationManyToOneErVisualization-instanceTemplate1":
-      {
-        key: "ERVisualizationNode:erVisualizationForTemplate_InstanceTemplate:relationManyToOneErVisualization-instanceTemplate1",
-        style: "small-circle",
-        displayName: "relationManyToOneErVisualization",
-      },
-    "ERVisualizationNode:erVisualizationForTemplate_InstanceTemplate:relationOneOwnsManyErVisualization-instanceTemplate1":
-      {
-        key: "ERVisualizationNode:erVisualizationForTemplate_InstanceTemplate:relationOneOwnsManyErVisualization-instanceTemplate1",
-        style: "small-circle",
-        displayName: "relationOneOwnsManyErVisualization",
-      },
-    "ERVisualizationNode:erVisualizationForTemplate_InstanceTemplate:relationOneOwnsOneErVisualization-instanceTemplate1":
-      {
-        key: "ERVisualizationNode:erVisualizationForTemplate_InstanceTemplate:relationOneOwnsOneErVisualization-instanceTemplate1",
-        style: "small-circle",
-        displayName: "relationOneOwnsOneErVisualization",
-      },
-    "ERVisualizationNode:erVisualizationForTemplate_InstanceTemplate:unionMemberErVisualization-instanceTemplate1":
-      {
-        key: "ERVisualizationNode:erVisualizationForTemplate_InstanceTemplate:unionMemberErVisualization-instanceTemplate1",
-        style: "small-circle",
-        displayName: "unionMemberErVisualization",
-      },
-    "ERVisualizationNode:erVisualizationForTemplate_InstanceTemplate:unionVisualization-instanceTemplate1":
-      {
-        key: "ERVisualizationNode:erVisualizationForTemplate_InstanceTemplate:unionVisualization-instanceTemplate1",
-        style: "small-circle",
-        displayName: "unionVisualization",
-      },
-    "ERVisualizationNode:erVisualizationForMechanism_Mechanism:attributeOnUnion": {
+    {
+      key: "ERVisualizationNode:erVisualizationForTemplate_InstanceTemplate:entityVisualization-instanceTemplate1",
+      style: "small-circle",
+      displayName: "entityVisualization",
+    },
+    {
+      key: "ERVisualizationNode:erVisualizationForTemplate_InstanceTemplate:erVisualizationForInstanceTemplateExpression-instanceTemplate1",
+      style: "small-circle",
+      displayName: "erVisualizationForInstanceTemplateExpression",
+    },
+    {
+      key: "ERVisualizationNode:erVisualizationForTemplate_InstanceTemplate:erVisualizationForMechanism-instanceTemplate1",
+      style: "small-circle",
+      displayName: "erVisualizationForMechanism",
+    },
+    {
+      key: "ERVisualizationNode:erVisualizationForTemplate_InstanceTemplate:erVisualizationForMechanismIngredient-instanceTemplate1",
+      style: "small-circle",
+      displayName: "erVisualizationForMechanismIngredient",
+    },
+    {
+      key: "ERVisualizationNode:erVisualizationForTemplate_InstanceTemplate:erVisualizationForMechanismToTemplate-instanceTemplate1",
+      style: "small-circle",
+      displayName: "erVisualizationForMechanismToTemplate",
+    },
+    {
+      key: "ERVisualizationNode:erVisualizationForTemplate_InstanceTemplate:erVisualizationForTemplate-instanceTemplate1",
+      style: "small-circle",
+      displayName: "erVisualizationForTemplate",
+    },
+    {
+      key: "ERVisualizationNode:erVisualizationForTemplate_InstanceTemplate:erVisualizationForTemplateToEntity-instanceTemplate1",
+      style: "small-circle",
+      displayName: "erVisualizationForTemplateToEntity",
+    },
+    {
+      key: "ERVisualizationNode:erVisualizationForTemplate_InstanceTemplate:relationManyToOneErVisualization-instanceTemplate1",
+      style: "small-circle",
+      displayName: "relationManyToOneErVisualization",
+    },
+    {
+      key: "ERVisualizationNode:erVisualizationForTemplate_InstanceTemplate:relationOneOwnsManyErVisualization-instanceTemplate1",
+      style: "small-circle",
+      displayName: "relationOneOwnsManyErVisualization",
+    },
+    {
+      key: "ERVisualizationNode:erVisualizationForTemplate_InstanceTemplate:relationOneOwnsOneErVisualization-instanceTemplate1",
+      style: "small-circle",
+      displayName: "relationOneOwnsOneErVisualization",
+    },
+    {
+      key: "ERVisualizationNode:erVisualizationForTemplate_InstanceTemplate:unionMemberErVisualization-instanceTemplate1",
+      style: "small-circle",
+      displayName: "unionMemberErVisualization",
+    },
+    {
+      key: "ERVisualizationNode:erVisualizationForTemplate_InstanceTemplate:unionVisualization-instanceTemplate1",
+      style: "small-circle",
+      displayName: "unionVisualization",
+    },
+    {
       key: "ERVisualizationNode:erVisualizationForMechanism_Mechanism:attributeOnUnion",
       style: "big-circle",
       displayName: "attributeOnUnion",
     },
-    "ERVisualizationNode:erVisualizationForMechanism_Mechanism:constraintTypes": {
+    {
       key: "ERVisualizationNode:erVisualizationForMechanism_Mechanism:constraintTypes",
       style: "big-circle",
       displayName: "constraintTypes",
     },
-    "ERVisualizationNode:erVisualizationForMechanism_Mechanism:displayNameForEntity": {
+    {
       key: "ERVisualizationNode:erVisualizationForMechanism_Mechanism:displayNameForEntity",
       style: "big-circle",
       displayName: "displayNameForEntity",
     },
-    "ERVisualizationNode:erVisualizationForMechanism_Mechanism:displayNameForEntityAndUnion": {
+    {
       key: "ERVisualizationNode:erVisualizationForMechanism_Mechanism:displayNameForEntityAndUnion",
       style: "big-circle",
       displayName: "displayNameForEntityAndUnion",
     },
-    "ERVisualizationNode:erVisualizationForMechanism_Mechanism:forExpression": {
+    {
       key: "ERVisualizationNode:erVisualizationForMechanism_Mechanism:forExpression",
       style: "big-circle",
       displayName: "forExpression",
     },
-    "ERVisualizationNode:erVisualizationForMechanism_Mechanism:referenceOnUnion": {
+    {
       key: "ERVisualizationNode:erVisualizationForMechanism_Mechanism:referenceOnUnion",
       style: "big-circle",
       displayName: "referenceOnUnion",
     },
-    "ERVisualizationNode:erVisualizationForMechanism_Mechanism:relationManyToOne": {
+    {
       key: "ERVisualizationNode:erVisualizationForMechanism_Mechanism:relationManyToOne",
       style: "big-circle",
       displayName: "relationManyToOne",
     },
-    "ERVisualizationNode:erVisualizationForMechanism_Mechanism:relationOneOwnsMany": {
+    {
       key: "ERVisualizationNode:erVisualizationForMechanism_Mechanism:relationOneOwnsMany",
       style: "big-circle",
       displayName: "relationOneOwnsMany",
     },
-    "ERVisualizationNode:erVisualizationForMechanism_Mechanism:relationOneOwnsOne": {
+    {
       key: "ERVisualizationNode:erVisualizationForMechanism_Mechanism:relationOneOwnsOne",
       style: "big-circle",
       displayName: "relationOneOwnsOne",
     },
-    "ERVisualizationNode:erVisualizationForMechanism_Mechanism:relationTypes": {
+    {
       key: "ERVisualizationNode:erVisualizationForMechanism_Mechanism:relationTypes",
       style: "big-circle",
       displayName: "relationTypes",
     },
-    "ERVisualizationNode:erVisualizationForMechanism_Mechanism:system": {
+    {
       key: "ERVisualizationNode:erVisualizationForMechanism_Mechanism:system",
       style: "big-circle",
       displayName: "system",
     },
-    "ERVisualizationNode:erVisualizationForMechanism_Mechanism:forPage": {
+    {
       key: "ERVisualizationNode:erVisualizationForMechanism_Mechanism:forPage",
       style: "big-circle",
       displayName: "forPage",
     },
-    "ERVisualizationNode:erVisualizationForMechanism_Mechanism:fieldsForInstanceMaintenance": {
+    {
       key: "ERVisualizationNode:erVisualizationForMechanism_Mechanism:fieldsForInstanceMaintenance",
       style: "big-circle",
       displayName: "fieldsForInstanceMaintenance",
     },
-    "ERVisualizationNode:erVisualizationForMechanism_Mechanism:forEntityAndMaintenanceConfig": {
+    {
       key: "ERVisualizationNode:erVisualizationForMechanism_Mechanism:forEntityAndMaintenanceConfig",
       style: "big-circle",
       displayName: "forEntityAndMaintenanceConfig",
     },
-    "ERVisualizationNode:erVisualizationForMechanism_Mechanism:forFieldRowWithOneToMany": {
+    {
       key: "ERVisualizationNode:erVisualizationForMechanism_Mechanism:forFieldRowWithOneToMany",
       style: "big-circle",
       displayName: "forFieldRowWithOneToMany",
     },
-    "ERVisualizationNode:erVisualizationForMechanism_Mechanism:forInstanceMaintenanceAndAttribute":
-      {
-        key: "ERVisualizationNode:erVisualizationForMechanism_Mechanism:forInstanceMaintenanceAndAttribute",
-        style: "big-circle",
-        displayName: "forInstanceMaintenanceAndAttribute",
-      },
-    "ERVisualizationNode:erVisualizationForMechanism_Mechanism:forInstanceMaintenanceAndManyToOneRelation":
-      {
-        key: "ERVisualizationNode:erVisualizationForMechanism_Mechanism:forInstanceMaintenanceAndManyToOneRelation",
-        style: "big-circle",
-        displayName: "forInstanceMaintenanceAndManyToOneRelation",
-      },
-    "ERVisualizationNode:erVisualizationForMechanism_Mechanism:forMaintenance": {
+    {
+      key: "ERVisualizationNode:erVisualizationForMechanism_Mechanism:forInstanceMaintenanceAndAttribute",
+      style: "big-circle",
+      displayName: "forInstanceMaintenanceAndAttribute",
+    },
+    {
+      key: "ERVisualizationNode:erVisualizationForMechanism_Mechanism:forInstanceMaintenanceAndManyToOneRelation",
+      style: "big-circle",
+      displayName: "forInstanceMaintenanceAndManyToOneRelation",
+    },
+    {
       key: "ERVisualizationNode:erVisualizationForMechanism_Mechanism:forMaintenance",
       style: "big-circle",
       displayName: "forMaintenance",
     },
-    "ERVisualizationNode:erVisualizationForMechanism_Mechanism:forMaintenanceConfig": {
+    {
       key: "ERVisualizationNode:erVisualizationForMechanism_Mechanism:forMaintenanceConfig",
       style: "big-circle",
       displayName: "forMaintenanceConfig",
     },
-    "ERVisualizationNode:erVisualizationForMechanism_Mechanism:instanceMaintenanceOneOwnsManyRelation":
-      {
-        key: "ERVisualizationNode:erVisualizationForMechanism_Mechanism:instanceMaintenanceOneOwnsManyRelation",
-        style: "big-circle",
-        displayName: "instanceMaintenanceOneOwnsManyRelation",
-      },
-    "ERVisualizationNode:erVisualizationForMechanism_Mechanism:instanceMaintenanceOneOwnsOneRelation":
-      {
-        key: "ERVisualizationNode:erVisualizationForMechanism_Mechanism:instanceMaintenanceOneOwnsOneRelation",
-        style: "big-circle",
-        displayName: "instanceMaintenanceOneOwnsOneRelation",
-      },
-    "ERVisualizationNode:erVisualizationForMechanism_Mechanism:instanceMaintenanceUnionMemberOneOwnsManyRelation":
-      {
-        key: "ERVisualizationNode:erVisualizationForMechanism_Mechanism:instanceMaintenanceUnionMemberOneOwnsManyRelation",
-        style: "big-circle",
-        displayName: "instanceMaintenanceUnionMemberOneOwnsManyRelation",
-      },
-    "ERVisualizationNode:erVisualizationForMechanism_Mechanism:structureForEntityRelatedInstances":
-      {
-        key: "ERVisualizationNode:erVisualizationForMechanism_Mechanism:structureForEntityRelatedInstances",
-        style: "big-circle",
-        displayName: "structureForEntityRelatedInstances",
-      },
-    "ERVisualizationNode:erVisualizationForMechanism_Mechanism:structureForEntityUnionMemberRelatedInstances":
-      {
-        key: "ERVisualizationNode:erVisualizationForMechanism_Mechanism:structureForEntityUnionMemberRelatedInstances",
-        style: "big-circle",
-        displayName: "structureForEntityUnionMemberRelatedInstances",
-      },
-    "ERVisualizationNode:erVisualizationForMechanism_Mechanism:structureForMaintenanceList": {
+    {
+      key: "ERVisualizationNode:erVisualizationForMechanism_Mechanism:instanceMaintenanceOneOwnsManyRelation",
+      style: "big-circle",
+      displayName: "instanceMaintenanceOneOwnsManyRelation",
+    },
+    {
+      key: "ERVisualizationNode:erVisualizationForMechanism_Mechanism:instanceMaintenanceOneOwnsOneRelation",
+      style: "big-circle",
+      displayName: "instanceMaintenanceOneOwnsOneRelation",
+    },
+    {
+      key: "ERVisualizationNode:erVisualizationForMechanism_Mechanism:instanceMaintenanceUnionMemberOneOwnsManyRelation",
+      style: "big-circle",
+      displayName: "instanceMaintenanceUnionMemberOneOwnsManyRelation",
+    },
+    {
+      key: "ERVisualizationNode:erVisualizationForMechanism_Mechanism:structureForEntityRelatedInstances",
+      style: "big-circle",
+      displayName: "structureForEntityRelatedInstances",
+    },
+    {
+      key: "ERVisualizationNode:erVisualizationForMechanism_Mechanism:structureForEntityUnionMemberRelatedInstances",
+      style: "big-circle",
+      displayName: "structureForEntityUnionMemberRelatedInstances",
+    },
+    {
       key: "ERVisualizationNode:erVisualizationForMechanism_Mechanism:structureForMaintenanceList",
       style: "big-circle",
       displayName: "structureForMaintenanceList",
     },
-    "ERVisualizationNode:erVisualizationForMechanism_Mechanism:structureForMaintenanceListWithMenu":
-      {
-        key: "ERVisualizationNode:erVisualizationForMechanism_Mechanism:structureForMaintenanceListWithMenu",
-        style: "big-circle",
-        displayName: "structureForMaintenanceListWithMenu",
-      },
-    "ERVisualizationNode:erVisualizationForMechanism_Mechanism:structureForPicker": {
+    {
+      key: "ERVisualizationNode:erVisualizationForMechanism_Mechanism:structureForMaintenanceListWithMenu",
+      style: "big-circle",
+      displayName: "structureForMaintenanceListWithMenu",
+    },
+    {
       key: "ERVisualizationNode:erVisualizationForMechanism_Mechanism:structureForPicker",
       style: "big-circle",
       displayName: "structureForPicker",
     },
-    "ERVisualizationNode:erVisualizationForMechanism_Mechanism:structureForRelatedInstances": {
+    {
       key: "ERVisualizationNode:erVisualizationForMechanism_Mechanism:structureForRelatedInstances",
       style: "big-circle",
       displayName: "structureForRelatedInstances",
     },
-    "ERVisualizationNode:erVisualizationForMechanism_Mechanism:forAddButton": {
+    {
       key: "ERVisualizationNode:erVisualizationForMechanism_Mechanism:forAddButton",
       style: "big-circle",
       displayName: "forAddButton",
     },
-    "ERVisualizationNode:erVisualizationForMechanism_Mechanism:forDraftActions": {
+    {
       key: "ERVisualizationNode:erVisualizationForMechanism_Mechanism:forDraftActions",
       style: "big-circle",
       displayName: "forDraftActions",
     },
-    "ERVisualizationNode:erVisualizationForMechanism_Mechanism:forFieldRow": {
+    {
       key: "ERVisualizationNode:erVisualizationForMechanism_Mechanism:forFieldRow",
       style: "big-circle",
       displayName: "forFieldRow",
     },
-    "ERVisualizationNode:erVisualizationForMechanism_Mechanism:forFieldRowManyToOne": {
+    {
       key: "ERVisualizationNode:erVisualizationForMechanism_Mechanism:forFieldRowManyToOne",
       style: "big-circle",
       displayName: "forFieldRowManyToOne",
     },
-    "ERVisualizationNode:erVisualizationForMechanism_Mechanism:forFieldRowString": {
+    {
       key: "ERVisualizationNode:erVisualizationForMechanism_Mechanism:forFieldRowString",
       style: "big-circle",
       displayName: "forFieldRowString",
     },
-    "ERVisualizationNode:erVisualizationForMechanism_Mechanism:forInlineInstance": {
+    {
       key: "ERVisualizationNode:erVisualizationForMechanism_Mechanism:forInlineInstance",
       style: "big-circle",
       displayName: "forInlineInstance",
     },
-    "ERVisualizationNode:erVisualizationForMechanism_Mechanism:forInlineInstanceAndEntityUnionMember":
-      {
-        key: "ERVisualizationNode:erVisualizationForMechanism_Mechanism:forInlineInstanceAndEntityUnionMember",
-        style: "big-circle",
-        displayName: "forInlineInstanceAndEntityUnionMember",
-      },
-    "ERVisualizationNode:erVisualizationForMechanism_Mechanism:forInstanceMaintenance": {
+    {
+      key: "ERVisualizationNode:erVisualizationForMechanism_Mechanism:forInlineInstanceAndEntityUnionMember",
+      style: "big-circle",
+      displayName: "forInlineInstanceAndEntityUnionMember",
+    },
+    {
       key: "ERVisualizationNode:erVisualizationForMechanism_Mechanism:forInstanceMaintenance",
       style: "big-circle",
       displayName: "forInstanceMaintenance",
     },
-    "ERVisualizationNode:erVisualizationForMechanism_Mechanism:forItemSelector": {
+    {
       key: "ERVisualizationNode:erVisualizationForMechanism_Mechanism:forItemSelector",
       style: "big-circle",
       displayName: "forItemSelector",
     },
-    "ERVisualizationNode:erVisualizationForMechanism_Mechanism:forList": {
+    {
       key: "ERVisualizationNode:erVisualizationForMechanism_Mechanism:forList",
       style: "big-circle",
       displayName: "forList",
     },
-    "ERVisualizationNode:erVisualizationForMechanism_Mechanism:forMainMenuItem": {
+    {
       key: "ERVisualizationNode:erVisualizationForMechanism_Mechanism:forMainMenuItem",
       style: "big-circle",
       displayName: "forMainMenuItem",
     },
-    "ERVisualizationNode:erVisualizationForMechanism_Mechanism:forMaintenanceList": {
+    {
       key: "ERVisualizationNode:erVisualizationForMechanism_Mechanism:forMaintenanceList",
       style: "big-circle",
       displayName: "forMaintenanceList",
     },
-    "ERVisualizationNode:erVisualizationForMechanism_Mechanism:forPicker": {
+    {
       key: "ERVisualizationNode:erVisualizationForMechanism_Mechanism:forPicker",
       style: "big-circle",
       displayName: "forPicker",
     },
-    "ERVisualizationNode:erVisualizationForMechanism_Mechanism:forRelatedInstances": {
+    {
       key: "ERVisualizationNode:erVisualizationForMechanism_Mechanism:forRelatedInstances",
       style: "big-circle",
       displayName: "forRelatedInstances",
     },
-    "ERVisualizationNode:erVisualizationForMechanism_Mechanism:forSection": {
+    {
       key: "ERVisualizationNode:erVisualizationForMechanism_Mechanism:forSection",
       style: "big-circle",
       displayName: "forSection",
     },
-    "ERVisualizationNode:erVisualizationForMechanism_Mechanism:forSectionWithHeader": {
+    {
       key: "ERVisualizationNode:erVisualizationForMechanism_Mechanism:forSectionWithHeader",
       style: "big-circle",
       displayName: "forSectionWithHeader",
     },
-    "ERVisualizationNode:erVisualizationForMechanism_Mechanism:forSectionWithSubheader": {
+    {
       key: "ERVisualizationNode:erVisualizationForMechanism_Mechanism:forSectionWithSubheader",
       style: "big-circle",
       displayName: "forSectionWithSubheader",
     },
-    "ERVisualizationNode:erVisualizationForMechanism_Mechanism:global": {
+    {
       key: "ERVisualizationNode:erVisualizationForMechanism_Mechanism:global",
       style: "big-circle",
       displayName: "global",
     },
-    "ERVisualizationNode:erVisualizationForMechanism_Mechanism:entityVisualization": {
+    {
       key: "ERVisualizationNode:erVisualizationForMechanism_Mechanism:entityVisualization",
       style: "big-circle",
       displayName: "entityVisualization",
     },
-    "ERVisualizationNode:erVisualizationForMechanism_Mechanism:erVisualizationForInstanceTemplateExpression":
-      {
-        key: "ERVisualizationNode:erVisualizationForMechanism_Mechanism:erVisualizationForInstanceTemplateExpression",
-        style: "big-circle",
-        displayName: "erVisualizationForInstanceTemplateExpression",
-      },
-    "ERVisualizationNode:erVisualizationForMechanism_Mechanism:erVisualizationForMechanism": {
+    {
+      key: "ERVisualizationNode:erVisualizationForMechanism_Mechanism:erVisualizationForInstanceTemplateExpression",
+      style: "big-circle",
+      displayName: "erVisualizationForInstanceTemplateExpression",
+    },
+    {
       key: "ERVisualizationNode:erVisualizationForMechanism_Mechanism:erVisualizationForMechanism",
       style: "big-circle",
       displayName: "erVisualizationForMechanism",
     },
-    "ERVisualizationNode:erVisualizationForMechanism_Mechanism:erVisualizationForMechanismIngredient":
-      {
-        key: "ERVisualizationNode:erVisualizationForMechanism_Mechanism:erVisualizationForMechanismIngredient",
-        style: "big-circle",
-        displayName: "erVisualizationForMechanismIngredient",
-      },
-    "ERVisualizationNode:erVisualizationForMechanism_Mechanism:erVisualizationForMechanismToTemplate":
-      {
-        key: "ERVisualizationNode:erVisualizationForMechanism_Mechanism:erVisualizationForMechanismToTemplate",
-        style: "big-circle",
-        displayName: "erVisualizationForMechanismToTemplate",
-      },
-    "ERVisualizationNode:erVisualizationForMechanism_Mechanism:erVisualizationForTemplate": {
+    {
+      key: "ERVisualizationNode:erVisualizationForMechanism_Mechanism:erVisualizationForMechanismIngredient",
+      style: "big-circle",
+      displayName: "erVisualizationForMechanismIngredient",
+    },
+    {
+      key: "ERVisualizationNode:erVisualizationForMechanism_Mechanism:erVisualizationForMechanismToTemplate",
+      style: "big-circle",
+      displayName: "erVisualizationForMechanismToTemplate",
+    },
+    {
       key: "ERVisualizationNode:erVisualizationForMechanism_Mechanism:erVisualizationForTemplate",
       style: "big-circle",
       displayName: "erVisualizationForTemplate",
     },
-    "ERVisualizationNode:erVisualizationForMechanism_Mechanism:erVisualizationForTemplateToEntity":
-      {
-        key: "ERVisualizationNode:erVisualizationForMechanism_Mechanism:erVisualizationForTemplateToEntity",
-        style: "big-circle",
-        displayName: "erVisualizationForTemplateToEntity",
-      },
-    "ERVisualizationNode:erVisualizationForMechanism_Mechanism:relationManyToOneErVisualization": {
+    {
+      key: "ERVisualizationNode:erVisualizationForMechanism_Mechanism:erVisualizationForTemplateToEntity",
+      style: "big-circle",
+      displayName: "erVisualizationForTemplateToEntity",
+    },
+    {
       key: "ERVisualizationNode:erVisualizationForMechanism_Mechanism:relationManyToOneErVisualization",
       style: "big-circle",
       displayName: "relationManyToOneErVisualization",
     },
-    "ERVisualizationNode:erVisualizationForMechanism_Mechanism:relationOneOwnsManyErVisualization":
-      {
-        key: "ERVisualizationNode:erVisualizationForMechanism_Mechanism:relationOneOwnsManyErVisualization",
-        style: "big-circle",
-        displayName: "relationOneOwnsManyErVisualization",
-      },
-    "ERVisualizationNode:erVisualizationForMechanism_Mechanism:relationOneOwnsOneErVisualization": {
+    {
+      key: "ERVisualizationNode:erVisualizationForMechanism_Mechanism:relationOneOwnsManyErVisualization",
+      style: "big-circle",
+      displayName: "relationOneOwnsManyErVisualization",
+    },
+    {
       key: "ERVisualizationNode:erVisualizationForMechanism_Mechanism:relationOneOwnsOneErVisualization",
       style: "big-circle",
       displayName: "relationOneOwnsOneErVisualization",
     },
-    "ERVisualizationNode:erVisualizationForMechanism_Mechanism:unionMemberErVisualization": {
+    {
       key: "ERVisualizationNode:erVisualizationForMechanism_Mechanism:unionMemberErVisualization",
       style: "big-circle",
       displayName: "unionMemberErVisualization",
     },
-    "ERVisualizationNode:erVisualizationForMechanism_Mechanism:unionVisualization": {
+    {
       key: "ERVisualizationNode:erVisualizationForMechanism_Mechanism:unionVisualization",
       style: "big-circle",
       displayName: "unionVisualization",
     },
-  },
+  ],
   edges: [
     {
       key: "ERVisualizationEdge:erVisualizationForMechanismToTemplate_InstanceTemplate:theSystem",
@@ -6074,19 +5954,5 @@ let demoData: any = {
 };
 
 export function createDemoData(): GraphData {
-  let nodes = new Map<string, NodeData>();
-  for (let [key, value] of Object.entries(demoData.nodes)) {
-    let nodeData = value as any;
-    nodes.set(key, nodeData);
-  }
-
-  let linkedNodes = new Map<string, string[]>();
-  demoData.edges.forEach((e: EdgeData) => {
-    linkedNodes.set(e.fromNode, (linkedNodes.get(e.fromNode) || []).concat(e.toNode));
-  });
-
-  return {
-    nodes,
-    edges: demoData.edges,
-  };
+  return demoData;
 }

@@ -1,4 +1,4 @@
-import "../visualizer-web-component";
+import "../graph-visualizer-element";
 
 import { createProjector, h } from "maquette";
 

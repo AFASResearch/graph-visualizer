@@ -49,7 +49,7 @@ export interface PositionUpserted {
 export type PositionsChange = PositionsCleared | PositionRemoved | PositionUpserted;
 
 export interface GraphData {
-  nodes: ReadonlyMap<string, NodeData>;
+  nodes: readonly NodeData[];
   edges: readonly EdgeData[];
   positions?: readonly NodePosition[];
 }

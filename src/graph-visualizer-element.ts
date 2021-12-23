@@ -7,7 +7,7 @@ import { customElement } from "./util/web-component-decorators";
 import { VisualizerComponent, createVisualizer } from "./visualizer";
 
 const emptyGraphData: GraphData = {
-  nodes: new Map(),
+  nodes: [],
   edges: [],
   positions: undefined,
 };
@@ -176,7 +176,7 @@ export class GraphVisualizerElement
               throw new Error("nodes and edges not found in the returned json");
             }
             this._data = {
-              nodes: new Map(Object.entries(parsed.nodes)),
+              nodes: parsed.nodes,
               edges: parsed.edges,
               positions: parsed.positions ?? this._data.positions,
             };

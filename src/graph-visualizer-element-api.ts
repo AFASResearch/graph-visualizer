@@ -1,5 +1,6 @@
 import { EdgeData, GraphData, NodeData, NodePosition, PositionsChange } from "./api";
 import { VisualizerAPI } from "./internal-api";
+import { createMemoization } from "./utils";
 
 export interface VisualizerWebComponentAPIParameters {
   getGraphData(): GraphData;
@@ -22,6 +23,7 @@ export function createGraphVisualizerElementAPI(
   let { getGraphData, getLocalStorageKey, emitPositionsChanged } = parameters;
   let lastDataPositions: readonly NodePosition[] | undefined;
   let positions: NodePosition[] | undefined;
+  let nodeMapMemoization = createMemoization<ReadonlyMap<string, NodeData>>();
 
   function savePositions() {
     let localStorageKey = getLocalStorageKey();
@@ -33,7 +35,11 @@ export function createGraphVisualizerElementAPI(
 
   return {
     getNodes(): ReadonlyMap<string, NodeData> {
-      return getGraphData().nodes;
+      let nodeList = getGraphData().nodes;
+      return nodeMapMemoization.result(
+        [nodeList],
+        () => new Map<string, NodeData>(nodeList.map((n) => [n.key, n]))
+      );
     },
     getEdges(): ReadonlyArray<EdgeData> {
       return getGraphData().edges;
