@@ -87,13 +87,5 @@
       "style": "module",
       "parser": "typescript"
     }
-  },
-  "husky": {
-    "hooks": {
-      "post-checkout": "tsa post-checkout || exit 0",
-      "post-merge": "tsa post-merge || exit 0",
-      "pre-commit": "tsa pre-commit",
-      "pre-push": "npm run dist && tsa pre-push"
-    }
   }
 }
