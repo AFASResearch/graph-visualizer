@@ -132,7 +132,7 @@ export class GraphVisualizerElement
     }
   }
 
-  // data-url
+  // data-url attribute
   get dataUrl() {
     return this.getAttribute(ATTRIBUTES.dataUrl) ?? undefined;
   }
@@ -145,6 +145,7 @@ export class GraphVisualizerElement
     }
   }
 
+  // data property
   get data() {
     return this._data;
   }

@@ -52,7 +52,7 @@ export function createGraphVisualizerElementAPI(
         lastDataPositions = newPositions;
         positions = newPositions ? [...newPositions] : [];
       }
-      return positions!;
+      return positions ?? []!;
     },
     clearVisualizationEntries() {
       positions = [];

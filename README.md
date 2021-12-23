@@ -17,7 +17,18 @@ When loaded, this library exposes a <graph-visualizer> (`GraphVisualizerElement`
 
 It also has the following properties:
 
-- `data`: can be used to programmatically set the `GraphData` for the graph to render
+- `data`: can be used to programmatically set the `GraphData` for the graph to render. Two things are important:
+    - All arrays, maps and objects in `GraphData` are considered immutable once they have been set on the component.
+      Making changes to these objects will cause problems.
+    - Reuse as many arrays, maps and objects from previous `GraphData` as possible for optimal performance.
+
+  Changing a location programmatically can therefore be best achieved using the following code:
+
+```ts
+let data = { ...graphVisualizerElement.data, positions: [...graphVisualizerElement.data.positions] };
+data.positions[2] = { nodeKey: 'a', x: 0, y: 0 }; // modifications are still allowed, because data.positions is a new array
+graphVisualizerElement.data = data;
+```
 
 It fires the following events:
 
