@@ -13,7 +13,6 @@ let css: CSSStyleSheet = require("./demo.css").default;
 let domNode = document.body;
 let projector = createProjector();
 let data = createDemoData();
-(window as any).VisualizerData = data;
 function nav(evt: CustomEvent<string>) {
   window.alert("Navigate to " + evt.detail);
 }
@@ -28,7 +27,7 @@ projector.append(domNode, () =>
   h("div", [
     h("graph-visualizer", {
       id: "1",
-      "data-variable": "VisualizerData",
+      data,
       "local-storage-key": "graph-positions",
       "edges-to-highlight":
         "ERVisualizationEdge:erVisualizationForTemplateToEntity_InstanceTemplate:forAddButton-instanceTemplate1",
