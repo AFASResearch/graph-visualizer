@@ -3,7 +3,10 @@ const HtmlWebpackPlugin = require('html-webpack-plugin');
 
 module.exports = {
   mode: 'development',
-  entry: './src/demo/demo.ts',
+  entry: {
+    demo: './src/demo/demo.ts',
+    customElement: './src/index.ts'
+  },
   plugins: [
     new HtmlWebpackPlugin({
       title: 'Graph visualizer',
@@ -32,7 +35,7 @@ module.exports = {
     extensions: [ '.tsx', '.ts', '.js' ],
   },
   output: {
-    filename: 'bundle.js',
+    filename: '[name].js',
     path: path.resolve(__dirname, 'build/webpack'),
   }
 };

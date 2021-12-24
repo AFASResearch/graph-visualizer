@@ -30,7 +30,6 @@ export function createGraphVisualizerElementAPI(
     if (localStorageKey) {
       window.localStorage[localStorageKey] = JSON.stringify(positions);
     }
-    // onPositionChanged()
   }
 
   return {
@@ -48,17 +47,20 @@ export function createGraphVisualizerElementAPI(
     getNodesToHighlight: parameters.nodesToHighlight,
     getNodePositions(): ReadonlyArray<NodePosition> {
       let newPositions = getGraphData().positions;
-      if (!newPositions && !positions && getLocalStorageKey()) {
-        try {
-          positions = JSON.parse(window.localStorage[getLocalStorageKey()!]) ?? [];
-        } catch (e) {
-          positions = [];
-        }
-      } else if (newPositions !== lastDataPositions) {
+      if (lastDataPositions !== newPositions || !positions) {
         lastDataPositions = newPositions;
-        positions = newPositions ? [...newPositions] : [];
+        if (getLocalStorageKey()) {
+          // localstorage always wins after loading graph data
+          try {
+            positions = JSON.parse(window.localStorage[getLocalStorageKey()!]) ?? [];
+          } catch (e) {
+            positions = newPositions ? [...newPositions] : [];
+          }
+        } else {
+          positions = newPositions ? [...newPositions] : [];
+        }
       }
-      return positions ?? []!;
+      return positions!;
     },
     clearVisualizationEntries() {
       positions = [];

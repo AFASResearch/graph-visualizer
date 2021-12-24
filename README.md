@@ -3,8 +3,9 @@
 Displays the nodes and edges from a dataset that the user can specify.
 Meant to be integrated in other applications.
 
-To see a demo, execute
-`npm run start`
+## Live demo
+
+https://graph-visualizer.github.io/
 
 ## Embedding
 When loaded, this library exposes a <graph-visualizer> (`GraphVisualizerElement`) custom element. it has the following attributes:
@@ -41,7 +42,7 @@ It fires the following events:
 
 Algorithm: pure function executed on every render:
 - input (API): NodeData + VisualizationEntry
-- + config = NodeModel
+  + config = NodeModel
 - nodeRenderers provide Dimensions to NodeModels
 - EdgeData is queried to determine visible edges, create EdgeLayouts
 - Render:
@@ -57,5 +58,4 @@ Algorithm: pure function executed on every render:
 - Gray out existing nodes, center on click
 - hover for long names in sidebar
 - Dark mode
-- Styling
 - Touch support

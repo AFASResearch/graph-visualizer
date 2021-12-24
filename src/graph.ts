@@ -33,21 +33,8 @@ export interface VisibleEdgeEntry {
 }
 
 export function createGraphState() {
-  let state: any = {};
-  let stateJson = window.localStorage["state"];
-  if (stateJson) {
-    state = JSON.parse(stateJson);
-  }
-  state.zoomFactor = state.zoomFactor || 1;
-  state.visualizationTransform = state.visualizationTransform || {
-    x: 0,
-    y: 0,
-  };
-
-  function saveState() {
-    stateJson = JSON.stringify(state);
-    window.localStorage["state"] = stateJson;
-  }
+  let zoomFactor = 0.4;
+  let visualizationTransform = { x: 0, y: 0 };
 
   return {
     svgElement: undefined as SVGSVGElement | undefined,
@@ -65,15 +52,13 @@ export function createGraphState() {
     visibleEdgesMemoization: createMemoization<ReadonlyMap<string, VisibleEdgeEntry>>(),
     previousNodes: undefined as unknown,
     renderCache: createCache<VNode>(),
-    getZoomFactor: () => state.zoomFactor,
-    setZoomFactor: (zoomFactor: number) => {
-      state.zoomFactor = zoomFactor;
-      saveState();
+    getZoomFactor: () => zoomFactor,
+    setZoomFactor: (newZoomFactor: number) => {
+      zoomFactor = newZoomFactor;
     },
-    getVisualizationTransform: () => state.visualizationTransform,
+    getVisualizationTransform: () => visualizationTransform,
     setVisualizationTransform: (transform: any) => {
-      state.visualizationTransform = transform;
-      saveState();
+      visualizationTransform = transform;
     },
   };
 }

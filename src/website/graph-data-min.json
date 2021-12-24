@@ -1,0 +1,11 @@
+{
+  "nodes": [
+    {
+      "key": "intruder",
+      "style": "small-circle",
+      "displayName": "Intruder"
+    }
+  ],
+  "edges": [
+  ]
+}

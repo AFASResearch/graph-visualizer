@@ -175,7 +175,7 @@ export class GraphVisualizerElement
             if (!parsed.nodes || !parsed.edges) {
               throw new Error("nodes and edges not found in the returned json");
             }
-            this._data = {
+            this.data = {
               nodes: parsed.nodes,
               edges: parsed.edges,
               positions: parsed.positions ?? this._data.positions,

@@ -1,0 +1,46 @@
+{
+  "nodes": [
+    {
+      "key": "db",
+      "style": "database",
+      "displayName": "Store"
+    },
+    {
+      "key": "processor",
+      "style": "default",
+      "displayName": "Processor"
+    },
+    {
+      "key": "intruder",
+      "style": "small-circle",
+      "displayName": "Intruder"
+    }
+  ],
+  "edges": [
+    {
+      "key": "a",
+      "style": "umbrella",
+      "fromNode": "db",
+      "toNode": "processor"
+    },
+    {
+      "key": "b",
+      "style": "arrow",
+      "fromNode": "intruder",
+      "toNode": "processor"
+    },
+    {
+      "key": "c",
+      "style": "lightning",
+      "fromNode": "intruder",
+      "toNode": "db"
+    }
+  ],
+  "positions": [
+    {
+      "nodeKey": "db",
+      "x": 0,
+      "y": 0
+    }
+  ]
+}
