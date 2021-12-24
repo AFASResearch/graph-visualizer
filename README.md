@@ -5,7 +5,7 @@ Meant to be integrated in other applications.
 
 ## Live demo
 
-https://graph-visualizer.github.io/
+https://afasresearch.github.io/graph-visualizer/
 
 ## Embedding
 When loaded, this library exposes a <graph-visualizer> (`GraphVisualizerElement`) custom element. it has the following attributes:

@@ -1,7 +1,7 @@
 // Skypack released version
 import graphVisualizer from 'https://cdn.skypack.dev/graph-visualizer@0.10.4';
 // Local webpack
-// import '../../build/webpack/customElement.js';
+// import '../build/webpack/customElement.js';
 
 window.addEventListener('DOMContentLoaded', () => {
   let graphVisualizer = document.querySelector('graph-visualizer');
