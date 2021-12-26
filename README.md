@@ -8,7 +8,7 @@ Meant to be integrated in other applications.
 https://afasresearch.github.io/graph-visualizer/
 
 ## Embedding
-When loaded, this library exposes a <graph-visualizer> (`GraphVisualizerElement`) custom element. it has the following attributes:
+When loaded, this library exposes a `<graph-visualizer>` (`GraphVisualizerElement`) custom element. it has the following attributes:
 
 - `data-url`: url which can be fetched that will retrieve json in the `GraphData` format describing all nodes and edges
 - `data-variable`: global variable stored on window that contains `GraphData`, alternative of `data-url`

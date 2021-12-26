@@ -1,5 +1,4 @@
-export const css = new CSSStyleSheet();
-(css as any).replaceSync(`
+const cssText = `
 :host {
   position: relative;
   display: block;
@@ -124,4 +123,14 @@ export const css = new CSSStyleSheet();
 *[data-highlighted="true"] {
   filter: drop-shadow(0px 0px 4px red) drop-shadow(0px 0px 4px red);
 }
-`);
+`;
+
+let cssCache: CSSStyleSheet | undefined;
+
+export function getGraviCss(): CSSStyleSheet {
+  if (!cssCache) {
+    cssCache = new CSSStyleSheet();
+    (cssCache as any).replaceSync(cssText);
+  }
+  return cssCache;
+}

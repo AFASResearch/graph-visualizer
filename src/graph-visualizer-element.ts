@@ -1,6 +1,6 @@
 import { GraphData, PositionsChange } from "./api";
 import { createGraphVisualizerElementAPI } from "./graph-visualizer-element-api";
-import { css } from "./gravi-css";
+import { getGraviCss } from "./gravi-css";
 import { VisualizerAPI } from "./internal-api";
 import { MaquetteWebComponent } from "./util/maquette-web-component";
 import { customElement } from "./util/web-component-decorators";
@@ -71,7 +71,7 @@ export class GraphVisualizerElement
 
   connectedCallback() {
     super.connectedCallback();
-    this.setAdoptedStyleSheets([css]);
+    this.setAdoptedStyleSheets([getGraviCss()]);
   }
 
   override render() {
