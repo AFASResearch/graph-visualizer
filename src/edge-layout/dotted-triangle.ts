@@ -29,7 +29,7 @@ export function renderDottedTriangle(
     line: h("path", {
       key: data,
       "stroke-width": "1",
-      stroke: "black",
+      stroke: "var(--color-primary)",
       "stroke-dasharray": "2 1",
       d:
         `M${centerPos}` +

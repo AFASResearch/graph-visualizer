@@ -73,7 +73,7 @@ export function renderLabel(
       key,
       x: (position.x + (hAlign === "left" ? -4 : 4)).toString(),
       y: (position.y + (vAlign === "top" ? -8 : 14)).toString(),
-      fill: "black",
+      fill: "var(--color-primary)",
       width: "10",
       "font-size": LABEL_FONT_SIZE.toString(),
       "text-anchor": hAlign === "left" ? "end" : "start",

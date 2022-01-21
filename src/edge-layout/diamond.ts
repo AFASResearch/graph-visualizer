@@ -19,7 +19,7 @@ export function renderDiamond(
       {
         key: data,
         "stroke-width": "1",
-        stroke: "black",
+        stroke: "var(--color-primary)",
         d: renderDiamondLine(endPosition.x, endPosition.y, startPosition.x, startPosition.y),
         ...renderAttributes(data, highlighted),
       },

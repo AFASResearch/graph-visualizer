@@ -22,7 +22,7 @@ export function renderAngularWithDiamond(
       {
         key: data,
         "stroke-width": "1",
-        stroke: "black",
+        stroke: "var(--color-primary)",
         d: renderAngularPathWithDiamond(
           startPosition.x,
           startPosition.y,

@@ -36,9 +36,8 @@ export function renderSmallCircleNodeLayout(
         cx: center.x,
         cy: center.y,
         r: diameter / 2,
-        /* @ts-ignore TS2783 false positive, we prefix the attributes with data-attr */
-        fill: "white",
-        stroke: "black",
+        fill: "var(--color-background)",
+        stroke: "var(--color-primary)",
         "stroke-width": 1,
         "data-nodetype": data.typeName,
         title: data.displayName,

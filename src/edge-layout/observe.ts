@@ -30,7 +30,7 @@ export function renderObserve(
     line: h("path", {
       key: data,
       "stroke-width": "1",
-      stroke: "black",
+      stroke: "var(--color-primary)",
       d:
         `M${centerPos}` +
         ` l${ndx * sizeLength + ndy * halfSizeWidth},${ndy * sizeLength - ndx * halfSizeWidth}` +

@@ -4,6 +4,9 @@ const cssText = `
   display: block;
   width: 1000px;
   height: 600px;
+  --color-background: white;
+  --color-primary: black;
+  --color-secondary: gray;
 }
 
 .gravi {

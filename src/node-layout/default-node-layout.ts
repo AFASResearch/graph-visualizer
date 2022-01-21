@@ -24,11 +24,6 @@ export function renderDefaultNodeLayout(
   let fontSize = DEFAULT_FONT_SIZE;
   let center: XY = dragPosition ?? position;
 
-  let stroke = "black";
-  let fill = "white";
-  let headerColor = "black";
-  let header2Color = "gray";
-
   let dimensions: NodeDimensions = {
     center,
     left: center.x - width / 2,
@@ -48,9 +43,8 @@ export function renderDefaultNodeLayout(
       {
         key: position,
         cursor: "move",
-        /* @ts-ignore TS2783 false positive, we prefix the attributes with data-attr */
-        fill,
-        stroke,
+        fill: "var(--color-background)",
+        stroke: "var(--color-primary)",
         transform: `translate(${dimensions.left},${dimensions.top})`,
         "data-nodetype": data.typeName,
         onmousedown: mouseDownEventHandler,
@@ -65,13 +59,13 @@ export function renderDefaultNodeLayout(
         }),
         h("path", {
           d: "M 0 20 " + width + " 20",
-          stroke,
+          stroke: "var(--color-primary)",
           "stroke-width": "1",
         }),
         h("path", {
           d: "M0,6 Q0,0 6,0 l" + (width - 12) + ",0 q6,0 6,6 l0,14 L0,20 0,6z",
-          fill,
-          stroke,
+          fill: "var(--color-background)",
+          stroke: "var(--color-primary)",
           "data-nodeelement": "title",
         }),
         h(
@@ -82,7 +76,7 @@ export function renderDefaultNodeLayout(
             y: "13",
             "stroke-width": "0",
             "font-family": "Arial",
-            fill: headerColor,
+            fill: "var(--color-primary)",
             "font-weight": "400",
           },
           [data.typeName]
@@ -99,7 +93,7 @@ export function renderDefaultNodeLayout(
             "stroke-width": "0",
             dy: (height / 2 + 10).toString(),
             "font-family": "Arial",
-            fill: header2Color,
+            fill: "var(--color-secondary)",
             "font-weight": "400",
           },
           [makeSafeTitle(safeTitle)]
@@ -117,7 +111,7 @@ export function renderDefaultNodeLayout(
                 "stroke-width": "0",
                 dy: (height / 2 + 10).toString(),
                 "font-family": "Arial",
-                fill: header2Color,
+                fill: "var(color-secondary)",
               },
               [makeSafeTitle(data.displayName)]
             )

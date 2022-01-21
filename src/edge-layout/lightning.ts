@@ -39,7 +39,7 @@ export function renderLightning(
     line: h("path", {
       key: data,
       "stroke-width": "1",
-      stroke: "black",
+      stroke: "var(--color-primary)",
       d:
         `M${start.x},${start.y}` +
         ` l${firstLastDx},${firstLastDy}` +

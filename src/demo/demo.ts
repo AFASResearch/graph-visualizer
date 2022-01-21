@@ -21,7 +21,7 @@ function selectionChanged(evt: CustomEvent<string | undefined>) {
   window.document.title = evt.detail ?? "no selection";
 }
 
-let highlighting = true;
+let highlighting = false;
 
 projector.append(domNode, () =>
   h("div", [
@@ -36,22 +36,23 @@ projector.append(domNode, () =>
       afterCreate(el) {
         // needed until https://github.com/AFASSoftware/maquette/issues/170 is resolved
         el.addEventListener("navigate", (el as any).onnavigate);
-        setInterval(() => {
+        setTimeout(() => {
+          // or setInterval
           highlighting = !highlighting;
           if (highlighting) {
-            el.setAttribute(
-              "edges-to-highlight",
-              "ERVisualizationEdge:erVisualizationForTemplateToEntity_InstanceTemplate:forAddButton-instanceTemplate1"
-            );
             el.setAttribute(
               "nodes-to-highlight",
               "ERVisualizationNode:entityVisualization_Entity:AddButton"
             );
-          } else {
             el.removeAttribute("edges-to-highlight");
+          } else {
+            el.setAttribute(
+              "edges-to-highlight",
+              "ERVisualizationEdge:erVisualizationForTemplateToEntity_InstanceTemplate:forAddButton-instanceTemplate1"
+            );
             el.removeAttribute("nodes-to-highlight");
           }
-        }, 500);
+        }, 2000);
       },
     }),
   ])

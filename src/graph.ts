@@ -261,7 +261,6 @@ export function renderGraph(
                       "," +
                       visualizationTransform.y +
                       ")",
-                    "data-transform": { x: visualizationTransform.x, y: visualizationTransform.y },
                   },
                   [
                     h(

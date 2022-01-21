@@ -37,6 +37,16 @@ It fires the following events:
 - `selectionchange`: will be used to notify that the user changed the selected node
 - `positionschange`: used to inform that the user modified/deleted/cleared the positions of one of the nodes. Detail is a `PositionsChange` type
 
+## Custom styling
+Attributes can be placed on nodes, like typename=Event. These can be picked up in css using the following construct
+
+```css
+graph-visualizer::part(typename\=Event) {
+  --color-primary:blue;
+}
+```
+
+Which causes the primary color to change. variables used are `--color-background`, `--color-primary` and `--color-secondary`.
 
 ## Internals
 

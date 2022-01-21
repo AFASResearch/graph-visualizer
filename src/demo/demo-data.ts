@@ -31,6 +31,7 @@ let demoData: GraphData = {
       style: "default",
       displayName: "AddButton",
       typeName: "Entity",
+      attributes: { typename: "Event" },
     },
     {
       key: "ERVisualizationNode:entityVisualization_Entity:AndExpression",

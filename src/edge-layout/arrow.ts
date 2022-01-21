@@ -19,7 +19,7 @@ export function renderArrow(
       {
         key: data,
         "stroke-width": "1",
-        stroke: "black",
+        stroke: "var(--color-primary)",
         d: renderArrowLine(startPosition.x, startPosition.y, endPosition.x, endPosition.y),
         ...renderAttributes(data, highlighted),
       },
