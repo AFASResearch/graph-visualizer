@@ -114,6 +114,8 @@ const cssText = `
   list-style: none;
   padding: 12px 16px;
   border-bottom: 1px solid lightgray;
+  background-color: var(--color-background);
+  color: var(--color-secondary);
 }
 
 .gravi-sidebar > ul > li > span {

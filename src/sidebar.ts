@@ -133,6 +133,7 @@ export function renderSidebar(
                     { x: evt.x, y: evt.y }
                   );
                 },
+                ...renderAttributes(n)
               },
               [h("span.shortName", [n.shortName ?? n.displayName]), h("span.name", [n.displayName])]
             )
@@ -141,6 +142,23 @@ export function renderSidebar(
       ]);
     }
   );
+}
+
+function renderAttributes(data: NodeData) {
+  if (data.attributes) {
+    let parts: string[] = [];
+    for (let [key, val] of Object.entries(data.attributes)) {
+      if (val && val !== "false") {
+        if (val === true || val === "true" || val === "True") {
+          parts.push(`sidebar=${key}`);
+        } else {
+          parts.push(`sidebar=${key}=${val}`);
+        }
+      }
+    }
+    return { part: parts.join(" ") };
+  }
+  return {};
 }
 
 function edgeExists(edges: readonly EdgeData[], nodeKey: string, otherNodeKey: string) {
