@@ -68,7 +68,7 @@ export function renderSmallEllipseNodeLayout(
             y: diameterHeight / 2 + 5,
             "stroke-width": "0",
             "font-family": "Arial",
-            fill: "var(--color-background)",
+            fill: "var(--color-secondary)",
             "font-weight": "400",
           },
           [title]
