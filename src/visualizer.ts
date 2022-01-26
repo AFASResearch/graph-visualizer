@@ -103,10 +103,12 @@ function renderGraphSummary(state: VisualizerState, api: VisualizerAPI) {
   let edges = api.getEdges();
   return state.summaryMemoization.result([nodes, edges], () => {
     let nodeCountPerType: { [type: string]: number } = {};
-    for (let node of Object.values(nodes)) {
-      nodeCountPerType[node.typeName] = (nodeCountPerType[node.typeName] || 0) + 1;
+    for (let node of nodes.values()) {
+      if(node.typeName)
+      {
+        nodeCountPerType[node.typeName] = (nodeCountPerType[node.typeName] || 0) + 1;
+      }
     }
-
     let nodeTypeSummary = Object.entries(nodeCountPerType).map(
       (entry) => `${entry[1]} ${entry[0]}`
     );
