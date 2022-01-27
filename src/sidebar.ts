@@ -11,7 +11,9 @@ export function createSidebarState() {
     draggingNodeKey: undefined as string | undefined,
     filterMemoization: createMemoization<GraphFilter>(),
     renderMemoization: createMemoization<VNode>(),
-    resultsMemoization: createMemoization<NodeData[]>(),
+    sortedNodesMemoization: createMemoization<NodeData[]>(),
+    filteredNodesMemoization: createMemoization<NodeData[]>(),
+    visibleNodesMemoization: createMemoization<NodeData[]>(),
   };
 }
 
@@ -57,28 +59,38 @@ export function renderSidebar(
   let positions = api.getNodePositions();
   let nodes = api.getNodes();
   let edges = api.getEdges();
-  let filters = state.filterMemoization.result([state.searchText], () => {
-    return createNodeFilters(state.searchText);
-  });
   return state.renderMemoization.result(
     [positions, nodes, edges, state.searchText, state.draggingNodeKey, filterNodeKey],
     () => {
-      let results = state.resultsMemoization.result(
-        [positions, nodes, state.searchText, filterNodeKey, filterNodeKey ? edges : undefined],
+      let filters = state.filterMemoization.result([state.searchText], () => {
+        return createNodeFilters(state.searchText);
+      });
+
+      // We should sort the nodes as few times as possible
+      let sortedNodes = state.sortedNodesMemoization.result([nodes], () => {
+        return [...nodes.values()].sort((a, b) => a.displayName.localeCompare(b.displayName));
+      });
+
+      // Filtering on lots of things (except positions) is expensive
+      let filteredNodes = state.filteredNodesMemoization.result(
+        [sortedNodes, filters, filterNodeKey, filterNodeKey ? edges : undefined],
         () => {
-          let filteredNodes = [...nodes.values()].filter(
+          return sortedNodes.filter(
             (n) =>
-              // we shouldn't show nodes that are already displayed
-              !positions.some((p) => p.nodeKey === n.key) &&
               // if a filterNode is present, the node should be connected to it
               (filterNodeKey ? edgeExists(edges, n.key, filterNodeKey) : true) &&
               // if a searchText is present, we should apply the parsed filters
               filters.every((f) => f(n))
           );
-          filteredNodes.sort((a, b) => a.displayName.localeCompare(b.displayName));
-          return filteredNodes;
         }
       );
+
+      // Lastly, filter on positions, which may change more often
+      let visibleNodes = state.visibleNodesMemoization.result([positions, filteredNodes], () => {
+        // we shouldn't show nodes that are already displayed
+        return filteredNodes.filter((n) => !positions.some((p) => p.nodeKey === n.key));
+      });
+
       return h("div.gravi-sidebar", [
         h(
           "button.gravi-open-sidebar-button",
@@ -118,7 +130,7 @@ export function renderSidebar(
         h("ul.gravi-list", [
           // Show only the first 500 elements. This speeds up rendering.
           // More results has no use.
-          results.slice(0, 500).map((n) =>
+          visibleNodes.slice(0, 500).map((n) =>
             h(
               "li",
               {
@@ -133,7 +145,7 @@ export function renderSidebar(
                     { x: evt.x, y: evt.y }
                   );
                 },
-                ...renderAttributes(n)
+                ...renderAttributes(n),
               },
               [h("span.shortName", [n.shortName ?? n.displayName]), h("span.name", [n.displayName])]
             )
