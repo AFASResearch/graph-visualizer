@@ -1,6 +1,6 @@
 import { VNode, h } from "maquette";
 
-import { EdgeData, NodeData } from "./api";
+import { NodeData } from "./api";
 import { XY } from "./interfaces";
 import { VisualizerAPI } from "./internal-api";
 import { createMemoization } from "./utils";
@@ -12,6 +12,7 @@ export function createSidebarState() {
     filterMemoization: createMemoization<GraphFilter>(),
     renderMemoization: createMemoization<VNode>(),
     sortedNodesMemoization: createMemoization<NodeData[]>(),
+    edgeConnectionMemoization: createMemoization<Map<string, string[]>>(),
     filteredNodesMemoization: createMemoization<NodeData[]>(),
     visibleNodesMemoization: createMemoization<NodeData[]>(),
   };
@@ -73,15 +74,24 @@ export function renderSidebar(
 
       // Filtering on lots of things (except positions) is expensive
       let filteredNodes = state.filteredNodesMemoization.result(
-        [sortedNodes, filters, filterNodeKey, filterNodeKey ? edges : undefined],
+        [filters, filterNodeKey, filterNodeKey ? edges : sortedNodes],
         () => {
-          return sortedNodes.filter(
-            (n) =>
-              // if a filterNode is present, the node should be connected to it
-              (filterNodeKey ? edgeExists(edges, n.key, filterNodeKey) : true) &&
-              // if a searchText is present, we should apply the parsed filters
-              filters.every((f) => f(n))
-          );
+          let candidateNodes = sortedNodes;
+          if (filterNodeKey) {
+            // change of plan, do not use pre-sorted nodes, but loop over edges and sort afterwards
+            candidateNodes = [];
+            for (let edge of edges) {
+              if (edge.fromNode === filterNodeKey) {
+                candidateNodes.push(nodes.get(edge.toNode)!);
+              } else if (edge.toNode === filterNodeKey) {
+                candidateNodes.push(nodes.get(edge.fromNode)!);
+              }
+            }
+            // the set of connected nodes should be relatively small, so this should not take long
+            candidateNodes.sort((a, b) => a.displayName.localeCompare(b.displayName));
+          }
+          // if a searchText is present, we should apply the parsed filters
+          return candidateNodes.filter((n) => filters.every((f) => f(n)));
         }
       );
 
@@ -171,12 +181,4 @@ function renderAttributes(data: NodeData) {
     return { part: parts.join(" ") };
   }
   return {};
-}
-
-function edgeExists(edges: readonly EdgeData[], nodeKey: string, otherNodeKey: string) {
-  return edges.some(
-    (e) =>
-      (e.fromNode === nodeKey && e.toNode === otherNodeKey) ||
-      (e.fromNode === otherNodeKey && e.toNode === nodeKey)
-  );
 }
