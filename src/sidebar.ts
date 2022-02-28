@@ -12,7 +12,6 @@ export function createSidebarState() {
     filterMemoization: createMemoization<GraphFilter>(),
     renderMemoization: createMemoization<VNode>(),
     sortedNodesMemoization: createMemoization<NodeData[]>(),
-    edgeConnectionMemoization: createMemoization<Map<string, string[]>>(),
     filteredNodesMemoization: createMemoization<NodeData[]>(),
     visibleNodesMemoization: createMemoization<NodeData[]>(),
   };
